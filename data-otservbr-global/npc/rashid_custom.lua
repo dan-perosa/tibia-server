@@ -266,11 +266,6 @@ npcHandler:setMessage(MESSAGE_WALKAWAY, "Come back soon!")
 npcHandler:setMessage(MESSAGE_SENDTRADE, "Take all the time you need to decide what you want!")
 
 local function onTradeRequest(npc, creature)
-	if toggleRashidStorage and Player(creature):getStorageValue(Storage.Quest.U8_1.TheTravellingTrader.Mission07) ~= 1 then
-		npcHandler:say("Sorry, but you do not belong to my exclusive customers. I have to make sure that I can trust in the quality of your wares.", npc, creature)
-		return false
-	end
-
 	return true
 end
 

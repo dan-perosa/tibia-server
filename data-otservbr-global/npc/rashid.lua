@@ -263,11 +263,6 @@ npcHandler:setMessage(MESSAGE_WALKAWAY, "Come back soon!")
 npcHandler:setMessage(MESSAGE_SENDTRADE, "Take all the time you need to decide what you want!")
 
 local function onTradeRequest(npc, creature)
-	if Player(creature):getStorageValue(Storage.Quest.U8_1.TheTravellingTrader.Mission07) ~= 1 then
-		npcHandler:say("Sorry, but you do not belong to my exclusive customers. I have to make sure that I can trust in the quality of your wares.", npc, creature)
-		return false
-	end
-
 	return true
 end
 
@@ -433,6 +428,64 @@ npcConfig.shop = {
 	{ itemName = "war horn", clientId = 2958, sell = 8000 },
 	{ itemName = "witch hat", clientId = 9653, sell = 5000 },
 	{ itemName = "wyvern fang", clientId = 7408, sell = 1500 },
+	{ itemName = "fire sword", clientId = 3280, sell = 2500 },
+	{ itemName = "ice rapier", clientId = 3284, sell = 2800 },
+	{ itemName = "poison dagger", clientId = 3299, sell = 2200 },
+	{ itemName = "giant sword", clientId = 3281, sell = 5500 },
+	{ itemName = "war hammer", clientId = 3279, sell = 4200 },
+	{ itemName = "warrior's axe", clientId = 14040, sell = 3500 },
+	{ itemName = "ravenwing", clientId = 7433, sell = 9000 },
+	{ itemName = "crusader helmet", clientId = 3391, sell = 3800 },
+	{ itemName = "royal helmet", clientId = 3392, sell = 4200 },
+	{ itemName = "guardian shield", clientId = 3415, sell = 3200 },
+	{ itemName = "dwarven shield", clientId = 3425, sell = 2800 },
+	{ itemName = "bonelord shield", clientId = 3418, sell = 5500 },
+	{ itemName = "crown shield", clientId = 3419, sell = 7500 },
+	{ itemName = "crown armor", clientId = 3381, sell = 11000 },
+	{ itemName = "crown legs", clientId = 3382, sell = 8500 },
+	{ itemName = "fireborn giant armor", clientId = 8053, sell = 25000 },
+	{ itemName = "blue robe", clientId = 3567, sell = 1800 },
+	{ itemName = "boots of haste", clientId = 3079, sell = 45000 },
+	{ itemName = "stone skin amulet", clientId = 3081, sell = 15000 },
+	{ itemName = "might ring", clientId = 3048, sell = 8000 },
+	{ itemName = "ring of healing", clientId = 3098, sell = 6000 },
+	{ itemName = "time ring", clientId = 3053, sell = 30000 },
+	{ itemName = "spellbook of mind control", clientId = 8074, sell = 55000 },
+	{ itemName = "yalahari mask", clientId = 8864, sell = 15000 },
+},
+	{ itemName = "fire sword", clientId = 3280, sell = 2500 },
+	{ itemName = "ice rapier", clientId = 3284, sell = 2800 },
+	{ itemName = "poison dagger", clientId = 3299, sell = 2200 },
+	{ itemName = "giant sword", clientId = 3281, sell = 5500 },
+	{ itemName = "war hammer", clientId = 3279, sell = 4200 },
+	{ itemName = "mercenary sword", clientId = 7386, sell = 3200 },
+	{ itemName = "warrior's axe", clientId = 14040, sell = 3500 },
+	{ itemName = "assassin dagger", clientId = 7404, sell = 4000 },
+	{ itemName = "ravenwing", clientId = 7433, sell = 9000 },
+	{ itemName = "crusader helmet", clientId = 3391, sell = 3800 },
+	{ itemName = "royal helmet", clientId = 3392, sell = 4200 },
+	{ itemName = "skull helmet", clientId = 5741, sell = 3000 },
+	{ itemName = "guardian shield", clientId = 3415, sell = 3200 },
+	{ itemName = "dwarven shield", clientId = 3425, sell = 2800 },
+	{ itemName = "medusa shield", clientId = 3436, sell = 12000 },
+	{ itemName = "bonelord shield", clientId = 3418, sell = 5500 },
+	{ itemName = "crown shield", clientId = 3419, sell = 7500 },
+	{ itemName = "demon shield", clientId = 3420, sell = 22000 },
+	{ itemName = "golden armor", clientId = 3360, sell = 4500 },
+	{ itemName = "dragon scale mail", clientId = 3386, sell = 9000 },
+	{ itemName = "crown armor", clientId = 3381, sell = 11000 },
+	{ itemName = "crown legs", clientId = 3382, sell = 8500 },
+	{ itemName = "magic plate armor", clientId = 3366, sell = 18000 },
+	{ itemName = "demon armor", clientId = 3388, sell = 20000 },
+	{ itemName = "fireborn giant armor", clientId = 8053, sell = 25000 },
+	{ itemName = "blue robe", clientId = 3567, sell = 1800 },
+	{ itemName = "boots of haste", clientId = 3079, sell = 45000 },
+	{ itemName = "stone skin amulet", clientId = 3081, sell = 15000 },
+	{ itemName = "might ring", clientId = 3048, sell = 8000 },
+	{ itemName = "ring of healing", clientId = 3098, sell = 6000 },
+	{ itemName = "time ring", clientId = 3053, sell = 30000 },
+	{ itemName = "spellbook of mind control", clientId = 8074, sell = 55000 },
+	{ itemName = "yalahari mask", clientId = 8864, sell = 15000 },
 }
 -- On buy npc shop message
 npcType.onBuyItem = function(npc, player, itemId, subType, amount, ignore, inBackpacks, totalCost)

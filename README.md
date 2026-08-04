@@ -59,6 +59,8 @@ environment variables, test account, and troubleshooting guide.
 
 ## Documentation
 
+- [Private server setup (this fork)](docs/private-server-setup.md). How this
+  fork's private server is installed and customized, with and without Docker.
 - [Docker beginner quickstart](docs/docker/quickstart-for-beginners.md).
 - [Multiprotocol runtime profiles](docs/systems/multiprotocol.md). Covers the
   current, 11.00, and 8.60 runtime contracts, port layout, client preparation,
