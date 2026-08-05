@@ -61,6 +61,8 @@ environment variables, test account, and troubleshooting guide.
 
 - [Private server setup (this fork)](docs/private-server-setup.md). How this
   fork's private server is installed and customized, with and without Docker.
+- [Changelog](docs/CHANGELOG.md). Dated log of what was changed on this
+  server, why, and gotchas discovered along the way.
 - [Docker beginner quickstart](docs/docker/quickstart-for-beginners.md).
 - [Multiprotocol runtime profiles](docs/systems/multiprotocol.md). Covers the
   current, 11.00, and 8.60 runtime contracts, port layout, client preparation,
