@@ -7,6 +7,25 @@ por sessão de trabalho, mais recente no topo.
 
 ## 2026-08-06
 
+### Correção séria: liberação de magias tinha removido nível/vocação também
+No dia anterior eu tinha adicionado a flag `ignorespellcheck="1"` no grupo
+"player" achando que ela só pulava a exigência de comprar a magia do NPC.
+**Errado**: essa flag é checada logo no topo de
+`Spell::playerSpellCheck()` (`src/creatures/combat/spells.cpp`), então
+qualquer jogador com ela conseguia lançar **qualquer magia, de qualquer
+nível, de qualquer vocação** — inclusive magias de outras classes. Pedro
+percebeu jogando de druida e conseguindo lançar magias de nível/classe
+incompatíveis.
+
+**Corrigido de verdade:** removida a flag de `groups.xml`. Em vez disso,
+`data-otservbr-global/scripts/creaturescripts/others/login.lua` agora
+"ensina" automaticamente pro jogador, no login, toda magia da vocação dele
+(via `player:learnInstantSpell()`, extraído programaticamente de
+`spell:name()`/`spell:vocation()` em todo `data/scripts/spells/`). Isso
+remove só a exigência de pagar o NPC — nível, mana e vocação continuam
+sendo checados normalmente na hora de lançar, porque essa checagem vive
+numa função diferente e não é afetada.
+
 ### Sistema de baú de recompensa única (quest chests)
 - Criado `data/scripts/actions/quests/custom_reward_chests.lua`: baú
   reusável (item 2472) que dá uma recompensa configurável **uma única vez**
