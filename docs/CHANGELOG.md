@@ -7,6 +7,28 @@ por sessão de trabalho, mais recente no topo.
 
 ## 2026-08-06
 
+### NPC de promoção (Alexander the Novice Uncoverer)
+- Criado `data-otservbr-global/npc/alexander_the_novice_uncoverer.lua`:
+  promove a vocação do jogador (Sorcerer→Master Sorcerer etc, via
+  `vocation:getPromotion()`) a partir do nível 20, cobrando os 20.000 gold
+  clássicos. Posicionado em (1001,1010,7).
+
+### Bug de duplicação de item nos baús de recompensa (espaço insuficiente)
+Se `player:addItem()` falhasse no meio do loop de recompensa (inventário
+cheio), o baú não era marcado como aberto, permitindo reabrir depois e
+receber de novo os itens que já tinham entrado com sucesso na tentativa
+anterior. Corrigido: `custom_reward_chests.lua` agora checa peso total e
+slots livres pra recompensa INTEIRA antes de dar qualquer item — tudo ou
+nada, nunca parcial. **Lição para o futuro:** sempre considerar esse
+cenário (espaço insuficiente no meio da entrega) em qualquer recompensa
+de quest nova.
+
+### Correção: algumas magias exigiam conta premium
+`freePremium = true` no `config.lua` — libera contas premium pra todo
+mundo (opção oficial do Canary pra isso, diferente da tentativa anterior
+com `ignorespellcheck`). Não afeta nível/vocação/mana, só a checagem de
+`isPremium()`.
+
 ### Correção séria: liberação de magias tinha removido nível/vocação também
 No dia anterior eu tinha adicionado a flag `ignorespellcheck="1"` no grupo
 "player" achando que ela só pulava a exigência de comprar a magia do NPC.
