@@ -452,7 +452,6 @@ npcConfig.shop = {
 	{ itemName = "time ring", clientId = 3053, sell = 30000 },
 	{ itemName = "spellbook of mind control", clientId = 8074, sell = 55000 },
 	{ itemName = "yalahari mask", clientId = 8864, sell = 15000 },
-},
 	{ itemName = "fire sword", clientId = 3280, sell = 2500 },
 	{ itemName = "ice rapier", clientId = 3284, sell = 2800 },
 	{ itemName = "poison dagger", clientId = 3299, sell = 2200 },

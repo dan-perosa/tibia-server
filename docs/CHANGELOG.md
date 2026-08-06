@@ -5,6 +5,54 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-06
+
+### Sistema de baú de recompensa única (quest chests)
+- Criado `data/scripts/actions/quests/custom_reward_chests.lua`: baú
+  reusável (item 2472) que dá uma recompensa configurável **uma única vez**
+  por jogador, controlado por Action ID. Suporta "group" opcional — baús do
+  mesmo grupo compartilham uma única trava (usado nos 4 baús de kit
+  inicial: abrir qualquer um deles bloqueia os outros 3 pro mesmo jogador).
+- 4 baús de kit inicial (Knight/Paladin/Sorcerer/Druid) instalados na salinha
+  de recompensa da hunt de orcs (979 a 973, 1087, z=7), cada um com placa
+  (item 2012) do lado indicando a classe. Teleporte de volta pro templo
+  (item 27589) no meio da sala.
+
+### Bug importante descoberto: colisão de Action ID com scripts oficiais
+Os 4 baús pareciam quebrados de formas diferentes e aleatórias (um abria
+como baú vazio, um deixava andar por cima, um **virou uma alavanca de
+verdade**). Causa raiz: o motor do Canary verifica ações registradas nesta
+ordem de prioridade (`Actions::getAction` em `src/lua/creature/actions.cpp`):
+posição > Unique ID > **Action ID** > ID do item. Meu script registra por
+**ID do item** (prioridade mais baixa) — então se qualquer OUTRO script do
+pacote oficial já usa a mesma Action ID que eu escolhi, aquele script ganha
+a prioridade e roda no lugar do meu, silenciosamente.
+
+Foi exatamente isso: as Action IDs que escolhi por padrão (30001-30004) já
+eram usadas por `scripts/actions/dawnport/lever.lua` (uma alavanca de
+verdade — daí o baú "virar alavanca") e por scripts de quests não
+relacionadas (`the_new_frontier/action_arena.lua`,
+`.../action_elevator.lua`, `movements/teleport/dark_cathedral_teleports.lua`).
+
+**Lição / como evitar de novo:** antes de escolher uma Action ID nova pra
+qualquer script custom, rodar:
+```
+grep -rhoE ':aid\([0-9, ]+\)|:actionid\([0-9, ]+\)' data/ data-otservbr-global/ | grep -oE '[0-9]+' | sort -n | uniq
+```
+e conferir se o número escolhido aparece na lista. A faixa **90000-91000**
+foi verificada livre de colisão em 2026-08-06 e é a que uso agora pros
+baús de kit inicial.
+
+### Bug separado: rashid.lua quebrado desde a fusão das listas de itens
+Descoberto durante a investigação acima: `data-otservbr-global/npc/rashid.lua`
+tinha uma chave `}` sobrando no meio da lista de itens (linha 455),
+resultado de um erro no script que uniu a lista original de 157 itens com
+os itens extras adicionados depois. Isso quebrava o arquivo inteiro —
+`unexpected symbol near '}'` no log a cada boot do servidor, e o Rashid
+provavelmente não funcionava de verdade desde então. Corrigido.
+
+---
+
 ## 2026-08-05
 
 ### NPC de compra (Yasir)
