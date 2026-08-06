@@ -208,7 +208,7 @@ local function learnAllSpells(player)
 	for _, spell in ipairs(AllVocationSpells) do
 		for _, voc in ipairs(spell.vocations) do
 			if voc == vocation then
-				player:learnInstantSpell(spell.name)
+				player:learnSpell(spell.name)
 				break
 			end
 		end
