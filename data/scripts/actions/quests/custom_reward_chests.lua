@@ -25,7 +25,7 @@ re-verify with the same grep before reusing this range elsewhere.
 
 local CustomQuestChests = {
 	-- Starting class kit chests (pick one, opening one locks the other 3)
-	[90001] = { -- Knight
+	[24465] = { -- Knight
 		group = "starter_kit",
 		items = {
 			{ id = 7418, count = 1 }, -- nightmare blade
@@ -38,7 +38,7 @@ local CustomQuestChests = {
 			{ id = 3079, count = 1 }, -- boots of haste
 		},
 	},
-	[90002] = { -- Paladin
+	[24466] = { -- Paladin
 		group = "starter_kit",
 		items = {
 			{ id = 14247, count = 1 }, -- ornate crossbow
@@ -49,7 +49,7 @@ local CustomQuestChests = {
 			{ id = 3079, count = 1 }, -- boots of haste
 		},
 	},
-	[90003] = { -- Sorcerer
+	[24467] = { -- Sorcerer
 		group = "starter_kit",
 		items = {
 			{ id = 16115, count = 1 }, -- wand of everblazing
@@ -60,7 +60,7 @@ local CustomQuestChests = {
 			{ id = 3079, count = 1 }, -- boots of haste
 		},
 	},
-	[90004] = { -- Druid
+	[24468] = { -- Druid
 		group = "starter_kit",
 		items = {
 			{ id = 16118, count = 1 }, -- glacial rod
@@ -86,6 +86,33 @@ local function storageKeyFor(actionId, config)
 	return BASE_STORAGE + actionId
 end
 
+-- Checks capacity/room for the WHOLE reward before adding anything, so a
+-- chest can never hand out only part of its reward. Without this, if
+-- addItem failed partway through the loop, the chest would still be
+-- unlocked to try again, and re-opening it would re-add (duplicate) every
+-- item that had already succeeded on the earlier partial attempt.
+local function hasRoomForReward(player, items)
+	local totalWeight = 0
+	for _, entry in ipairs(items) do
+		totalWeight = totalWeight + (ItemType(entry.id):getWeight() * entry.count)
+	end
+	if (player:getFreeCapacity() / 100) < totalWeight then
+		return false
+	end
+
+	local backpack = player:getSlotItem(CONST_SLOT_BACKPACK)
+	if not backpack then
+		return false
+	end
+	-- Conservative: assume every reward entry needs its own new slot, even
+	-- though a stackable item might actually merge into one already carried.
+	if backpack:getEmptySlots(true) < #items then
+		return false
+	end
+
+	return true
+end
+
 local questChest = Action()
 
 function questChest.onUse(player, item, fromPosition, target, toPosition, isHotkey)
@@ -101,9 +128,16 @@ function questChest.onUse(player, item, fromPosition, target, toPosition, isHotk
 		return true
 	end
 
+	if not hasRoomForReward(player, config.items) then
+		player:sendTextMessage(MESSAGE_FAILURE, "You don't have enough room to carry the reward. Free up some space and try again.")
+		return true
+	end
+
 	for _, entry in ipairs(config.items) do
 		if not player:addItem(entry.id, entry.count) then
-			player:sendTextMessage(MESSAGE_FAILURE, "You don't have enough room to carry the reward.")
+			-- Should not happen given the check above, but bail out without
+			-- marking the chest as claimed if it somehow still fails.
+			player:sendTextMessage(MESSAGE_FAILURE, "You don't have enough room to carry the reward. Free up some space and try again.")
 			return true
 		end
 	end
