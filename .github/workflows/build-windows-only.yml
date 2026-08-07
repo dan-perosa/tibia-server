@@ -1,0 +1,32 @@
+---
+name: Build - Windows (only)
+
+# Workflow independente para gerar APENAS o executável Canary para Windows.
+# Ele chama o workflow reutilizável `Reusable Windows Build` sem rodar o CI
+# inteiro (nada de Linux/macOS/Docker, checks ou Lua tests nem smoke tests).
+#
+# Como usar:
+#   1. Vá em Actions -> "Build - Windows (only)"
+#   2. Clique em "Run workflow"
+#   3. Selecione a branch (no seu fork, normalmente main) e clique em
+#      "Run workflow"
+#   4. Ao terminar, no job "Build - Windows", baixe o artefato
+#      "canary-windows-cmake-release" (contém o canary.exe).
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-windows:
+    name: Build - Windows
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/reusable-build-windows.yml
+    with:
+      run_canary_smoke: false
+    secrets: inherit
