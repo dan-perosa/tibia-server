@@ -2,46 +2,49 @@
 name: CI
 
 on:
+  # Somente disparo manual pela UI do GitHub (Actions -> CI -> Run workflow).
+  # Os gatilhos automáticos push/pull_request foram desligados para não rodar
+  # nada ao comitar. Para usá-los novamente, basta descomentar os blocos abaixo.
   workflow_dispatch:
-  pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
-    paths:
-      - "src/**"
-      - "tests/**"
-      - "data/**"
-      - "data-canary/**"
-      - "data-otservbr-global/**"
-      - "cmake/**"
-      - "docker/**"
-      - "docs/lua-api/**"
-      - "docs/systems/**"
-      - "tools/**"
-      - "vcproj/**"
-      - "vcpkg.json"
-      - "CMakeLists.txt"
-      - "CMakePresets.json"
-      - ".github/scripts/**"
-      - ".github/workflows/**"
-  push:
-    branches:
-      - main
-    paths:
-      - "src/**"
-      - "tests/**"
-      - "data/**"
-      - "data-canary/**"
-      - "data-otservbr-global/**"
-      - "cmake/**"
-      - "docker/**"
-      - "docs/lua-api/**"
-      - "docs/systems/**"
-      - "tools/**"
-      - "vcproj/**"
-      - "vcpkg.json"
-      - "CMakeLists.txt"
-      - "CMakePresets.json"
-      - ".github/scripts/**"
-      - ".github/workflows/**"
+  # pull_request:
+  #   types: [opened, synchronize, reopened, ready_for_review]
+  #   paths:
+  #     - "src/**"
+  #     - "tests/**"
+  #     - "data/**"
+  #     - "data-canary/**"
+  #     - "data-otservbr-global/**"
+  #     - "cmake/**"
+  #     - "docker/**"
+  #     - "docs/lua-api/**"
+  #     - "docs/systems/**"
+  #     - "tools/**"
+  #     - "vcproj/**"
+  #     - "vcpkg.json"
+  #     - "CMakeLists.txt"
+  #     - "CMakePresets.json"
+  #     - ".github/scripts/**"
+  #     - ".github/workflows/**"
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - "src/**"
+  #     - "tests/**"
+  #     - "data/**"
+  #     - "data-canary/**"
+  #     - "data-otservbr-global/**"
+  #     - "cmake/**"
+  #     - "docker/**"
+  #     - "docs/lua-api/**"
+  #     - "docs/systems/**"
+  #     - "tools/**"
+  #     - "vcproj/**"
+  #     - "vcpkg.json"
+  #     - "CMakeLists.txt"
+  #     - "CMakePresets.json"
+  #     - ".github/scripts/**"
+  #     - ".github/workflows/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
