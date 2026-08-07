@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <npcs>
+	<npc centerx="1018" centery="981" centerz="7" radius="1">
+		<npc name="King Tibianus" x="0" y="0" z="7" spawntime="60" />
+	</npc>
 	<npc centerx="981" centery="990" centerz="7" radius="1">
 		<npc name="Liane" x="0" y="0" z="7" spawntime="60" />
 	</npc>
@@ -23,8 +26,5 @@
 	</npc>
 	<npc centerx="996" centery="1017" centerz="7" radius="1">
 		<npc name="Luna" x="0" y="0" z="7" spawntime="60" />
-	</npc>
-	<npc centerx="1001" centery="1010" centerz="7" radius="1">
-		<npc name="Alexander the Novice Uncoverer" x="0" y="0" z="7" spawntime="60" />
 	</npc>
 </npcs>
