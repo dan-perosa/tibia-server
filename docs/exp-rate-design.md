@@ -1,8 +1,8 @@
-# Taxa de experiência (stages.lua) — desenho aprovado, ainda não implementado
+# Taxa de experiência (stages.lua) — implementado
 
-**Status: DECIDIDO, mas NÃO aplicado no servidor ainda.** Pedro vai pedir explicitamente
-quando quiser que isso entre em `data/stages.lua`. Este documento existe pra não perder o
-raciocínio/números até lá.
+**Status: APLICADO em `data/stages.lua` em 2026-08-07.** Este documento registra o
+raciocínio/números por trás da tabela, pra caso alguém (Pedro, Dan, ou eu numa sessão futura)
+precise entender o porquê de um valor específico ou recalibrar depois de testes reais.
 
 ## Objetivo original
 

@@ -5,6 +5,25 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-07
+
+### Taxa de experiência aplicada (`data/stages.lua`)
+Implementada a tabela de `experienceStages` desenhada e aprovada na sessão anterior — ver
+[`exp-rate-design.md`](exp-rate-design.md) pra metodologia completa, fontes de dado real e
+histórico de decisão. Resumo: multiplicador começa em 3x (level 1-100) e sobe em 15 degraus
+suaves até 91x (level 2501+), calibrado com XP/hora real do Tibia global (não chute) pra
+manter level 2000-3000 factível sem tornar o início do jogo instantâneo. `skillsStages` e
+`magicLevelStages` não foram mexidos, só `experienceStages`.
+
+### Mapa consolidado num único local rastreado pelo git
+O mapa vinha sendo editado numa cópia fora do repositório (`tibia-server/meu-mapa/`), enquanto
+existia uma cópia bem antiga e desatualizada dentro do repositório (`canary/meu-mapa/`, sem
+nenhuma das mudanças recentes). Sincronizado: `canary/meu-mapa/` agora é a fonte única de
+verdade. `sync-map-to-server.ps1` e `tools/otbm-tools/fix_ground_20888.py` atualizados pra
+apontar pro novo local.
+
+---
+
 ## 2026-08-06 (continuação)
 
 ### Sala-cofre da tumba (dragões/aranhas/scarabs, cópia da Banshee Quest)

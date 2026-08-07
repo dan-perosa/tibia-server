@@ -1,30 +1,83 @@
 -- Minlevel and multiplier are MANDATORY
 -- Maxlevel is OPTIONAL, but is considered infinite by default
 -- Create a stage with minlevel 1 and no maxlevel to disable stages
+-- Calibrated against real Tibia global XP/hour data (manual hunting, no bots)
+-- and the server's own getExpForLevel curve -- see docs/exp-rate-design.md
+-- for the full methodology, data sources, and decision history.
 experienceStages = {
 	{
 		minlevel = 1,
-		maxlevel = 8,
-		multiplier = 7,
-	},
-	{
-		minlevel = 9,
-		maxlevel = 20,
-		multiplier = 6,
-	},
-	{
-		minlevel = 21,
-		maxlevel = 50,
-		multiplier = 5,
-	},
-	{
-		minlevel = 51,
 		maxlevel = 100,
-		multiplier = 4,
+		multiplier = 3,
 	},
 	{
 		minlevel = 101,
-		multiplier = 2,
+		maxlevel = 200,
+		multiplier = 7,
+	},
+	{
+		minlevel = 201,
+		maxlevel = 300,
+		multiplier = 11,
+	},
+	{
+		minlevel = 301,
+		maxlevel = 400,
+		multiplier = 13,
+	},
+	{
+		minlevel = 401,
+		maxlevel = 500,
+		multiplier = 15,
+	},
+	{
+		minlevel = 501,
+		maxlevel = 700,
+		multiplier = 34,
+	},
+	{
+		minlevel = 701,
+		maxlevel = 850,
+		multiplier = 43,
+	},
+	{
+		minlevel = 851,
+		maxlevel = 1000,
+		multiplier = 52,
+	},
+	{
+		minlevel = 1001,
+		maxlevel = 1200,
+		multiplier = 58,
+	},
+	{
+		minlevel = 1201,
+		maxlevel = 1350,
+		multiplier = 63,
+	},
+	{
+		minlevel = 1351,
+		maxlevel = 1500,
+		multiplier = 68,
+	},
+	{
+		minlevel = 1501,
+		maxlevel = 1750,
+		multiplier = 74,
+	},
+	{
+		minlevel = 1751,
+		maxlevel = 2000,
+		multiplier = 80,
+	},
+	{
+		minlevel = 2001,
+		maxlevel = 2500,
+		multiplier = 85,
+	},
+	{
+		minlevel = 2501,
+		multiplier = 91,
 	},
 }
 
