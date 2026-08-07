@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Fórmulas de Dano — Canary (tibia-server)</title>
+<style>
+  :root {
+    --bg: #0f1216;
+    --bg-alt: #171b21;
+    --card: #1b2028;
+    --border: #2a313c;
+    --text: #e6e9ee;
+    --text-dim: #9aa4b2;
+    --accent: #ff8a4c;
+    --accent2: #4cc2ff;
+    --danger: #ff5c5c;
+    --good: #59d68d;
+    --mono-bg: #10141a;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f6f7f9;
+      --bg-alt: #ffffff;
+      --card: #ffffff;
+      --border: #dde2e8;
+      --text: #1a1f27;
+      --text-dim: #5b6472;
+      --accent: #d9601a;
+      --accent2: #0b74b0;
+      --danger: #c92a2a;
+      --good: #1a8f5e;
+      --mono-bg: #eef0f3;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1216; --bg-alt: #171b21; --card: #1b2028; --border: #2a313c;
+    --text: #e6e9ee; --text-dim: #9aa4b2; --accent: #ff8a4c; --accent2: #4cc2ff;
+    --danger: #ff5c5c; --good: #59d68d; --mono-bg: #10141a;
+  }
+  :root[data-theme="light"] {
+    --bg: #f6f7f9; --bg-alt: #ffffff; --card: #ffffff; --border: #dde2e8;
+    --text: #1a1f27; --text-dim: #5b6472; --accent: #d9601a; --accent2: #0b74b0;
+    --danger: #c92a2a; --good: #1a8f5e; --mono-bg: #eef0f3;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 32px 20px 80px; }
+  h1 { font-size: 1.9rem; margin-bottom: 4px; }
+  .subtitle { color: var(--text-dim); margin-top: 0; margin-bottom: 28px; }
+  h2 {
+    font-size: 1.35rem; margin-top: 48px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--border); color: var(--accent);
+  }
+  h3 { font-size: 1.05rem; margin-top: 28px; color: var(--accent2); }
+  p { color: var(--text); }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 20px; margin: 14px 0;
+  }
+  code, .formula {
+    font-family: "SF Mono", Consolas, Menlo, monospace; font-size: 0.92em;
+    background: var(--mono-bg); padding: 2px 6px; border-radius: 4px;
+  }
+  pre {
+    font-family: "SF Mono", Consolas, Menlo, monospace; font-size: 0.88rem;
+    background: var(--mono-bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 16px; overflow-x: auto; white-space: pre;
+  }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 22px; font-size: 0.92rem; }
+  caption { text-align: left; color: var(--text-dim); font-size: 0.85rem; margin-bottom: 6px; }
+  th, td {
+    border-bottom: 1px solid var(--border); text-align: left;
+    padding: 7px 10px; vertical-align: top;
+  }
+  th { color: var(--text-dim); font-weight: 600; font-size: 0.82rem; text-transform: uppercase; letter-spacing: .03em; }
+  tr:hover td { background: var(--bg-alt); }
+  .path { color: var(--text-dim); font-size: 0.85em; }
+  .tag {
+    display: inline-block; font-size: 0.72rem; font-weight: 700;
+    padding: 2px 8px; border-radius: 999px; letter-spacing: .02em;
+  }
+  .tag-todo { background: rgba(255,92,92,.15); color: var(--danger); }
+  .tag-mecanismo { background: rgba(76,194,255,.15); color: var(--accent2); }
+  .tag-fixo { background: rgba(89,214,141,.15); color: var(--good); }
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 24px; }
+  .toc ol { margin: 0; padding-left: 22px; columns: 2; column-gap: 40px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--text); text-decoration: none; }
+  .toc a:hover { color: var(--accent); }
+  .callout {
+    border-left: 4px solid var(--danger); background: rgba(255,92,92,.08);
+    padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 16px 0;
+  }
+  .callout-good { border-left-color: var(--good); background: rgba(89,214,141,.08); }
+  .file-table td:first-child, .file-table th:first-child { width: 34%; }
+  footer { color: var(--text-dim); font-size: 0.82rem; margin-top: 60px; border-top: 1px solid var(--border); padding-top: 16px; }
+  .overflow { overflow-x: auto; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Fórmulas de Dano — Canary (tibia-server)</h1>
+<p class="subtitle">Levantamento completo de todas as fórmulas e mecanismos de dano encontrados no código-fonte (C++) e nos scripts (Lua) do projeto. Feito como base para a reformulação das fórmulas.</p>
+<div class="callout callout-good">
+<strong>Atualizado em 2026-08-07:</strong> o divisor de level em todas as fórmulas abaixo (armas, runas, magias de ataque e skill-based) foi trocado de <code>/5</code> para <code>/4</code>. Detalhes em <a href="damage-formula-level-divisor.md">damage-formula-level-divisor.md</a>.
+</div>
+<div class="callout callout-good">
+<strong>Também atualizado em 2026-08-07:</strong> skill de arma e magic level deixaram de entrar linearmente nas fórmulas — agora usam <code>skill<sup>1.1</sup></code> / <code>maglevel<sup>1.1</sup></code>, decidido comparando n=1.05 vs n=1.1 (ver <a href="damage-skill-exponent-simulation.html">simulador</a>). Detalhes em <a href="damage-skill-exponent.md">damage-skill-exponent.md</a>. Curas e tudo de monstro ficaram de fora, de propósito.
+</div>
+
+<div class="toc">
+<ol>
+<li><a href="#visao-geral">Visão geral: como o dano é montado, em camadas</a></li>
+<li><a href="#nucleo">Núcleo do motor (C++) — as 3 fórmulas base</a></li>
+<li><a href="#armas">Dano de armas (corpo-a-corpo, distância, wand)</a></li>
+<li><a href="#modificadores">Modificadores aplicados depois da base</a></li>
+<li><a href="#runas">Runas — fórmula por item</a></li>
+<li><a href="#magias-ataque">Magias de ataque (mana, level/magic level)</a></li>
+<li><a href="#magias-combo">Magias de combo (skill, estilo Monge)</a></li>
+<li><a href="#campos">Campos de dano (fire field, poison field, etc.)</a></li>
+<li><a href="#monstros">Dano de monstros</a></li>
+<li><a href="#mitigacao">Mitigação / Defesa (o lado que recebe o dano)</a></li>
+<li><a href="#todo">Fórmulas já marcadas como "provisórias" no código</a></li>
+<li><a href="#indice">Índice rápido de arquivos</a></li>
+</ol>
+</div>
+
+<h2 id="visao-geral">1. Visão geral: como o dano é montado, em camadas</h2>
+<div class="card">
+<p>Todo dano no Canary passa, em geral, por esta sequência:</p>
+<pre>1. Fórmula base (arma, magia, runa ou ataque de monstro)
+     ↓
+2. Modificadores do atacante (crítico, fatal hit, augments, especialização elemental,
+   Wheel of Destiny, boosted creature / forge stacks)
+     ↓
+3. Mitigação do alvo (absorb%, defense, armor, mitigation%)
+     ↓
+   Dano final aplicado
+</pre>
+<p>A base quase sempre é calculada em <strong>Lua</strong> (arquivos em <code>data/scripts/</code> e <code>data-otservbr-global/</code>), mas os números que a alimentam (nível, magic level, skill, attack value) e todos os modificadores das etapas 2 e 3 vêm do <strong>C++</strong> (<code>src/</code>).</p>
+</div>
+
+<h2 id="nucleo">2. Núcleo do motor (C++) — as 3 fórmulas base</h2>
+<p class="path">src/creatures/creatures_definitions.hpp (enum formulaType_t) · src/creatures/combat/combat.cpp</p>
+
+<table>
+<caption>Os 3 tipos de fórmula que o C++ entende nativamente. Cada magia/runa/arma escolhe um deles.</caption>
+<tr><th>Tipo</th><th>Usado por</th><th>Fórmula</th></tr>
+<tr>
+  <td><code>COMBAT_FORMULA_LEVELMAGIC</code></td>
+  <td>Magias e runas baseadas em Magic Level</td>
+  <td class="formula">min = levelFormula × mina + minb<br>max = levelFormula × maxa + maxb<br><br><em>onde, quando a magia não define um callback Lua próprio (a maioria define):</em><br>levelFormula = level × 2 + (magicLevel + especializaçãoElemental) × 3</td>
+</tr>
+<tr>
+  <td><code>COMBAT_FORMULA_SKILL</code></td>
+  <td>Ataques com arma (melee/distância) e magias "de combo" (skill-based)</td>
+  <td class="formula">Delegado pra <code>Weapon::calculateSkillFormula</code> ou pro callback Lua da magia (ver seções 3 e 7)</td>
+</tr>
+<tr>
+  <td><code>COMBAT_FORMULA_DAMAGE</code></td>
+  <td>Dano fixo, sem escala com nível/skill</td>
+  <td class="formula">dano = random(mina, maxa)</td>
+</tr>
+</table>
+
+<div class="card">
+<h3 style="margin-top:0">A fórmula "level + magic level" (o coração de quase toda magia)</h3>
+<p class="path">src/creatures/combat/combat.cpp, função <code>Combat::getLevelFormula</code> (linha 33)</p>
+<pre>levelFormula = player:getLevel() * 2 + (player:getMagicLevel() + especializaçãoMagicaElemental) * 3</pre>
+<p>Esse valor entra na fórmula genérica acima quando a magia não sobrescreve com sua própria fórmula em Lua. Na prática, <strong>quase toda magia de ataque sobrescreve</strong> (ver seção 6) — essa fórmula genérica é usada só quando nenhum callback Lua é registrado.</p>
+</div>
+
+<h2 id="armas">3. Dano de armas</h2>
+<p class="path">src/items/weapons/weapons.cpp</p>
+
+<table>
+<tr><th>Arma</th><th>Fórmula do dano máximo</th><th>Dano mínimo</th></tr>
+<tr>
+  <td>Corpo-a-corpo (melee)</td>
+  <td class="formula">max = round(0.085 × attackFactor × attackValue × attackSkill<sup>1.1</sup> + level/4)</td>
+  <td class="formula">min = level/4 (0 se a arma não tiver ataque físico)</td>
+</tr>
+<tr>
+  <td>Distância (arco/besta + munição)</td>
+  <td class="formula">max = round(0.09 × attackFactor × attackValue × attackSkill<sup>1.1</sup> + level/4)</td>
+  <td class="formula">min = level/4</td>
+</tr>
+<tr>
+  <td>Wand (varinha)</td>
+  <td class="formula" colspan="2">Fixo: random(minChange, maxChange), valores definidos por item em items.xml — não escala com level/skill</td>
+</tr>
+</table>
+
+<div class="card">
+<p><strong>attackValue</strong> = ataque físico do item + ataque elemental do item + bônus de <em>weapon proficiency</em> (sistema de progressão por uso de arma).<br>
+<strong>attackFactor</strong> vem de <code>player:getAttackFactor()</code> — varia com o modo de combate (ofensivo/defensivo/balanceado).<br>
+<strong>attackSkill<sup>1.1</sup></strong>: o expoente 1.1 (aplicado em 2026-08-07, ver <a href="damage-skill-exponent.md">damage-skill-exponent.md</a>) faz cada ponto de skill valer mais dano quanto mais alta a skill já está.<br>
+<strong>attackSkill</strong> = a skill relevante pro tipo de arma (club/sword/axe/distance/fist).<br><br>
+O dano elemental de uma arma melee (ex: espada de fogo) é calculado <em>separadamente</em>, com a mesma fórmula mas usando só o valor elemental como <code>attackValue</code>, e soma como dano secundário.</p>
+</div>
+
+<h2 id="modificadores">4. Modificadores aplicados depois da base</h2>
+<p class="path">src/creatures/combat/combat.cpp (Combat::applyExtensions, linha ~2492) · src/creatures/combat/spells.cpp</p>
+
+<table>
+<tr><th>Modificador</th><th>Fórmula</th></tr>
+<tr>
+  <td>Chance de crítico (jogador)</td>
+  <td class="formula">chance = skillLevel(SKILL_CRITICAL_HIT_CHANCE) + playerBaseCriticalChance(config.lua) × 10000 + bônus de charms/proficiência<br>rola: uniform_random(1,10000) ≤ chance</td>
+</tr>
+<tr>
+  <td>Multiplicador de dano crítico</td>
+  <td class="formula">multiplicador = 1 + [skillLevel(SKILL_CRITICAL_HIT_DAMAGE) + playerBaseCriticalDamage(config.lua) × 10000 + bônus] / 10000</td>
+</tr>
+<tr>
+  <td>Fatal Hit (tier de forja na arma)</td>
+  <td class="formula">chance vem de item:getFatalChance() (tier da arma), amplificada por botas com tier<br>se acertar: dano += round(dano × 0.6)  <span class="tag tag-fixo">+60% fixo</span></td>
+</tr>
+<tr>
+  <td>Crítico de monstro</td>
+  <td class="formula">chance = monster:getCriticalChance() × 100<br>multiplicador = 1 + (monster:getCriticalDamage() × 100) / 10000</td>
+</tr>
+<tr>
+  <td>Attack Multiplier de monstro (Forge — Influenced/Fiendish)</td>
+  <td class="formula">multiplicador = attackMultiplierBase × (1.35 + (stacks-1) × 0.1), se o monstro tiver stacks de forja</td>
+</tr>
+<tr>
+  <td>Augments de equipamento (IncreasedDamage / PowerfulImpact / StrongImpact / BaseDamage / BaseHealing)</td>
+  <td class="formula">dano += dano × (valorDoAugment / 100)<br><span class="path">src/creatures/combat/spells.cpp, Spell::getCombatDataAugment</span> — aplicado só se o augment for específico pro nome daquela magia</td>
+</tr>
+<tr>
+  <td>Especialização mágica elemental</td>
+  <td class="formula">soma de: item equipado (imbuement) + Wheel of Destiny + Weapon Proficiency, por tipo de elemento — entra direto na fórmula levelFormula da seção 2</td>
+</tr>
+<tr>
+  <td>Wheel of Destiny (talentos)</td>
+  <td>Sistema próprio com dezenas de bônus individuais por talento/revelação (major stat "DAMAGE", grades de upgrade de magias específicas, etc). Não é uma fórmula única — cada talento tem seu próprio valor fixo.<br><span class="path">src/creatures/players/components/wheel/player_wheel.cpp</span></td>
+</tr>
+</table>
+
+<h2 id="runas">5. Runas — fórmula por item</h2>
+<p class="path">data/scripts/runes/*.lua — função <code>onGetFormulaValues(player, level, maglevel)</code>, todas no formato <code>min/max = level/4 + maglevel × A + B</code></p>
+
+<div class="overflow">
+<table>
+<tr><th>Runa</th><th>Mínimo</th><th>Máximo</th><th>Arquivo</th></tr>
+<tr><td>Sudden Death</td><td class="formula">level/4 + magL^1.1×4.605 + 28</td><td class="formula">level/4 + magL^1.1×7.395 + 46</td><td class="path">sudden_death.lua</td></tr>
+<tr><td>Avalanche</td><td class="formula">level/4 + magL^1.1×1.2 + 7</td><td class="formula">level/4 + magL^1.1×2.8 + 17</td><td class="path">avalanche.lua</td></tr>
+<tr><td>Great Fireball</td><td class="formula">level/4 + magL^1.1×1.2 + 7</td><td class="formula">level/4 + magL^1.1×2.8 + 17</td><td class="path">great_fireball.lua</td></tr>
+<tr><td>Fireball</td><td class="formula">level/4 + magL^1.1×1.81 + 10</td><td class="formula">level/4 + magL^1.1×3 + 18</td><td class="path">fireball.lua</td></tr>
+<tr><td>Icicle</td><td class="formula">level/4 + magL^1.1×1.81 + 10</td><td class="formula">level/4 + magL^1.1×3 + 18</td><td class="path">icicle.lua</td></tr>
+<tr><td>Holy Missile</td><td class="formula">level/4 + magL^1.1×1.79 + 11</td><td class="formula">level/4 + magL^1.1×3.75 + 24</td><td class="path">holy_missile.lua</td></tr>
+<tr><td>Explosion</td><td class="formula">0</td><td class="formula">level/4 + magL^1.1×4.8</td><td class="path">explosion.lua</td></tr>
+<tr><td>Heavy Magic Missile</td><td class="formula">level/4 + magL^1.1×0.4 + 2</td><td class="formula">level/4 + magL^1.1×1.59 + 10</td><td class="path">heavy_magic_missile.lua</td></tr>
+<tr><td>Stalagmite</td><td class="formula">level/4 + magL^1.1×0.4 + 2</td><td class="formula">level/4 + magL^1.1×1.59 + 10</td><td class="path">stalagmite.lua</td></tr>
+<tr><td>Light Magic Missile</td><td class="formula">level/4 + magL^1.1×0.4 + 2</td><td class="formula">level/4 + magL^1.1×0.81 + 4</td><td class="path">light_magic_missile.lua</td></tr>
+<tr><td>Lightest Missile</td><td class="formula">level/4 + magL^1.1×0.4 + 3</td><td class="formula">level/4 + magL^1.1×0.8 + 5</td><td class="path">lightest_missile.lua</td></tr>
+<tr><td>Lightest Magic Missile</td><td class="formula" colspan="2">Fixo: -3, -5 (não escala)</td><td class="path">lightest_magic_missile.lua</td></tr>
+<tr><td>Stone Shower</td><td class="formula">level/4 + magL^1.1×1 + 6</td><td class="formula">level/4 + magL^1.1×2.6 + 16</td><td class="path">stone_shower.lua</td></tr>
+<tr><td>Thunderstorm</td><td class="formula">level/4 + magL^1.1×1 + 6</td><td class="formula">level/4 + magL^1.1×2.6 + 16</td><td class="path">thunderstorm.lua</td></tr>
+<tr><td>Light Stone Shower</td><td class="formula">min(level,20)/4 + min(magL,20)^1.1×0.3 + 2</td><td class="formula">min(level,20)/4 + min(magL,20)^1.1×0.45 + 3</td><td class="path">light_stone_shower.lua <span class="tag tag-mecanismo">level/magL limitados a 20</span></td></tr>
+<tr><td>Ultimate Healing (cura, referência)</td><td class="formula">level/4 + magL<sup>1.1</sup>×7.3 + 42</td><td class="formula">level/4 + magL<sup>1.1</sup>×12.4 + 90</td><td class="path">ultimate_healing_rune.lua <span class="tag tag-mecanismo">atualizado junto com as magias de cura — ver healing-formula-update.md</span></td></tr>
+<tr><td>Intense Healing (cura, referência)</td><td class="formula">level/4 + magL<sup>1.1</sup>×3.2 + 20</td><td class="formula">level/4 + magL<sup>1.1</sup>×5.4 + 40</td><td class="path">intense_healing_rune.lua</td></tr>
+<tr><td>Soulfire</td><td colspan="3">Não usa fórmula — dano fixo por tick (10 de dano, a cada 2s, 2 ticks) via <code>Condition</code>, mais cria um campo de fogo. <span class="path">soul_fire.lua</span></td></tr>
+<tr><td>Energy Bomb / Energy Field / Energy Wall / Fire Bomb / Fire Field / Fire Wall / Poison Bomb / Poison Field / Poison Wall</td><td colspan="3">Não têm fórmula própria de dano — apenas <strong>criam um item de campo</strong> (ex: <code>ITEM_FIREFIELD_PVP_FULL</code>). O dano por tick desses campos é definido no próprio item, em <code>items.xml</code> (ver seção 8). <span class="tag tag-mecanismo">mecanismo, não fórmula</span></td></tr>
+</table>
+</div>
+
+<h2 id="magias-ataque">6. Magias de ataque instantâneas (mana, baseadas em level/magic level)</h2>
+<p class="path">data/scripts/spells/attack/*.lua — mesmo padrão das runas: <code>onGetFormulaValues(player, level, maglevel)</code></p>
+
+<div class="overflow">
+<table>
+<tr><th>Magia</th><th>Mínimo</th><th>Máximo</th><th>Arquivo</th></tr>
+<tr><td>Apprentice's Strike</td><td class="formula">level/4 + magL^1.1×0.4 + 3</td><td class="formula">level/4 + magL^1.1×0.7 + 5</td><td class="path">apprentice's_strike.lua</td></tr>
+<tr><td>Buzz</td><td class="formula">level/4 + magL^1.1×0.4 + 3</td><td class="formula">level/4 + magL^1.1×0.7 + 5</td><td class="path">buzz.lua</td></tr>
+<tr><td>Mud Attack</td><td class="formula">level/4 + magL^1.1×0.4 + 3</td><td class="formula">level/4 + magL^1.1×0.7 + 5</td><td class="path">mud_attack.lua</td></tr>
+<tr><td>Chill Out</td><td class="formula">level/4 + magL^1.1×0.3 + 2</td><td class="formula">level/4 + magL^1.1×0.6 + 4</td><td class="path">chill_out.lua</td></tr>
+<tr><td>Scorch</td><td class="formula">level/4 + magL^1.1×0.3 + 2</td><td class="formula">level/4 + magL^1.1×0.6 + 4</td><td class="path">scorch.lua</td></tr>
+<tr><td>Ice Wave</td><td class="formula">level/4 + magL^1.1×0.81 + 4</td><td class="formula">level/4 + magL^1.1×2 + 12</td><td class="path">ice_wave.lua</td></tr>
+<tr><td>Fire Wave</td><td class="formula">level/4 + magL^1.1×1.25 + 4</td><td class="formula">level/4 + magL^1.1×2 + 12</td><td class="path">fire_wave.lua</td></tr>
+<tr><td>Death Strike / Energy Strike / Flame Strike / Ice Strike / Physical Strike / Terra Strike</td><td class="formula">level/4 + magL^1.1×1.403 + 8</td><td class="formula">level/4 + magL^1.1×2.203 + 13</td><td class="path">death_strike.lua, energy_strike.lua, flame_strike.lua, ice_strike.lua, physical_strike.lua, terra_strike.lua <span class="tag tag-mecanismo">mesma fórmula, 6 elementos</span></td></tr>
+<tr><td>Divine Missile</td><td class="formula">level/4 + magL^1.1×1.79 + 11</td><td class="formula">level/4 + magL^1.1×3 + 18</td><td class="path">divine_missile.lua</td></tr>
+<tr><td>Lightning</td><td class="formula">level/4 + magL^1.1×2.2 + 12</td><td class="formula">level/4 + magL^1.1×3.4 + 21</td><td class="path">lightning.lua</td></tr>
+<tr><td>Energy Beam / Energy Wave / Great Energy Beam</td><td class="formula">level/4 + magL^1.1×1.8 + 11</td><td class="formula">level/4 + magL^1.1×3 + 19</td><td class="path">energy_beam.lua, energy_wave.lua, great_energy_beam.lua <span class="tag tag-mecanismo">compartilham formulaFunction()</span></td></tr>
+<tr><td>Great Fire Wave</td><td class="formula">level/4 + magL^1.1×2.8 + 16</td><td class="formula">level/4 + magL^1.1×4.4 + 28</td><td class="path">great_fire_wave.lua <span class="tag tag-todo">TODO no código</span></td></tr>
+<tr><td>Strong Energy Strike / Strong Flame Strike / Strong Ice Strike / Strong Terra Strike</td><td class="formula">level/4 + magL^1.1×2.8 + 16</td><td class="formula">level/4 + magL^1.1×4.4 + 28</td><td class="path">strong_*_strike.lua <span class="tag tag-mecanismo">mesma fórmula, 4 elementos</span></td></tr>
+<tr><td>Divine Caldera</td><td class="formula">level/4 + magL^1.1×4</td><td class="formula">level/4 + magL^1.1×6</td><td class="path">divine_caldera.lua</td></tr>
+<tr><td>Divine Grenade</td><td class="formula" colspan="2">level/4 + magL^1.1×4 .. level/4 + magL^1.1×6, multiplicado por 1.3/1.6/2.0 conforme grade da Wheel of Destiny (upgradeSpellsWOD)</td><td class="path">divine_grenade.lua <span class="tag tag-mecanismo">bônus da Wheel</span></td></tr>
+<tr><td>Terra Wave</td><td class="formula">level/4 + magL^1.1×3.5</td><td class="formula">level/4 + magL^1.1×7</td><td class="path">terra_wave.lua</td></tr>
+<tr><td>Wrath of Nature</td><td class="formula">level/4 + magL^1.1×5</td><td class="formula">level/4 + magL^1.1×10</td><td class="path">wrath_of_nature.lua</td></tr>
+<tr><td>Great Death Beam</td><td class="formula">level/4 + magL^1.1×5.5</td><td class="formula">level/4 + magL^1.1×9</td><td class="path">great_death_beam.lua</td></tr>
+<tr><td>Ice Burst / Terra Burst</td><td class="formula">level/4 + magL^1.1×7</td><td class="formula">level/4 + magL^1.1×10.5</td><td class="path">ice_burst.lua, terra_burst.lua</td></tr>
+<tr><td>Rage of the Skies / Eternal Winter</td><td class="formula">level/4 + magL^1.1×7</td><td class="formula">level/4 + magL^1.1×14</td><td class="path">rage_of_the_skies.lua, eternal_winter.lua</td></tr>
+<tr><td>Hell's Core</td><td class="formula">level/4 + magL^1.1×10</td><td class="formula">level/4 + magL^1.1×14</td><td class="path">hells_core.lua</td></tr>
+<tr><td>Strong Ice Wave</td><td class="formula">level/4 + magL^1.1×4.5 + 20</td><td class="formula">level/4 + magL^1.1×7.6 + 48</td><td class="path">strong_ice_wave.lua</td></tr>
+<tr><td>Ultimate Energy/Flame/Ice/Terra Strike</td><td class="formula">level/4 + magL^1.1×4.5 + 35</td><td class="formula">level/4 + magL^1.1×7.3 + 55</td><td class="path">ultimate_*_strike.lua <span class="tag tag-mecanismo">mesma fórmula, 4 elementos</span></td></tr>
+<tr><td>Practise Fire Wave</td><td class="formula" colspan="2">Fixo: -11, -14 (magia de treino, não escala)</td><td class="path">practise_fire_wave.lua</td></tr>
+</table>
+</div>
+
+<h3>Magias baseadas em skill (não em magic level)</h3>
+<div class="overflow">
+<table>
+<tr><th>Magia</th><th>Mínimo</th><th>Máximo</th><th>Arquivo</th></tr>
+<tr><td>Ethereal Spear</td><td class="formula">level/4 + (skill<sup>1.1</sup>+25)/3</td><td class="formula">level/4 + skill<sup>1.1</sup>+25</td><td class="path">ethereal_spear.lua</td></tr>
+<tr><td>Lesser Ethereal Spear</td><td class="formula">level/4 + (skill<sup>1.1</sup>+9)/3</td><td class="formula">level/4 + skill<sup>1.1</sup>+9</td><td class="path">lesser_ethereal_spear.lua</td></tr>
+<tr><td>Strong Ethereal Spear</td><td class="formula">(2×skill<sup>1.1</sup> + attack/2500)×2.30 + level/4 + 7</td><td class="formula">(2×skill<sup>1.1</sup> + attack/1875)×3.30 + level/4 + 13</td><td class="path">strong_ethereal_spear.lua</td></tr>
+<tr><td>Whirlwind Throw</td><td class="formula">[level/4 + (skill<sup>1.1</sup>+attack)/3] × 1.28</td><td class="formula">[level/4 + skill<sup>1.1</sup>+attack] × 1.28</td><td class="path">whirlwind_throw.lua <span class="tag tag-todo">TODO no código</span></td></tr>
+<tr><td>Groundshaker</td><td class="formula">[level/4 + (skill<sup>1.1</sup>+attack)×0.5] × 1.28</td><td class="formula">[level/4 + (skill<sup>1.1</sup>+attack)×1.1] × 1.28</td><td class="path">groundshaker.lua <span class="tag tag-todo">TODO no código</span></td></tr>
+<tr><td>Berserk</td><td class="formula">[level/4 + (skill<sup>1.1</sup>+attack)×0.5] × 1.1</td><td class="formula">[level/4 + (skill<sup>1.1</sup>+attack)×1.5] × 1.1</td><td class="path">berserk.lua <span class="tag tag-todo">TODO no código</span></td></tr>
+<tr><td>Fierce Berserk</td><td class="formula">[level/4 + (skill<sup>1.1</sup>+2×attack)×1.1] × 1.1</td><td class="formula">[level/4 + (skill<sup>1.1</sup>+2×attack)×3] × 1.1</td><td class="path">fierce_berserk.lua <span class="tag tag-todo">TODO no código</span></td></tr>
+<tr><td>Front Sweep</td><td class="formula">[(skill<sup>1.1</sup>×attack)×0.04 + 31 + level/4] × 1.1</td><td class="formula">[(skill<sup>1.1</sup>×attack)×0.08 + 45 + level/4] × 1.1</td><td class="path">front_sweep.lua <span class="tag tag-todo">TODO no código</span></td></tr>
+<tr><td>Lesser Front Sweep</td><td class="formula">[(skill<sup>1.1</sup>×attack)×0.02 + 7 + level/4] × 1.1</td><td class="formula">[(skill<sup>1.1</sup>×attack)×0.04 + 14 + level/4] × 1.1</td><td class="path">lesser_front_sweep.lua <span class="tag tag-todo">TODO no código</span></td></tr>
+<tr><td>Brutal Strike</td><td class="formula">[(skill<sup>1.1</sup>×attack)×0.02 + 4 + level/4] × 1.28</td><td class="formula">[(skill<sup>1.1</sup>×attack)×0.04 + 9 + level/4] × 1.28</td><td class="path">brutal_strike.lua <span class="tag tag-todo">TODO no código</span></td></tr>
+<tr><td>Executioner's Throw</td><td class="formula">[(skill<sup>1.1</sup>×attack)×0.17 + 17 + level/4] × 1.28</td><td class="formula">[(skill<sup>1.1</sup>×attack)×0.20 + 40 + level/4] × 1.28</td><td class="path">executioners_throw.lua</td></tr>
+<tr><td>Annihilation</td><td class="formula">[(skill<sup>1.1</sup>×attack)×0.17 + 13 + level/4] × 1.28</td><td class="formula">[(skill<sup>1.1</sup>×attack)×0.20 + 34 + level/4] × 1.28</td><td class="path">annihilation.lua <span class="tag tag-todo">TODO no código</span></td></tr>
+</table>
+</div>
+
+<h2 id="magias-combo">7. Magias de combo (estilo Monge, baseadas em skill)</h2>
+<div class="card">
+<p>Todas seguem a mesma estrutura, mudando só a constante <code>SPELL_BASE_POWER</code>:</p>
+<pre>dano = SPELL_BASE_POWER × (skill/100) × (attack/10) + calculateFlatDamageHealing()
+min  = dano - dano/10   (-10%)
+max  = dano + dano/10   (+10%)</pre>
+<p><code>calculateFlatDamageHealing()</code> é uma baseline que cresce com o level, mas com retorno decrescente a cada 500+600×tier níveis (ver <span class="path">src/creatures/players/player.cpp:578</span>). <strong>Atualizado em 2026-08-07:</strong> o ponto de partida da progressão mudou de <code>1/5</code> para <code>1/4</code> (segue subindo 1 no divisor a cada tier: 1/4 → 1/5 → 1/6...) — precisa recompilar o <code>canary.exe</code> pra valer. Algumas dessas magias passam o resultado por <code>player:getHarmonyDamage(min, max)</code> — um multiplicador adicional do sistema de combo do Monge (acertar o combo certo aumenta o dano).</p>
+</div>
+<table>
+<tr><th>Magia</th><th>SPELL_BASE_POWER</th><th>Usa getHarmonyDamage?</th><th>Arquivo</th></tr>
+<tr><td>Swift Jab</td><td>12</td><td>Não</td><td class="path">swift_jab.lua</td></tr>
+<tr><td>Tiger Clash</td><td>15</td><td>Sim</td><td class="path">tiger_clash.lua</td></tr>
+<tr><td>Double Jab</td><td>50</td><td>Não</td><td class="path">double_jab.lua</td></tr>
+<tr><td>Spiritual Outburst</td><td>42</td><td>Sim</td><td class="path">spiritual_outburst.lua <span class="tag tag-mecanismo">tem variante "recast" com 37.5% de dano reduzido, escalando com grade da Wheel</span></td></tr>
+<tr><td>Greater Tiger Clash</td><td>44</td><td>Sim</td><td class="path">greater_tiger_clash.lua</td></tr>
+<tr><td>Mystic Repulse</td><td>72</td><td>Não</td><td class="path">mystic_repulse.lua</td></tr>
+<tr><td>Devastating Knockout</td><td>62</td><td>Sim</td><td class="path">devastating_knockout.lua</td></tr>
+<tr><td>Flurry of Blows</td><td>65</td><td>Não</td><td class="path">flurry_of_blows.lua</td></tr>
+<tr><td>Chained Penance</td><td>74</td><td>Não</td><td class="path">chained_penance.lua</td></tr>
+<tr><td>Greater Flurry of Blows</td><td>100</td><td>Não</td><td class="path">greater_flurry_of_blows.lua</td></tr>
+<tr><td>Forceful Uppercut</td><td>130</td><td>Não</td><td class="path">forceful_uppercut.lua</td></tr>
+<tr><td>Sweeping Takedown</td><td colspan="2" class="formula">baseDamage × 1.3 .. baseDamage × 1.7, via getHarmonyDamage (cacheia o valor entre dois callbacks "Inner"/"Outer")</td><td class="path">sweeping_takedown.lua <span class="tag tag-mecanismo">mecanismo com cache por player</span></td></tr>
+</table>
+
+<h2 id="campos">8. Campos de dano (fire field, poison field, energy field...)</h2>
+<div class="card">
+<p>Runas/magias como <em>Fire Field</em>, <em>Energy Wall</em> e <em>Poison Bomb</em> <strong>não calculam dano diretamente</strong>. Elas só invocam um item de campo (ex: <code>ITEM_FIREFIELD_PVP_FULL</code>). O dano de quem pisa/fica no campo é uma <strong>condição periódica definida no próprio item</strong>, em <span class="path">data-otservbr-global/items.xml</span> — segue o mesmo mecanismo genérico de <code>Condition:addDamage(ticks, intervalo, dano)</code> que vimos na runa Soulfire (seção 5).</p>
+<p>Ou seja: pra "reformular" o dano de campos, o lugar certo não é um arquivo de magia, é a definição do item do campo em <code>items.xml</code>.</p>
+</div>
+
+<h2 id="monstros">9. Dano de monstros</h2>
+<p class="path">data-otservbr-global/monster/**/*.lua — tabela <code>monster.attacks</code></p>
+<div class="card">
+<p>Monstros <strong>não usam fórmula</strong> — cada ataque tem <code>minDamage</code>/<code>maxDamage</code> fixos, definidos manualmente por quem criou o monstro. Exemplo real (Dragon):</p>
+<pre>monster.attacks = {
+	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -120 },
+	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_FIREDAMAGE,
+	  minDamage = -60, maxDamage = -140, range = 7, radius = 4 },
+	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_FIREDAMAGE,
+	  minDamage = -100, maxDamage = -170, length = 8, spread = 3 },
+}</pre>
+<p>Dois multiplicadores globais entram por cima desses valores fixos:</p>
+<ul>
+<li><strong>Crítico de monstro</strong> — ver seção 4.</li>
+<li><strong>Attack Multiplier (Forge — monstro Influenced/Fiendish)</strong>: <code class="formula">multiplicador = base × (1.35 + (stacks-1) × 0.1)</code></li>
+</ul>
+</div>
+
+<h2 id="mitigacao">10. Mitigação / Defesa (o lado que recebe o dano)</h2>
+<p class="path">src/creatures/creature.cpp — Creature::blockHit / Creature::mitigateDamage / Creature::applyAbsorbDamageModifications</p>
+<p>Depois que o dano é calculado (seções 2 a 9), ele ainda passa por isso no alvo, nesta ordem:</p>
+<table>
+<tr><th>Etapa</th><th>Fórmula</th></tr>
+<tr><td>1. Absorb % / flat (resistências de equipamento)</td><td class="formula">dano -= dano × absorbPercent/100 <br> dano = max(0, dano + absorbFlat)<br>(e o atacante pode ter um "increase%" que soma de volta)</td></tr>
+<tr><td>2. Defesa (shield/skill de defesa, só physical)</td><td class="formula">dano -= random(defesa/2, defesa)</td></tr>
+<tr><td>3. Armadura</td><td class="formula">se armor &gt; 3: dano -= random(armor/2, armor - (armor%2+1))<br>se armor entre 1 e 3: dano -= 1</td></tr>
+<tr><td>4. Mitigação % (Wheel of Destiny / stat de monstro)</td><td class="formula">dano -= dano × mitigation/100</td></tr>
+</table>
+<p>Se em qualquer etapa o dano cair a zero ou menos, ele é bloqueado (<code>BLOCK_ARMOR</code> / <code>BLOCK_DEFENSE</code>) e nada de dano é aplicado.</p>
+
+<h2 id="todo">11. Fórmulas já marcadas como "provisórias" no próprio código</h2>
+<div class="callout">
+<p>Estas magias têm comentários <code>-- TODO</code> no código-fonte dizendo que a fórmula atual é uma aproximação e devia ser revista — são candidatas naturais pra começar a reformulação:</p>
+<ul>
+<li><strong>Annihilation</strong> — <span class="path">annihilation.lua</span> — "Use New Real Formula instead of an %"</li>
+<li><strong>Brutal Strike</strong> — <span class="path">brutal_strike.lua</span> — mesma nota</li>
+<li><strong>Front Sweep</strong> / <strong>Lesser Front Sweep</strong> — mesma nota</li>
+<li><strong>Groundshaker</strong> — mesma nota</li>
+<li><strong>Whirlwind Throw</strong> — mesma nota</li>
+<li><strong>Berserk</strong> / <strong>Fierce Berserk</strong> — mesma nota</li>
+<li><strong>Great Fire Wave</strong> — "TibiaWiki says ~Strong Flame Strike but we need more accuracy"</li>
+</ul>
+</div>
+
+<h2 id="indice">12. Índice rápido de arquivos</h2>
+<table class="file-table">
+<tr><th>O que</th><th>Onde</th></tr>
+<tr><td>Fórmulas centrais de combate (C++)</td><td class="path">src/creatures/combat/combat.cpp</td></tr>
+<tr><td>Dano de armas (melee/distância/wand)</td><td class="path">src/items/weapons/weapons.cpp</td></tr>
+<tr><td>Crítico, fatal hit, augments</td><td class="path">src/creatures/combat/combat.cpp (applyExtensions), src/creatures/combat/spells.cpp</td></tr>
+<tr><td>Mitigação / defesa / armadura</td><td class="path">src/creatures/creature.cpp</td></tr>
+<tr><td>Wheel of Destiny</td><td class="path">src/creatures/players/components/wheel/player_wheel.cpp</td></tr>
+<tr><td>calculateFlatDamageHealing (baseline dos combos)</td><td class="path">src/creatures/players/player.cpp:578</td></tr>
+<tr><td>Runas</td><td class="path">data/scripts/runes/</td></tr>
+<tr><td>Magias de ataque (mana)</td><td class="path">data/scripts/spells/attack/</td></tr>
+<tr><td>Magias de conjuração (criam runas/itens)</td><td class="path">data/scripts/spells/conjuring/</td></tr>
+<tr><td>Multiplicadores globais de XP/skill (não é dano, mas é vizinho)</td><td class="path">data/stages.lua</td></tr>
+<tr><td>Monstros (min/max de ataque)</td><td class="path">data-otservbr-global/monster/</td></tr>
+<tr><td>Itens de campo de dano (fire field etc.)</td><td class="path">data-otservbr-global/items.xml</td></tr>
+</table>
+
+<footer>Gerado a partir de leitura direta do código-fonte deste repositório (src/, data/, data-otservbr-global/). Se algum arquivo mudar, este documento precisa ser atualizado manualmente.</footer>
+
+</div>
+</body>
+</html>

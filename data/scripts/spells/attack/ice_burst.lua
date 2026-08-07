@@ -4,8 +4,8 @@ combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ICEATTACK)
 combat:setArea(createCombatArea(AREA_RING1_BURST3))
 
 function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 7)
-	local max = (level / 5) + (maglevel * 10.5)
+	local min = (level / 4) + ((maglevel ^ 1.1) * 7)
+	local max = (level / 4) + ((maglevel ^ 1.1) * 10.5)
 	return -min, -max
 end
 

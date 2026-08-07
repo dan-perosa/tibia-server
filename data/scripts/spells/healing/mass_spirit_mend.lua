@@ -1,7 +1,7 @@
 local function targetFunction(creature, target)
 	local player = creature:getPlayer()
-	local baseMin = ((player:getLevel() / 5) + (player:getMagicLevel() * 5.7) + 26)
-	local baseMax = ((player:getLevel() / 5) + (player:getMagicLevel() * 10.43) + 62)
+	local baseMin = ((player:getLevel() / 4) + ((player:getMagicLevel() ^ 1.1) * 5.7) + 26)
+	local baseMax = ((player:getLevel() / 4) + ((player:getMagicLevel() ^ 1.1) * 10.43) + 62)
 
 	local min, max = player:getHarmonyDamage(baseMin, baseMax)
 

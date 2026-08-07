@@ -11,9 +11,15 @@ Fix: replace ground=20888 with ground=20712 ("oramond marble floor1"),
 same visual family, confirmed primarytype="artificial tiles" (real floor).
 """
 
+import sys
+from pathlib import Path
+
 from otbm import read_otbm, write_otbm
 
-MAP_PATH = r"C:\Users\Pedro\Desktop\tibia-server\meu-mapa\MAPA OFICIAL DE TRABALHO.otbm"
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_MAP_PATH = REPO_ROOT / "meu-mapa" / "MAPA OFICIAL DE TRABALHO.otbm"
+
+MAP_PATH = sys.argv[1] if len(sys.argv) > 1 else str(DEFAULT_MAP_PATH)
 BAD_ID = 20888
 GOOD_ID = 20712
 

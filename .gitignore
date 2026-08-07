@@ -407,6 +407,12 @@ vcpkg_installed
 database_backup
 cache/lua-bytecode/
 
+# Ferramentas locais baixadas (client, RME) - grandes, não são código do projeto
+/client/
+/rme/
+/dist/
+/Tibia Client.lnk
+
 # CLION
 cmake-build-*
 compile_commands.json
