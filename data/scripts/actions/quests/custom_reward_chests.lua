@@ -17,10 +17,22 @@ item ID match (see Actions::getAction in src/lua/creature/actions.cpp), so if
 any other official quest script happens to already use the same Action ID,
 that other script silently wins instead of this one -- this is exactly what
 happened the first time (30001 collided with data-otservbr-global/scripts/
-actions/dawnport/lever.lua, turning a chest into a lever). Stick to the
-90000-91000 range below (verified empirically free of collisions on
-2026-08-06 by grepping the whole datapack for :aid(/:actionid( calls) and
-re-verify with the same grep before reusing this range elsewhere.
+actions/dawnport/lever.lua, turning a chest into a lever). Before reusing any
+range, re-run this against both data/ and data-otservbr-global/:
+  grep -rhoE ':aid\([0-9, ]+\)|:actionid\([0-9, ]+\)' | grep -oE '[0-9]+' | sort -n | uniq
+
+IMPORTANT -- Action IDs baked into the .otbm map file (via RME or otbm.py)
+are a 16-bit field (0-65535), NOT arbitrary Lua numbers. A value above 65535
+silently wraps around (v mod 65536) when written -- this bit us on
+2026-08-06: 90001-90006 written into the map turned into 24465-24470, two of
+which collided with the existing starter-kit chests (24465/24466), pointing
+those tiles at the WRONG reward and the WRONG storage key. The old "use
+90000-91000" advice below only ever applied to Action IDs referenced purely
+from Lua (:aid() calls with no matching map tile) -- it does NOT apply to any
+Action ID that will actually be placed on a map item. Stay under 65536 for
+those, and also grep the *map itself* for the range before reusing it (no
+otbm.py helper for this yet -- read the map, scan tile.items for
+action_id in range).
 ]]
 
 local CustomQuestChests = {
@@ -71,6 +83,16 @@ local CustomQuestChests = {
 			{ id = 3079, count = 1 }, -- boots of haste
 		},
 	},
+
+	-- Fire vault room (dragon/spider/scarab tomb, copied from the Banshee
+	-- quest layout). 4 independent chests, each with its own one-time
+	-- reward -- no group/lockout, a player can open all 4. 200k gold split
+	-- evenly across the 4 (50k each, as crystal coins) alongside one piece
+	-- of gear per chest.
+	[24601] = { items = { { id = 6529, count = 1 }, { id = 3043, count = 5 } } }, -- pair of soft boots + 50k
+	[24602] = { items = { { id = 11687, count = 1 }, { id = 3043, count = 5 } } }, -- royal scale robe + 50k
+	[24603] = { items = { { id = 11651, count = 1 }, { id = 3043, count = 5 } } }, -- elite draken mail + 50k
+	[24604] = { items = { { id = 8060, count = 1 }, { id = 3043, count = 5 } } }, -- master archer's armor + 50k
 }
 
 local GroupStorage = {

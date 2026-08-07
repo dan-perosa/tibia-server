@@ -5,7 +5,161 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
-## 2026-08-06
+## 2026-08-06 (continuação)
+
+### Sala-cofre da tumba (dragões/aranhas/scarabs, cópia da Banshee Quest)
+- Configurados os 6 baús (item 2472) que o Pedro colocou na sala: 4 nos
+  cantos + 2 perto do portal de saída. Cada um é independente (sem grupo/
+  trava compartilhada) — o jogador pode abrir todos os 6, um de cada vez:
+  - (1216,1116,7) Action ID 24601 → life ring
+  - (1230,1116,7) Action ID 24602 → stone skin amulet
+  - (1216,1130,7) Action ID 24603 → small diamond x5
+  - (1230,1130,7) Action ID 24604 → platinum coin x100
+  - (1222,1132,7) Action ID 24605 → great mana potion x25
+  - (1224,1132,7) Action ID 24606 → great health potion x25
+- **Revisado logo em seguida**: Pedro pediu só 4 baús, não 6. Os 2 perto do
+  portal (1222,1132,7 e 1224,1132,7) voltaram a ficar sem Action ID (baú
+  inerte, sem função). Os 4 dos cantos foram reconfigurados com o pedido
+  final: 1 peça de equipamento + 50k de gold (crystal coin x5) cada —
+  200k no total, dividido igual entre os 4:
+  - 24601 → pair of soft boots + 50k
+  - 24602 → royal scale robe + 50k
+  - 24603 → elite draken mail + 50k
+  - 24604 → master archer's armor + 50k
+- Portal de saída da sala (item 1949 em 1223,1133,7) tinha destino
+  `(0,0,0)` (não configurado). Corrigido pra teleportar pro templo
+  `(1000,1000,7)` — mesmo destino já usado pelo teleporte de volta da
+  hunt de orcs (item 27589 em 976,1091,7), reaproveitado por consistência.
+
+### Bug sério descoberto: Action ID acima de 65535 estoura silenciosamente no `.otbm`
+A primeira tentativa usou Action IDs 90001-90006 pra esses baús (mesma
+faixa "90000-91000" documentada como livre de colisão no
+`custom_reward_chests.lua`). Depois de salvar, conferi o arquivo de novo e
+os IDs realmente gravados eram **24465-24470** — dois deles (24465, 24466)
+batendo em cima dos baús de kit inicial (Knight/Paladin) já existentes!
+
+**Causa:** o campo Action ID dentro do arquivo `.otbm` é de 16 bits
+(0-65535). `90001 mod 65536 = 24465`, e assim por diante — o valor estourou
+e "deu a volta" silenciosamente, sem erro nenhum. A faixa 90000-91000 só
+tinha sido validada contra chamadas `:aid()` dentro de scripts Lua (que
+aceitam qualquer número), nunca contra o formato binário do mapa. Corrigido
+usando a faixa 24601-24606 (verificada livre tanto nos scripts quanto no
+mapa em si) e documentada essa distinção no cabeçalho do
+`custom_reward_chests.lua` pra não repetir.
+
+### Bug grave: RME aberto revertia TODAS as correções feitas por fora
+Pedro pediu pra checar se os baús da sala-cofre estavam funcionando. Descoberto que **os 4
+baús, o portal, a remoção da grade da escada e a correção da água tinham voltado ao estado
+antigo** — nenhum dos 4 fixes anteriores estava mais valendo, nem no arquivo local nem no
+container.
+
+**Causa raiz**: o `canary-map-editor-x64` (RME) estava aberto desde as 15:49, rodando o tempo
+inteiro em que os fixes acima foram aplicados via `otbm.py` direto no arquivo. Como o RME
+mantém sua própria cópia do mapa em memória (carregada antes dos meus fixes), qualquer save
+dele — manual ou automático — sobrescreve o `.otbm` inteiro com essa versão desatualizada,
+sem aviso. Confirmado na prática: reapliquei os 4 fixes, salvei, e segundos depois o arquivo
+já tinha voltado ao estado antigo de novo — só parou de acontecer depois que o Pedro fechou o
+RME.
+
+**Lição**: essa mesma armadilha já era conhecida pros arquivos `-npc.xml`/`-monster.xml`/etc
+(RME reescreve eles do zero ao salvar), mas não estava documentado que o **`.otbm` em si**
+sofre do mesmo problema. Daqui pra frente: **sempre confirmar que o RME está fechado antes de
+editar o mapa via `otbm.py`**, e se o Pedro quiser deixar o RME aberto, ele precisa dar
+File → Reload nele depois de qualquer edição minha, antes de salvar de novo por lá.
+
+Todos os 4 fixes foram reaplicados com o RME fechado e confirmados persistentes desta vez:
+baús (24601-24604), portal (→ templo), grade da escada removida, água da plataforma corrigida.
+
+### Escada de subida da plataforma de fogo virou "sem volta" de verdade
+Pedro queria que, depois de descer da plataforma elevada central (as
+armadilhas de fogo, em z=6) de volta pro chão da sala (z=7), o jogador não
+conseguisse subir de novo por ali — só saindo pelo teleporte. A primeira
+tentativa foi colocar uma grade (item "bars", 2185) fixa em cima dos 3 tiles
+da escada de subida (1222-1224,1114,7). **Isso não funcionaria**: se a
+grade bloqueia passagem (como grades normalmente fazem no Tibia), ela
+bloquearia também a primeira subida — ninguém jamais chegaria na plataforma.
+
+Fui ver como a Banshee Quest oficial resolve exatamente esse problema
+(`data-otservbr-global/scripts/quests/the_queen_of_the_banshees/
+movement-1-first_seal_close_mw.lua`): a parede não fica no mapa desde o
+início. Um `MoveEvent` na posição por onde o jogador PASSA depois do ponto
+sem volta **cria** a parede ali (`Position(pos):createItem(2129)`),
+selando o caminho retroativamente.
+
+Apliquei a mesma técnica: removida a grade estática do mapa nos 3 tiles da
+escada de subida. Criado `data/scripts/movements/quests/vault_room_seal.lua`
+— um `MoveEvent` nos 3 tiles onde o jogador aterrissa ao descer a escada de
+z=6 (1223,1116,7 / 1224,1116,7 / 1225,1115,7 — calculados a partir da lógica
+real de `Tile::queryDestination` em `tile.cpp`, incluindo o ajuste que o
+motor já faz pra não devolver o jogador em cima da própria escada de
+subida). Ao pisar ali, o script cria a grade (2185) nos 3 tiles de subida
+(1222-1224,1114,7), com checagem pra não duplicar se o jogador passar várias
+vezes pelo gatilho.
+
+**Observação**: igual à quest oficial, esse selo é do **tile**, não por
+jogador — é estado compartilhado do mundo. Se dois jogadores estiverem na
+sala ao mesmo tempo, o primeiro que descer sela a escada pros dois (fiel ao
+comportamento da quest real, mas vale saber caso alguém fique "preso" em
+cima esperando um amigo).
+
+### Revisado: selo virou por jogador, não mais compartilhado
+Pedro apontou que o comportamento "compartilhado" acima é ruim — com vários
+jogadores na sala ao mesmo tempo, o primeiro a descer trancaria a escada
+pros outros também, podendo prender alguém em cima. Pedido: cada jogador
+precisa poder subir/descer de forma independente, e só fica bloqueado de
+subir de novo DEPOIS que ELE MESMO descer.
+
+Reescrito `vault_room_seal.lua` sem criar nenhuma parede/grade no mundo —
+mais simples que a técnica da quest oficial e sem o problema de estado
+compartilhado:
+- Ao pisar num dos 3 tiles de chegada da escada de descida, grava
+  `player:setStorageValue(62300, 1)` (flag individual do jogador).
+- Ao pisar num dos 3 tiles da escada de subida (item 1956), o script checa
+  essa storage; se já tiver descido, teleporta o jogador de volta pra onde
+  ele veio antes da mudança de andar acontecer e cancela a subida.
+
+Confirmado no código-fonte (`game.cpp`, `Game::internalMoveCreature`) que
+o jogador já está fisicamente parado no tile de subida no momento em que
+esse `onStepIn` roda — a troca de andar (`TILESTATE_FLOORCHANGE`) só é
+resolvida DEPOIS, então teletransportar de volta nesse momento cancela a
+subida de forma confiável, sem qualquer chance de o jogador ficar "preso"
+entre andares.
+
+### Bug de verdade: coordenadas erradas no script do selo da escada
+Pedro reportou que às vezes conseguia subir de novo logo após descer, e só
+ficava travado depois de andar um pouco. Causa: as posições de aterrissagem
+usadas no `vault_room_seal.lua` estavam erradas em 2 dos 3 tiles (usei
+y=1116 em vez de y=1115, resquício de um cálculo anterior que eu mesmo já
+tinha corrigido no texto, mas esqueci de atualizar no código). Recalculei
+com um script Python que reproduz exatamente `Tile::queryDestination`
+(`tile.cpp`) em cima dos dados reais do mapa em vez de fazer conta de
+cabeça — landing correto é (1223,1115,7) / (1224,1115,7) / (1225,1115,7),
+todos na mesma linha. Corrigido e reimplantado.
+
+### Água de verdade na plataforma de fogo (não era bug de config)
+Pedro reportou boa parte da "cave de mamis escarabes" cheia de água, sem
+aparecer no RME. Investigado a fundo (cheguei a suspeitar de novo do bug do
+`toggleMapCustom` do dia 04 — confirmado que **não** é isso, está `false`
+como deveria). Causa real: a própria plataforma elevada da sala (z=6, onde
+ficam as armadilhas de fogo) tinha **465 tiles de chão "shallow water"**
+de verdade (itens 4597-4633), espalhados por boa parte dela — provavelmente
+um brush errado usado sem querer ao construir aquele andar no RME. A água
+está realmente gravada no mapa; só não é visível se você olhar o andar
+errado no editor (z=7 em vez de z=6, onde fica essa plataforma).
+
+Substituídos os 465 tiles de água pelo piso "mountain" (item 1128), que já
+era o chão predominante no resto da mesma plataforma (250 dos ~826 tiles).
+É uma correção funcional — o encaixe visual nas bordas onde a água tocava
+outros tipos de piso pode precisar de um retoque manual no RME depois, se
+Pedro achar a transição feia.
+
+### `server-fixes/login.lua` estava desatualizado (risco de regressão)
+Descoberto de passagem: o `sync-map-to-server.ps1` (usado toda vez que o
+Pedro salva o mapa no RME) sempre sobrescreve o `login.lua` do container a
+partir de `server-fixes/login.lua` — e esse arquivo ainda era a versão
+**antiga**, de antes do sistema de auto-aprender magias. Rodar o sync teria
+revertido aquela correção sem aviso nenhum. Sincronizado com a versão atual
+do repositório.
 
 ### NPC de promoção (Alexander the Novice Uncoverer)
 - Criado `data-otservbr-global/npc/alexander_the_novice_uncoverer.lua`:

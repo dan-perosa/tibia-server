@@ -43,7 +43,7 @@ sem Docker.
 1. Clone o repositório e entre na pasta `docker`:
 
    ```powershell
-   git clone https://github.com/Miracidio/tibia-server.git
+   git clone https://github.com/dan-perosa/tibia-server.git
    cd tibia-server/docker
    ```
 
