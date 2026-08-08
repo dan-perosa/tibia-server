@@ -5,6 +5,43 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-08
+
+### Sala do "Demon" disfarçado (corredor de lava)
+Pedro montou um desafio de lava com um monstro que deveria parecer um Demon de
+verdade, mas usou o monstro oficial "Demon Goblin" (bem mais fraco) —
+funcionou visualmente (os dois usam o mesmo `lookType`), mas o nome acima da
+cabeça entregava "Demon Goblin", estragando a surpresa.
+
+**Solução**: criado `data-otservbr-global/monster/demons/hidden_demon_goblin.lua`
+— clone exato das estatísticas do Demon Goblin oficial, registrado sob um nome
+interno diferente ("Hidden Demon Goblin", só pra não colidir com o registro do
+Demon de verdade) e com `mType.onSpawn` chamando `monster:setName("Demon", "a
+demon")` assim que nasce, antes de qualquer jogador ver. Resultado: nameplate e
+texto de "olhar" mostram "Demon" normalmente; só o HP baixo denuncia na hora da
+luta. Pedro trocou o monstro do spawn direto no RME.
+
+### Sala de um jogador por vez
+Pedido do Pedro: impedir que dois jogadores entrem na sala do Demon ao mesmo
+tempo, e que a sala libere na hora se o único jogador lá dentro morrer (sem
+esperar nenhum temporizador).
+
+Criado `data/scripts/movements/quests/demon_goblin_room_lock.lua`: ao pisar no
+tile de chegada do teleporte de entrada (971,967,7), o script confere ao vivo
+— via `Game.getSpectators` sobre toda a área da sala, olhando só por
+jogadores com vida > 0 — se já tem alguém lá dentro. Se tiver, o jogador é
+devolvido pro tile logo antes do teleporte de entrada (967,967,7) com um
+aviso, sem ser jogado pro templo. Não usa flag manual nem timeout: como a
+checagem é sempre ao vivo, a sala libera sozinha assim que o único jogador lá
+dentro morre (corpo não conta mais como "vivo") ou sai — nenhum caso extremo
+deixa a sala travada.
+
+### Recompensa do baú da sala do Demon
+Baú em (979,967,7) configurado com Action ID 24701 → 1x Demon Legs (item
+3389), usando o mesmo sistema reusável de `custom_reward_chests.lua`.
+
+---
+
 ## 2026-08-07
 
 ### Taxa de experiência aplicada (`data/stages.lua`)

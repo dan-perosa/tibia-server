@@ -93,6 +93,9 @@ local CustomQuestChests = {
 	[24602] = { items = { { id = 11687, count = 1 }, { id = 3043, count = 5 } } }, -- royal scale robe + 50k
 	[24603] = { items = { { id = 11651, count = 1 }, { id = 3043, count = 5 } } }, -- elite draken mail + 50k
 	[24604] = { items = { { id = 8060, count = 1 }, { id = 3043, count = 5 } } }, -- master archer's armor + 50k
+
+	-- Hidden Demon Goblin lava corridor reward chest (979,967,7)
+	[24701] = { items = { { id = 3389, count = 1 } } }, -- demon legs
 }
 
 local GroupStorage = {
