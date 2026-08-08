@@ -6,8 +6,8 @@ combat:setParameter(COMBAT_PARAM_USECHARGES, 1)
 combat:setArea(createCombatArea(AREA_WAVE6, AREADIAGONAL_WAVE6))
 
 function onGetFormulaValues(player, skill, attack, factor)
-	local skillTotal = skill * attack
-	local levelTotal = player:getLevel() / 5
+	local skillTotal = (skill ^ 1.1) * attack
+	local levelTotal = player:getLevel() / 4
 	return -(((skillTotal * 0.02) + 7) + levelTotal) * 1.1, -(((skillTotal * 0.04) + 14) + levelTotal) * 1.1 -- TODO : Use New Real Formula instead of an %
 end
 

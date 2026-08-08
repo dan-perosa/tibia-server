@@ -578,7 +578,7 @@ uint8_t Player::getWeaponSkillId(const std::shared_ptr<Item> &item) const {
 uint16_t Player::calculateFlatDamageHealing() const {
 	double previousLevelsAggregatedBaseline = 0.0;
 	uint32_t currentLevelBaseline = 0;
-	double currentLevelFactor = 1.0 / 5.0;
+	double currentLevelFactor = 1.0 / 4.0;
 
 	// Starting threshold and increment steps
 	uint32_t threshold = 500;
@@ -588,8 +588,8 @@ uint16_t Player::calculateFlatDamageHealing() const {
 	// Progressively reduce the scaling factor as the level increases
 	while (level >= threshold) {
 		currentLevelBaseline = threshold;
-		currentLevelFactor = 1.0 / (5.0 + tierIndex);
-		previousLevelsAggregatedBaseline += threshold * (1.0 / (5.0 + tierIndex - 1));
+		currentLevelFactor = 1.0 / (4.0 + tierIndex);
+		previousLevelsAggregatedBaseline += threshold * (1.0 / (4.0 + tierIndex - 1));
 
 		++tierIndex;
 		threshold += thresholdStep;

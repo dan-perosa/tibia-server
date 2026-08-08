@@ -5,8 +5,8 @@ combat:setParameter(COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
 combat:setParameter(COMBAT_PARAM_AGGRESSIVE, false)
 
 function onGetFormulaValues(player, level, maglevel) -- already compared to the official tibia | compared date: 08/03/21(m/d/y) -- possible max limit of 30?, need test in magic level 71+.
-	local min = (level * 0 + maglevel * 0.1614) + 8
-	local max = (level * 0 + maglevel * 0.2468) + 15
+	local min = (level * 0 + (maglevel ^ 1.1) * 0.1614) + 8
+	local max = (level * 0 + (maglevel ^ 1.1) * 0.2468) + 15
 	return min, max
 end
 

@@ -1,36 +1,57 @@
-# Sincroniza o mapa editado no RME para o servidor Canary rodando no Docker.
-# Uso: dê duplo clique (ou rode no PowerShell) sempre que salvar o mapa no editor.
+# Sincroniza o mapa editado na RME para o servidor Canary local e reinicia o canary.exe.
+# Uso: rode este script (duplo clique ou no PowerShell) sempre que salvar o mapa no editor.
+# Funciona em qualquer maquina/usuario: todos os caminhos sao relativos a pasta do repositorio
+# (a mesma pasta onde este script esta salvo), nao ha nada fixo pro seu usuario ou pro meu.
 
 $ErrorActionPreference = "Stop"
-$docker = "C:\Users\Pedro\AppData\Local\Programs\DockerDesktop\resources\bin\docker.exe"
-$mapDir = "C:\Users\Pedro\Desktop\tibia-server\meu-mapa"
+
+$repoRoot = $PSScriptRoot
+$mapDir = Join-Path $repoRoot "meu-mapa"
 $mapName = "MAPA OFICIAL DE TRABALHO"
-$container = "otbr-server-1"
-$worldPath = "/canary/data-otservbr-global/world"
+$worldDir = Join-Path $repoRoot "data-otservbr-global\world"
+$configPath = Join-Path $repoRoot "config.lua"
+$canaryExe = Join-Path $repoRoot "canary.exe"
+
+if (-not (Test-Path $canaryExe)) {
+    Write-Host "canary.exe nao encontrado em $repoRoot - baixe o build antes de rodar este script." -ForegroundColor Red
+    Read-Host "Pressione Enter para fechar"
+    exit 1
+}
 
 Write-Host "Corrigindo pisos incompativeis com o servidor..." -ForegroundColor Cyan
-$python = "C:\Users\Pedro\AppData\Local\Programs\Python\Python312\python.exe"
-& $python "C:\Users\Pedro\Desktop\tibia-server\tools\otbm-tools\fix_ground_20888.py"
+$python = Get-Command python -ErrorAction SilentlyContinue
+if (-not $python) { $python = Get-Command python3 -ErrorAction SilentlyContinue }
+if ($python) {
+    & $python.Source (Join-Path $repoRoot "tools\otbm-tools\fix_ground_20888.py") "$mapDir\$mapName.otbm"
+} else {
+    Write-Host "Python nao encontrado no PATH - pulando correcao de piso (instale o Python se precisar dela)." -ForegroundColor Yellow
+}
 
 Write-Host "Copiando arquivos do mapa para o servidor..." -ForegroundColor Cyan
-& $docker cp "$mapDir\$mapName.otbm" "${container}:${worldPath}/$mapName.otbm"
-& $docker cp "$mapDir\$mapName-house.xml" "${container}:${worldPath}/$mapName-house.xml"
-& $docker cp "$mapDir\$mapName-monster.xml" "${container}:${worldPath}/$mapName-monster.xml"
-& $docker cp "$mapDir\$mapName-npc.xml" "${container}:${worldPath}/$mapName-npc.xml"
-& $docker cp "$mapDir\$mapName-zones.xml" "${container}:${worldPath}/$mapName-zones.xml"
+Copy-Item "$mapDir\$mapName.otbm" "$worldDir\$mapName.otbm" -Force
+Copy-Item "$mapDir\$mapName-house.xml" "$worldDir\$mapName-house.xml" -Force
+Copy-Item "$mapDir\$mapName-monster.xml" "$worldDir\$mapName-monster.xml" -Force
+Copy-Item "$mapDir\$mapName-npc.xml" "$worldDir\$mapName-npc.xml" -Force
+Copy-Item "$mapDir\$mapName-zones.xml" "$worldDir\$mapName-zones.xml" -Force
 
-Write-Host "Reaplicando correcao do login.lua (evita crash em mapas customizados)..." -ForegroundColor Cyan
-$fixDir = "C:\Users\Pedro\Desktop\tibia-server\server-fixes"
-& $docker cp "$fixDir\login.lua" "${container}:/canary/data-otservbr-global/scripts/creaturescripts/others/login.lua"
+$fixLogin = Join-Path $repoRoot "server-fixes\login.lua"
+if (Test-Path $fixLogin) {
+    Write-Host "Reaplicando correcao do login.lua (evita crash em mapas customizados)..." -ForegroundColor Cyan
+    Copy-Item $fixLogin (Join-Path $repoRoot "data-otservbr-global\scripts\creaturescripts\others\login.lua") -Force
+} else {
+    Write-Host "server-fixes\login.lua nao encontrado nesta maquina - pulando (arquivo local, nao versionado no git)." -ForegroundColor Yellow
+}
 
 Write-Host "Apontando config.lua para o mapa correto..." -ForegroundColor Cyan
-& $docker exec $container sh -c "sed -i 's/^mapName = \`".*\`"/mapName = \`"$mapName\`"/' /canary/config.lua"
-
-Write-Host "Desligando o mapa extra oficial (evita sobrepor seu mapa com agua/terreno oficial)..." -ForegroundColor Cyan
-& $docker exec $container sh -c "sed -i 's/^toggleMapCustom = true/toggleMapCustom = false/' /canary/config.lua"
+$configContent = Get-Content $configPath -Raw
+$configContent = $configContent -replace 'mapName\s*=\s*"[^"]*"', "mapName = `"$mapName`""
+$configContent = $configContent -replace 'toggleMapCustom\s*=\s*true', 'toggleMapCustom = false'
+Set-Content -Path $configPath -Value $configContent -NoNewline
 
 Write-Host "Reiniciando o servidor..." -ForegroundColor Cyan
-& $docker restart $container | Out-Null
+Get-Process -Name "canary" -ErrorAction SilentlyContinue | Stop-Process -Force
+Start-Sleep -Seconds 2
+Start-Process -FilePath $canaryExe -WorkingDirectory $repoRoot
 
 Write-Host "Aguardando o servidor subir..." -ForegroundColor Cyan
 Start-Sleep -Seconds 8

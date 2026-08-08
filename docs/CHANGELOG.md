@@ -44,6 +44,43 @@ Baú em (979,967,7) configurado com Action ID 24701 → 1x Demon Legs (item
 
 ## 2026-08-07
 
+### Fórmulas de cura: mesmo tratamento do dano (level/4 + maglevel^1.1)
+Extensão das duas mudanças de dano pra cura, que usa a mesma estrutura de fórmula com sinal
+positivo. Simulado antes com Exura Vita (nível 500/ML120: 958–1738 → 1484–2714, ~55% mais).
+17 arquivos (15 magias + 2 runas de cura) tiveram o level `/5`→`/4` e o magic level virou
+`^1.1`; 3 arquivos que já usavam um divisor de level diferente do padrão (`nature's_embrace`,
+`restore_balance`, `magic_patch`) tiveram só o magic level ajustado, level ficou como estava, de
+propósito. Cure de condição, heals de monstro e buffs de regeneração fixos não têm fórmula, não
+foram tocados. Ver [`healing-formula-update.md`](healing-formula-update.md) pra lista completa.
+Tudo Lua, vale já com `/reload`, sem precisar recompilar.
+
+### Fórmulas de dano: expoente de skill/magic level n=1.1
+Segundo passo da reformulação de dano (depois do `/5` → `/4`): skill de arma e magic level
+deixaram de entrar linearmente nas fórmulas e passaram a usar `skill^1.1` / `maglevel^1.1`. Efeito:
+um ponto de skill no nível 200 agora vale ~43% mais dano que um ponto no nível 5 (era 0% de
+diferença antes) — decidido comparando n=1.05 vs n=1.1 num conjunto de magias/runas reais
+(Sudden Death, Avalanche, Exori Gran, Exevo Mas San, Exevo Gran Mas Flam) em personagens de nível
+50 a 2500. Afeta armas melee/distância (C++, `weapons.cpp`), 51 runas/magias com fórmula
+level+maglevel, e 12 magias skill-based (todas em Lua). Curas (`intense_healing_rune`,
+`ultimate_healing_rune`) e tudo relacionado a monstro ficaram de fora, de propósito. Ver
+[`damage-skill-exponent.md`](damage-skill-exponent.md) pra lista completa de arquivos e
+[`formulas-de-dano.html`](formulas-de-dano.html) pro catálogo geral (já atualizado).
+**Mesma pendência de antes: a parte C++ (armas) só vale depois de recompilar e publicar um
+`canary.exe` novo.**
+
+### Fórmulas de dano: divisor de level level/5 → level/4
+Primeiro passo da reformulação das fórmulas de dano do servidor: todo lugar onde o level do
+personagem entra como termo aditivo numa fórmula de dano passou de `/5` para `/4` (~25% mais peso
+pro level). Afeta armas melee/distância, todas as runas e magias de ataque com fórmula
+`level+maglevel`, as magias skill-based (Berserk, Groundshaker, Ethereal Spear, etc.) e o ponto de
+partida do combo do Monge (`calculateFlatDamageHealing`, que segue progressivo, só desloca o
+início de `/5` pra `/4`). Wand e o fallback genérico do C++ ficaram de fora por decisão do Pedro.
+Ver [`damage-formula-level-divisor.md`](damage-formula-level-divisor.md) pra lista completa de
+arquivos tocados e [`formulas-de-dano.html`](formulas-de-dano.html) pro catálogo geral de
+fórmulas de dano do projeto (já atualizado com os novos valores).
+**Pendência: o lado C++ (armas + combo do Monge) só entra em vigor depois de recompilar e publicar
+um `canary.exe` novo.**
+
 ### Taxa de experiência aplicada (`data/stages.lua`)
 Implementada a tabela de `experienceStages` desenhada e aprovada na sessão anterior — ver
 [`exp-rate-design.md`](exp-rate-design.md) pra metodologia completa, fontes de dado real e

@@ -5,8 +5,8 @@ combat:setParameter(COMBAT_PARAM_AGGRESSIVE, 0)
 combat:setParameter(COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
 
 function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 2.5) + (maglevel * 20)
-	local max = (level / 2.5) + (maglevel * 28) -- TODO: Formulas (TibiaWiki says x2 but need more acurracy)
+	local min = (level / 2.5) + ((maglevel ^ 1.1) * 20)
+	local max = (level / 2.5) + ((maglevel ^ 1.1) * 28) -- TODO: Formulas (TibiaWiki says x2 but need more acurracy)
 	return min, max
 end
 
