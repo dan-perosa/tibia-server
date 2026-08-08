@@ -7,6 +7,30 @@ por sessão de trabalho, mais recente no topo.
 
 ## 2026-08-08
 
+### Loja da Asnarus: expansão de runes/munição, repreço completo das bolts
+Loja da Asnarus (`data-otservbr-global/npc/asnarus.lua`) expandida com o catálogo de runes e
+munições que faltavam em relação ao NPC oficial "Archery's Hut" (que não fica spawnado no
+mapa, então não há risco de arbitragem). `burst arrow` (13gp, ancorada na `envenomed arrow`
+por ser munição de efeito, não física pura) e `infernal bolt` reprecificadas com fórmula
+própria documentada em `docs/ammo-pricing-formula.md` (regra de três pelo `attack` do vizinho
+mais próximo já precificado, com prêmio adicional — dividido entre os dois degraus quando o
+item novo fica entre dois preços já fixos). Em seguida, a pedido do Pedro, **todas as 8 bolts
+foram triplicadas** como gold sink geral: bolt 12, piercing 15, vortex 18, power 21, drill 36,
+prismatic 60, infernal 114, spectral 210 — infernal mantida acima da prismatic por ter mais
+ataque (72 vs 66), mesmo sendo menos usada na prática por ser mais rara.
+
+Cobertura completa de arrows também fechada: adicionada `poison arrow` (10gp — descoberto que
+o script da arma sobrescreve o ataque do items.xml de 23 pra 21 e aplica veneno de verdade,
+então foi tratada como item de efeito, ancorada na envenomed arrow). `simple arrow` (item de
+tutorial, baixa precisão) e as "storm arrows" (não existem neste datapack ainda) ficaram de
+fora por decisão/limitação, não por descuido. `diamond arrow` mantida fixa em 130gp por pedido
+explícito do Pedro.
+
+Loja da Sarina finalizada: reorganizada em ordem alfabética (os backpacks novos tinham sido só
+colados no fim da lista) — conteúdo (remoção de itens genéricos, adição da linha completa de
+backpacks) já estava certo, só faltava esse ajuste de formatação. Nenhum dos dois arquivos foi
+commitado ainda nesta sessão.
+
 ### Sala do "Demon" disfarçado (corredor de lava)
 Pedro montou um desafio de lava com um monstro que deveria parecer um Demon de
 verdade, mas usou o monstro oficial "Demon Goblin" (bem mais fraco) —
