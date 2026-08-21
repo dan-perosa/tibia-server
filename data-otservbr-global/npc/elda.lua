@@ -61,8 +61,13 @@ end
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
 npcConfig.shop = {
+	{ itemName = "energy ring", clientId = 3051, buy = 1500 },
+	{ itemName = "life ring", clientId = 3052, buy = 1500 },
 	{ itemName = "might ring", clientId = 3048, buy = 3000 },
+	{ itemName = "sacred tree amulet", clientId = 9302, buy = 35000 },
+	{ itemName = "shockwave amulet", clientId = 9304, buy = 35000 },
 	{ itemName = "stone skin amulet", clientId = 3081, buy = 18000 },
+	{ itemName = "time ring", clientId = 3053, buy = 5000 },
 }
 -- On buy npc shop message
 npcType.onBuyItem = function(npc, player, itemId, subType, amount, ignore, inBackpacks, totalCost)

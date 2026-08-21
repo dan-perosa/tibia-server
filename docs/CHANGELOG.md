@@ -5,6 +5,16 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21 (16)
+
+### Elda: catálogo expandido (5 itens novos de joalheria)
+Adicionados Energy Ring (1500g), Life Ring (1500g), Time Ring (5000g),
+Shockwave Amulet (35000g) e Sacred Tree Amulet (35000g) — preços de
+memória (Tibia Global), sinalizar se algum estiver errado. Loja da Elda
+agora com 7 itens: os 5 novos + Might Ring e Stone Skin Amulet.
+
+Testado ao vivo, sem erro.
+
 ## 2026-08-21 (15)
 
 ### Itens de vitrine (bancada dos NPCs) agora são fixos
