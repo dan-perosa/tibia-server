@@ -58,10 +58,11 @@ local ORC_KEY_ITEM_ID = 2973
 -- Storage 900001: liberado permanentemente apos a chave ser consumida na primeira viagem
 local STORAGE_BOATMAN_UNLOCKED = 900001
 
--- TODO: Mirror Island e a ilha secreta ainda nao foram construidas no mapa.
--- Atualizar essas posicoes assim que existirem (placeholder aponta pro templo
--- da cidade por enquanto, pra nao teleportar o jogador pra um lugar quebrado).
-local MIRROR_ISLAND_DESTINATION = Position(1000, 1000, 7)
+local MIRROR_ISLAND_DESTINATION = Position(811, 219, 7)
+
+-- TODO: a ilha secreta (boss Gorgo) ainda nao foi construida no mapa.
+-- Atualizar assim que existir (placeholder aponta pro templo da cidade por
+-- enquanto, pra nao teleportar o jogador pra um lugar quebrado).
 local SECRET_ISLAND_DESTINATION = Position(1000, 1000, 7)
 local SECRET_ISLAND_CHANCE = 5 -- % de chance por viagem
 

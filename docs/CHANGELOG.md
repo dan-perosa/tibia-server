@@ -5,6 +5,32 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21 (5)
+
+### Mirror Island: bestiário trocado (frog/tortoise fraco -> Medusa/Serpent Spawn) + destino do barco ligado
+Pedro construiu a Mirror Island copiando outra hunt do Tibia como base de
+terreno, mas isso trouxe o bestiário fraco junto (Tortoise, Toad, Frog x5
+variantes, Crab, Crocodile, Seagull — 41 pontos de spawn, 155 criaturas,
+x787-881/y221-307/z7). Substituídas todas por **Medusa** (42, ~27%) e
+**Serpent Spawn** (113, ~73%) — a dupla clássica do Tibia oficial pra esse
+tema, ambas na faixa de HP 3000-4500 (tier alto). Mesmas posições/raios de
+spawn originais, só trocado o nome da criatura em cada slot (script Python
+com seed fixa, backup do XML original guardado como `.bak` antes de mexer).
+
+**Atualizado o boatman.lua**: `MIRROR_ISLAND_DESTINATION` agora aponta pra
+(811, 219, 7), a coordenada de chegada que o Pedro passou (dentro da ilha,
+ground limpo, confirmado antes de aplicar). A ilha secreta (Gorgo) continua
+com placeholder — falta ser construída.
+
+**Ponto de atenção pro Pedro**: 155 criaturas de 3000-4500 HP na mesma
+densidade de uma hunt desenhada pra bicho fraco pode ficar muito lotado/
+difícil de navegar — vale testar in-game e avisar se quiser espaçar mais
+os spawns antes de considerar pronta.
+
+Testado ao vivo via `docker compose cp` (npc + monster.xml) + restart —
+zero erro de Lua, nenhum aviso de "tipo de monstro não encontrado" pra
+Medusa/Serpent Spawn (nomes confirmados corretos).
+
 ## 2026-08-21 (4)
 
 ### NPC Boatman criado — primeiro passo do sistema de barco pra Mirror Island
