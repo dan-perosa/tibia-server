@@ -5,6 +5,28 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21 (15)
+
+### Itens de vitrine (bancada dos NPCs) agora são fixos
+Pedro percebeu que os itens de exemplo nas bancadas dos NPCs (potes/runas
+do Asnarus, flechas/besta do Archery, ferramentas da Sarina) podiam ser
+roubados pelos jogadores. Achada uma solução nativa do motor: existe uma
+constante `IMMOVABLE_ACTION_ID` (valor 100) já usada em outros lugares do
+datapack — qualquer item com esse Action ID fica impossível de mover/
+pegar/girar (bloqueio no `data/events/scripts/player.lua`, engine-level).
+Marcados os 9 itens identificados nas 3 bancadas (Asnarus, Archery,
+Sarina) com esse Action ID direto no `.otbm`, sem precisar escrever
+script nenhum.
+
+**Não mexido**: achei um conjunto de armadura (demon shield/golden armor/
+skull helmet, x995-997/y1011) que parece bancada de exibição também, mas
+não corresponde a nenhum NPC de fato posicionado no mapa vendendo esses
+itens — deixei de fora até confirmar com o Pedro se é de algum NPC
+específico ou só decoração solta.
+
+Backup do `.otbm` antes da mudança: `MAPA OFICIAL DE TRABALHO.otbm.bak5`.
+Testado ao vivo, sem erro.
+
 ## 2026-08-21 (14)
 
 ### Testserver Assistant renomeado para Blessing Merchant; Elda criada
