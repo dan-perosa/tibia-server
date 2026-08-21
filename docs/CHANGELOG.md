@@ -5,6 +5,19 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21 (10)
+
+### NPC Rojan: vendedor de armas de treino, ao lado dos dummies
+Faltava um NPC vendendo as armas de treino (sword/axe/club/bow/rod/wand +
+shield/wraps, ids 28540-28545/44064/50292, 50 cargas cada) pra treinar nos
+training dummies. Criado `rojan.lua`, preço 2000 gold cada (valor padrão
+do Tibia global, de memória — não tem como conferir localmente já que não
+existia NPC nenhum vendendo isso neste datapack antes). Posicionado em
+(1342, 585, 7), logo ao sul dos 4 dummies achados em (1339-1346, 584, 7).
+
+Testado ao vivo via `docker compose cp` (script + `-npc.xml`) + restart,
+sem erro de Lua.
+
 ## 2026-08-21 (9)
 
 ### Investigado (não corrigido): Cledwyn mostra "Gold Coin" na janela de loja
