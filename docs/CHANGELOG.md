@@ -5,6 +5,31 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21 (2)
+
+### Sarina passou a vender todas as 35 backpacks de 20 slots
+Pedro notou que a loja da Sarina só tinha 14 cores/temas de backpack, todas
+de 20 slots (mesma capacidade, só cosmético) — comparado a uma lista
+completa de backpacks do Tibia clássico, existem 35 modelos diferentes
+nessa faixa de capacidade. Adicionadas as 20 que faltavam (birthday, buggy,
+cake, changing, crystal, deepling, demon, dragon, expedition, feedbag,
+glooth, minotaur, moon, mushroom, old and used, pannier, pirate, raccoon,
+santa, wolf), todas a 20 gold, ids conferidos em `items.xml`
+(`containersize=20` em todas). Backpacks com capacidade real maior (24+,
+tipo Backpack of Holding) ficaram de fora de propósito — decisão do Pedro
+de reservar essas pra serem obtidas de outra forma (loot/quest), não
+compradas direto de NPC.
+
+**Descoberta no caminho**: o container Docker rodando **não sincroniza**
+`data-otservbr-global/npc/*.lua` do repositório automaticamente — só o
+mapa tem esse sync (`sync-map-to-server.ps1`). Pra essa mudança realmente
+valer no servidor de teste, precisou `docker compose cp` manual do arquivo
+pro container + restart. Isso provavelmente significa que outras mudanças
+de NPC/script feitas antes (Asnarus, fórmula de dano) também nunca foram
+de fato testadas ao vivo neste container — só verificadas por leitura de
+log de start-up, que usa a cópia própria da imagem, não a do repositório.
+Vale revisitar esse gap de sync quando sobrar tempo.
+
 ## 2026-08-21
 
 ### Mesclado o mapa do Pedro com a hunt do pântano do Daniel (edição em paralelo)
