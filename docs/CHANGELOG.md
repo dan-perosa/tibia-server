@@ -5,6 +5,27 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21 (13)
+
+### Rojan reconstruído: vende os itens reais de exercise weapon (3 tiers)
+Pedro apontou que eu estava reinventando a roda — não precisava de sistema
+de "bulk order" customizado, o Tibia oficial já tem os 3 tiers como itens
+separados de verdade: **exercise** (500 cargas), **durable exercise**
+(1800 cargas) e **lasting exercise** (14400 cargas), cada arma/escudo/wraps
+em cada tier. Como cada tier é um item id diferente, some completamente o
+problema de preço-por-id que motivou o sistema customizado nas duas
+tentativas anteriores (agora abandonadas) — voltou a ser loja padrão
+simples, 24 itens.
+
+Preços: exercise 2kk, durable exercise 5kk, lasting exercise 10kk (o
+último confirmado pelo Pedro batendo com Tibia Global; os outros dois são
+de memória, sinalizar se estiver errado). Removidas as "training weapons"
+antigas (28540-28545) que eu tinha usado por engano na primeira tentativa
+— eram de um sistema mais velho, sem relação com o "exercise dummy" que
+realmente está no DP.
+
+Testado ao vivo, sem erro.
+
 ## 2026-08-21 (12)
 
 ### Rojan reposicionado: os dummies de verdade ficam dentro do DP
