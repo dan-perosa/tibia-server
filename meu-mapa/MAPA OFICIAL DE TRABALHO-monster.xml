@@ -374,17 +374,14 @@
 	<monster centerx="821" centery="226" centerz="7" radius="7">
 		<monster name="Medusa" x="-1" y="-3" z="7" spawntime="90" />
 		<monster name="Medusa" x="4" y="0" z="7" spawntime="90" />
-		<monster name="Serpent Spawn" x="-4" y="1" z="7" spawntime="90" />
 		<monster name="Serpent Spawn" x="0" y="3" z="7" spawntime="90" />
 	</monster>
 	<monster centerx="852" centery="226" centerz="7" radius="7">
 		<monster name="Medusa" x="1" y="-7" z="7" spawntime="90" />
-		<monster name="Serpent Spawn" x="-3" y="-5" z="7" spawntime="90" />
 		<monster name="Serpent Spawn" x="2" y="-5" z="7" spawntime="90" />
 		<monster name="Medusa" x="6" y="-4" z="7" spawntime="90" />
 		<monster name="Serpent Spawn" x="-3" y="-3" z="7" spawntime="90" />
 		<monster name="Serpent Spawn" x="1" y="-3" z="7" spawntime="90" />
-		<monster name="Serpent Spawn" x="-6" y="-2" z="7" spawntime="90" />
 		<monster name="Medusa" x="-2" y="1" z="7" spawntime="90" />
 		<monster name="Serpent Spawn" x="4" y="1" z="7" spawntime="90" />
 		<monster name="Serpent Spawn" x="-6" y="2" z="7" spawntime="90" />
@@ -447,7 +444,6 @@
 		<monster name="Serpent Spawn" x="1" y="-2" z="7" spawntime="90" />
 		<monster name="Serpent Spawn" x="-1" y="1" z="7" spawntime="90" />
 		<monster name="Serpent Spawn" x="2" y="3" z="7" spawntime="90" />
-		<monster name="Serpent Spawn" x="4" y="3" z="7" spawntime="90" />
 	</monster>
 	<monster centerx="836" centery="259" centerz="7" radius="3">
 		<monster name="Medusa" x="3" y="-2" z="7" spawntime="90" />
@@ -462,7 +458,6 @@
 	<monster centerx="868" centery="263" centerz="7" radius="5">
 		<monster name="Serpent Spawn" x="2" y="-4" z="7" spawntime="90" />
 		<monster name="Serpent Spawn" x="-2" y="-3" z="7" spawntime="90" />
-		<monster name="Serpent Spawn" x="-1" y="-2" z="7" spawntime="90" />
 		<monster name="Serpent Spawn" x="4" y="-2" z="7" spawntime="90" />
 		<monster name="Serpent Spawn" x="-4" y="-1" z="7" spawntime="90" />
 		<monster name="Serpent Spawn" x="3" y="2" z="7" spawntime="90" />

@@ -5,6 +5,29 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21 (6)
+
+### Protection Zone no píer de chegada da Mirror Island
+Pedro pediu pra proteger a área de desembarque do barco (jogador chegava
+direto perto de Medusa/Serpent Spawn sem chance de reagir). Localizado o
+píer de madeira de verdade via scan do `.otbm` (só 6 tiles de drawbridge,
+x810-812/y219-220) e a tartaruga de retorno (811,217). Aplicada a flag
+`TILESTATE_PROTECTIONZONE` (bit 128) direto no `.otbm` numa caixa pequena
+de 9x9 ao redor dos dois (x807-815/y215-223/z7, 81 tiles) — via
+`otbm.py`, preservando outras flags já existentes no tile (ex: a tartaruga
+já tinha a flag de teleporte, `|=` não apagou). Não usei o brush de PZ do
+RME porque não achei uma definição clara dele nos arquivos de dados do
+editor pra confirmar o caminho certo de cliques — mais seguro fazer via
+script com coordenada exata.
+
+Dois pontos dos spawns novos (centrados em 805,226 e 821,226, raio 7)
+alcançam até y=219 na borda — intencional, é o padrão comum do Tibia de
+"pequeno bolsão seguro dentro do território de monstros", não reduz o
+resto da hunt.
+
+Backup do `.otbm` antes da mudança: `MAPA OFICIAL DE TRABALHO.otbm.bak2`.
+Testado ao vivo (restart do container), sem erro.
+
 ## 2026-08-21 (5)
 
 ### Mirror Island: bestiário trocado (frog/tortoise fraco -> Medusa/Serpent Spawn) + destino do barco ligado
