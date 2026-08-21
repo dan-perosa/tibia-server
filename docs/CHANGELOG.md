@@ -5,6 +5,32 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21 (8)
+
+### Sala secreta da World Wolves: Hellflayer guardião + baú de recompensa
+Definido o boss da sala do teleporte (fim da hunt secreta de Werewolf/
+Wereboar/Werebear/Werebadger/Werefox, sul do DP): **Hellflayer** (14000 HP/
+11720 exp, bem acima de tudo que já existe na hunt normal). Sem a flag
+`rewardBoss` (decisão consciente — essa flag muda o sistema de auto-loot
+pra tratar como boss oficial, não só visual; ficou de fora por simplicidade).
+
+**Recompensa** (Action ID 24801, resgatável 1x por jogador, mesmo sistema
+dos outros baús): uma backpack com 10x Stone Skin Amulet, uma backpack com
+10x Might Ring, e 200k gold. Precisou estender `custom_reward_chests.lua`
+pra suportar recompensa "empacotada numa mochila" (campo `backpack = true`
+por entrada) — sistema só dava itens soltos antes.
+
+**Bug pego na colocação**: o baú foi colocado no mapa com item id **2481**
+("chest" — outra variante visual) em vez do **2472** que o script realmente
+reconhece (dois itens diferentes, nome igual na paleta do RME). Corrigido
+direto no `.otbm` via `otbm.py`, mantendo o Action ID. Backup antes da
+correção: `MAPA OFICIAL DE TRABALHO.otbm.bak4`.
+
+Chest em (1024,1086,10), Hellflayer em (1029,1086,10) — mesma sala,
+confirmado. Testado ao vivo (script carrega sem erro, servidor sobe
+limpo) — teste de interação real (abrir o baú in-game) ainda pendente,
+não dá pra simular sem cliente de jogo.
+
 ## 2026-08-21 (7)
 
 ### Cidade principal renomeada para Skartholt

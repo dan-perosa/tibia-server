@@ -4221,4 +4221,7 @@
 	<monster centerx="982" centery="1068" centerz="10" radius="3">
 		<monster name="Werewolf" x="0" y="-3" z="10" spawntime="60" />
 	</monster>
+	<monster centerx="1029" centery="1086" centerz="10" radius="1">
+		<monster name="Hellflayer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
 </monsters>

@@ -96,6 +96,15 @@ local CustomQuestChests = {
 
 	-- Hidden Demon Goblin lava corridor reward chest (979,967,7)
 	[24701] = { items = { { id = 3389, count = 1 } } }, -- demon legs
+
+	-- World Wolves secret hunt -- Hellflayer guardian room
+	[24801] = {
+		items = {
+			{ id = 3081, count = 10, backpack = true }, -- backpack of 10x stone skin amulet
+			{ id = 3048, count = 10, backpack = true }, -- backpack of 10x might ring
+			{ id = 3043, count = 20 }, -- 200k gold (crystal coin = 10k each)
+		},
+	},
 }
 
 local GroupStorage = {
@@ -116,10 +125,15 @@ end
 -- addItem failed partway through the loop, the chest would still be
 -- unlocked to try again, and re-opening it would re-add (duplicate) every
 -- item that had already succeeded on the earlier partial attempt.
+local REWARD_BACKPACK_ID = 2854
+
 local function hasRoomForReward(player, items)
 	local totalWeight = 0
 	for _, entry in ipairs(items) do
 		totalWeight = totalWeight + (ItemType(entry.id):getWeight() * entry.count)
+		if entry.backpack then
+			totalWeight = totalWeight + ItemType(REWARD_BACKPACK_ID):getWeight()
+		end
 	end
 	if (player:getFreeCapacity() / 100) < totalWeight then
 		return false
@@ -159,7 +173,18 @@ function questChest.onUse(player, item, fromPosition, target, toPosition, isHotk
 	end
 
 	for _, entry in ipairs(config.items) do
-		if not player:addItem(entry.id, entry.count) then
+		if entry.backpack then
+			local bp = Game.createItem(REWARD_BACKPACK_ID)
+			for _ = 1, entry.count do
+				bp:addItem(entry.id, 1)
+			end
+			if not player:addItemEx(bp) then
+				-- Should not happen given the check above, but bail out without
+				-- marking the chest as claimed if it somehow still fails.
+				player:sendTextMessage(MESSAGE_FAILURE, "You don't have enough room to carry the reward. Free up some space and try again.")
+				return true
+			end
+		elseif not player:addItem(entry.id, entry.count) then
 			-- Should not happen given the check above, but bail out without
 			-- marking the chest as claimed if it somehow still fails.
 			player:sendTextMessage(MESSAGE_FAILURE, "You don't have enough room to carry the reward. Free up some space and try again.")
