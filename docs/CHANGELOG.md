@@ -5,6 +5,34 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21 (4)
+
+### NPC Boatman criado — primeiro passo do sistema de barco pra Mirror Island
+Implementa o gancho de lore da chave dos orcs (plantado em 2026-08-08, ver
+placa em 959,1125,7 "This key might be useful someday") — a chave física
+("bone key", item 2973) foi colocada por cima da placa (959,1124,7).
+
+**NPC**: `data-otservbr-global/npc/boatman.lua`. Fica ao lado do DP, antes
+da forja. Falas exatas definidas pelo Pedro (inglês, 4 cenários: sem chave,
+primeira viagem/consome a chave, viagens seguintes, saudação). Sem chave →
+recusa. Com chave (primeira vez) → consome 1x, marca storage `900001`
+como liberado permanentemente, viaja. Já liberado → viaja direto, sem
+checar a chave de novo.
+
+**Pendente (aguardando construção do restante do sistema)**:
+- Mirror Island e a ilha secreta **ainda não existem no mapa** — o destino
+  do teleporte está com posição placeholder (temple da cidade, 1000,1000,7)
+  pros dois casos, só pra não jogar o jogador em lugar quebrado. Atualizar
+  `MIRROR_ISLAND_DESTINATION`/`SECRET_ISLAND_DESTINATION` no topo do script
+  assim que as ilhas forem construídas.
+- A chance de 5% de cair na ilha secreta (boss Gorgo/Medusa) já está
+  implementada no script (`SECRET_ISLAND_CHANCE`), só falta o destino real.
+- NPC preso na ilha secreta, boss Gorgo, item no corpo pra questline futura,
+  nome final do Boatman e da cidade principal — tudo ainda não definido/não
+  implementado, registrado aqui só pra não perder o contexto da conversa.
+
+Testado ao vivo via `docker compose cp` + restart, sem erro de Lua.
+
 ## 2026-08-21 (3)
 
 ### Separada a loja do Asnarus: potes/runas ficam, distância vai pro Archery

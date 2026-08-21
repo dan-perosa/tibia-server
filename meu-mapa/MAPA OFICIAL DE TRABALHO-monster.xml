@@ -355,6 +355,367 @@
 		<monster name="Bonebeast" x="3" y="-3" z="6" spawntime="60" />
 		<monster name="Putrid Mummy" x="0" y="-2" z="6" spawntime="60" />
 	</monster>
+	<monster centerx="835" centery="221" centerz="7" radius="5">
+		<monster name="Crocodile" x="-4" y="-3" z="7" spawntime="90" />
+		<monster name="Coral Frog" x="-1" y="-1" z="7" spawntime="90" />
+		<monster name="Azure Frog" x="-1" y="4" z="7" spawntime="90" />
+		<monster name="Tortoise" x="1" y="4" z="7" spawntime="90" />
+		<monster name="Tortoise" x="-5" y="5" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="805" centery="226" centerz="7" radius="7">
+		<monster name="Seagull" x="-7" y="-4" z="7" spawntime="90" />
+		<monster name="Coral Frog" x="5" y="-3" z="7" spawntime="90" />
+		<monster name="Crab" x="-3" y="-2" z="7" spawntime="90" />
+		<monster name="Coral Frog" x="-2" y="-2" z="7" spawntime="90" />
+		<monster name="Tortoise" x="3" y="-2" z="7" spawntime="90" />
+		<monster name="Tortoise" x="-6" y="0" z="7" spawntime="90" />
+		<monster name="Crimson Frog" x="4" y="0" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="821" centery="226" centerz="7" radius="7">
+		<monster name="Crimson Frog" x="-1" y="-3" z="7" spawntime="90" />
+		<monster name="Orchid Frog" x="4" y="0" z="7" spawntime="90" />
+		<monster name="Toad" x="-4" y="1" z="7" spawntime="90" />
+		<monster name="Azure Frog" x="0" y="3" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="852" centery="226" centerz="7" radius="7">
+		<monster name="Green Frog" x="1" y="-7" z="7" spawntime="90" />
+		<monster name="Coral Frog" x="-3" y="-5" z="7" spawntime="90" />
+		<monster name="Toad" x="2" y="-5" z="7" spawntime="90" />
+		<monster name="Seagull" x="6" y="-4" z="7" spawntime="90" />
+		<monster name="Tortoise" x="-3" y="-3" z="7" spawntime="90" />
+		<monster name="Crocodile" x="1" y="-3" z="7" spawntime="90" />
+		<monster name="Azure Frog" x="-6" y="-2" z="7" spawntime="90" />
+		<monster name="Crimson Frog" x="-2" y="1" z="7" spawntime="90" />
+		<monster name="Toad" x="4" y="1" z="7" spawntime="90" />
+		<monster name="Toad" x="-6" y="2" z="7" spawntime="90" />
+		<monster name="Crimson Frog" x="4" y="6" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="827" centery="239" centerz="7" radius="4">
+		<monster name="Azure Frog" x="-4" y="-2" z="7" spawntime="90" />
+		<monster name="Crab" x="2" y="-1" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="808" centery="243" centerz="7" radius="4">
+		<monster name="Tortoise" x="0" y="-3" z="7" spawntime="90" />
+		<monster name="Azure Frog" x="0" y="3" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="860" centery="244" centerz="7" radius="7">
+		<monster name="Tortoise" x="7" y="-6" z="7" spawntime="90" />
+		<monster name="Toad" x="-5" y="-2" z="7" spawntime="90" />
+		<monster name="Azure Frog" x="-5" y="1" z="7" spawntime="90" />
+		<monster name="Tortoise" x="6" y="2" z="7" spawntime="90" />
+		<monster name="Azure Frog" x="3" y="3" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="797" centery="245" centerz="7" radius="4">
+		<monster name="Tortoise" x="4" y="-2" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="820" centery="249" centerz="7" radius="4">
+		<monster name="Crab" x="2" y="-3" z="7" spawntime="90" />
+		<monster name="Crimson Frog" x="2" y="0" z="7" spawntime="90" />
+		<monster name="Toad" x="-3" y="2" z="7" spawntime="90" />
+		<monster name="Tortoise" x="4" y="2" z="7" spawntime="90" />
+		<monster name="Orchid Frog" x="0" y="4" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="832" centery="250" centerz="7" radius="4">
+		<monster name="Toad" x="1" y="0" z="7" spawntime="90" />
+		<monster name="Toad" x="-3" y="2" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="874" centery="250" centerz="7" radius="5">
+		<monster name="Coral Frog" x="1" y="-5" z="7" spawntime="90" />
+		<monster name="Crab" x="-4" y="-3" z="7" spawntime="90" />
+		<monster name="Tortoise" x="3" y="-2" z="7" spawntime="90" />
+		<monster name="Tortoise" x="-4" y="2" z="7" spawntime="90" />
+		<monster name="Toad" x="0" y="3" z="7" spawntime="90" />
+		<monster name="Orchid Frog" x="-1" y="4" z="7" spawntime="90" />
+		<monster name="Crimson Frog" x="4" y="4" z="7" spawntime="90" />
+		<monster name="Tortoise" x="2" y="5" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="807" centery="253" centerz="7" radius="4">
+		<monster name="Azure Frog" x="-2" y="-1" z="7" spawntime="90" />
+		<monster name="Crimson Frog" x="4" y="0" z="7" spawntime="90" />
+		<monster name="Tortoise" x="3" y="4" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="794" centery="256" centerz="7" radius="5">
+		<monster name="Toad" x="-5" y="-4" z="7" spawntime="90" />
+		<monster name="Crocodile" x="2" y="-3" z="7" spawntime="90" />
+		<monster name="Toad" x="-3" y="-2" z="7" spawntime="90" />
+		<monster name="Orchid Frog" x="5" y="0" z="7" spawntime="90" />
+		<monster name="Tortoise" x="2" y="3" z="7" spawntime="90" />
+		<monster name="Toad" x="-3" y="4" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="850" centery="257" centerz="7" radius="4">
+		<monster name="Toad" x="-1" y="-3" z="7" spawntime="90" />
+		<monster name="Crab" x="1" y="-2" z="7" spawntime="90" />
+		<monster name="Tortoise" x="-1" y="1" z="7" spawntime="90" />
+		<monster name="Crimson Frog" x="2" y="3" z="7" spawntime="90" />
+		<monster name="Toad" x="4" y="3" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="836" centery="259" centerz="7" radius="3">
+		<monster name="Toad" x="3" y="-2" z="7" spawntime="90" />
+		<monster name="Crimson Frog" x="-1" y="-1" z="7" spawntime="90" />
+		<monster name="Tortoise" x="3" y="0" z="7" spawntime="90" />
+		<monster name="Tortoise" x="0" y="2" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="824" centery="260" centerz="7" radius="3">
+		<monster name="Tortoise" x="-3" y="0" z="7" spawntime="90" />
+		<monster name="Toad" x="2" y="0" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="868" centery="263" centerz="7" radius="5">
+		<monster name="Toad" x="2" y="-4" z="7" spawntime="90" />
+		<monster name="Crimson Frog" x="-2" y="-3" z="7" spawntime="90" />
+		<monster name="Toad" x="-1" y="-2" z="7" spawntime="90" />
+		<monster name="Seagull" x="4" y="-2" z="7" spawntime="90" />
+		<monster name="Tortoise" x="-4" y="-1" z="7" spawntime="90" />
+		<monster name="Tortoise" x="3" y="2" z="7" spawntime="90" />
+		<monster name="Toad" x="-5" y="4" z="7" spawntime="90" />
+		<monster name="Toad" x="4" y="4" z="7" spawntime="90" />
+		<monster name="Green Frog" x="-2" y="5" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="810" centery="265" centerz="7" radius="3">
+		<monster name="Toad" x="-3" y="-1" z="7" spawntime="90" />
+		<monster name="Toad" x="2" y="1" z="7" spawntime="90" />
+		<monster name="Seagull" x="1" y="2" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1125" centery="265" centerz="7" radius="2">
+		<monster name="Crocodile" x="-1" y="-1" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="787" centery="267" centerz="7" radius="4">
+		<monster name="Azure Frog" x="2" y="-3" z="7" spawntime="90" />
+		<monster name="Seagull" x="-4" y="-1" z="7" spawntime="90" />
+		<monster name="Seagull" x="-1" y="2" z="7" spawntime="90" />
+		<monster name="Seagull" x="0" y="2" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="802" centery="267" centerz="7" radius="3">
+		<monster name="Azure Frog" x="1" y="-3" z="7" spawntime="90" />
+		<monster name="Tortoise" x="1" y="1" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1117" centery="267" centerz="7" radius="3">
+		<monster name="Hydra" x="2" y="-1" z="7" spawntime="90" />
+		<monster name="Cobra" x="-2" y="1" z="7" spawntime="1445" />
+	</monster>
+	<monster centerx="829" centery="268" centerz="7" radius="3">
+		<monster name="Tortoise" x="2" y="-2" z="7" spawntime="90" />
+		<monster name="Toad" x="-1" y="-1" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="857" centery="269" centerz="7" radius="3">
+		<monster name="Azure Frog" x="-1" y="-2" z="7" spawntime="90" />
+		<monster name="Toad" x="0" y="1" z="7" spawntime="90" />
+		<monster name="Tortoise" x="2" y="2" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="849" centery="270" centerz="7" radius="3">
+		<monster name="Tortoise" x="-1" y="1" z="7" spawntime="90" />
+		<monster name="Tortoise" x="3" y="1" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1132" centery="270" centerz="7" radius="3">
+		<monster name="Crocodile" x="2" y="-2" z="7" spawntime="90" />
+		<monster name="Seagull" x="0" y="1" z="7" spawntime="90" />
+		<monster name="Hydra" x="2" y="1" z="7" spawntime="90" />
+		<monster name="Slime" x="1" y="2" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1090" centery="271" centerz="7" radius="3">
+		<monster name="Hydra" x="3" y="-1" z="7" spawntime="90" />
+		<monster name="Hydra" x="-2" y="0" z="7" spawntime="90" />
+		<monster name="Cobra" x="3" y="1" z="7" spawntime="1445" />
+	</monster>
+	<monster centerx="1124" centery="273" centerz="7" radius="2">
+		<monster name="Cobra" x="-1" y="-1" z="7" spawntime="1445" />
+		<monster name="Water Elemental" x="0" y="0" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="842" centery="274" centerz="7" radius="2">
+		<monster name="Tortoise" x="2" y="-2" z="7" spawntime="90" />
+		<monster name="Toad" x="2" y="-1" z="7" spawntime="90" />
+		<monster name="Coral Frog" x="-2" y="0" z="7" spawntime="90" />
+		<monster name="Crab" x="1" y="2" z="7" spawntime="90" />
+		<monster name="Coral Frog" x="2" y="2" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1104" centery="274" centerz="7" radius="3">
+		<monster name="Cobra" x="-1" y="-2" z="7" spawntime="1445" />
+		<monster name="Seagull" x="-2" y="-1" z="7" spawntime="90" />
+		<monster name="Hydra" x="2" y="2" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="807" centery="275" centerz="7" radius="3">
+		<monster name="Crimson Frog" x="-3" y="-1" z="7" spawntime="90" />
+		<monster name="Toad" x="2" y="-1" z="7" spawntime="90" />
+		<monster name="Tortoise" x="-2" y="2" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="834" centery="275" centerz="7" radius="2">
+		<monster name="Tortoise" x="-1" y="1" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="818" centery="276" centerz="7" radius="4">
+		<monster name="Azure Frog" x="-1" y="-3" z="7" spawntime="90" />
+		<monster name="Toad" x="1" y="-2" z="7" spawntime="90" />
+		<monster name="Crimson Frog" x="-2" y="1" z="7" spawntime="90" />
+		<monster name="Toad" x="2" y="2" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1114" centery="276" centerz="7" radius="2">
+		<monster name="Crocodile" x="-1" y="-1" z="7" spawntime="90" />
+		<monster name="Seagull" x="0" y="2" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1096" centery="278" centerz="7" radius="2">
+		<monster name="Cobra" x="-1" y="0" z="7" spawntime="1445" />
+		<monster name="Water Elemental" x="0" y="0" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="796" centery="279" centerz="7" radius="4">
+		<monster name="Green Frog" x="2" y="-2" z="7" spawntime="90" />
+		<monster name="Seagull" x="-4" y="0" z="7" spawntime="90" />
+		<monster name="Orchid Frog" x="0" y="2" z="7" spawntime="90" />
+		<monster name="Seagull" x="0" y="3" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="858" centery="279" centerz="7" radius="3">
+		<monster name="Toad" x="3" y="0" z="7" spawntime="90" />
+		<monster name="Toad" x="-1" y="2" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="867" centery="280" centerz="7" radius="3">
+		<monster name="Tortoise" x="-2" y="-1" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="881" centery="280" centerz="7" radius="9">
+		<monster name="Green Frog" x="2" y="-9" z="7" spawntime="90" />
+		<monster name="Seagull" x="4" y="-8" z="7" spawntime="90" />
+		<monster name="Seagull" x="-5" y="-4" z="7" spawntime="90" />
+		<monster name="Crocodile" x="-3" y="-1" z="7" spawntime="90" />
+		<monster name="Toad" x="2" y="-1" z="7" spawntime="90" />
+		<monster name="Tortoise" x="-6" y="3" z="7" spawntime="90" />
+		<monster name="Orchid Frog" x="-3" y="5" z="7" spawntime="90" />
+		<monster name="Crimson Frog" x="3" y="5" z="7" spawntime="90" />
+		<monster name="Tortoise" x="0" y="7" z="7" spawntime="90" />
+		<monster name="Toad" x="4" y="7" z="7" spawntime="90" />
+		<monster name="Crimson Frog" x="5" y="9" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1121" centery="280" centerz="7" radius="3">
+		<monster name="Hydra" x="-1" y="-1" z="7" spawntime="90" />
+		<monster name="Slime" x="-2" y="1" z="7" spawntime="90" />
+		<monster name="Hydra" x="1" y="3" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1111" centery="282" centerz="7" radius="2">
+		<monster name="Slime" x="-1" y="0" z="7" spawntime="90" />
+		<monster name="Crocodile" x="1" y="0" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1131" centery="282" centerz="7" radius="2">
+		<monster name="Slime" x="1" y="-1" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="849" centery="283" centerz="7" radius="3">
+		<monster name="Toad" x="2" y="1" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1103" centery="284" centerz="7" radius="3">
+		<monster name="Crocodile" x="-1" y="-2" z="7" spawntime="90" />
+		<monster name="Hydra" x="2" y="0" z="7" spawntime="90" />
+		<monster name="Cobra" x="0" y="2" z="7" spawntime="1445" />
+	</monster>
+	<monster centerx="1089" centery="285" centerz="7" radius="3">
+		<monster name="Cobra" x="2" y="-2" z="7" spawntime="1445" />
+		<monster name="Hydra" x="0" y="0" z="7" spawntime="90" />
+		<monster name="Crocodile" x="3" y="1" z="7" spawntime="90" />
+		<monster name="Slime" x="2" y="3" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="816" centery="287" centerz="7" radius="4">
+		<monster name="Crocodile" x="-2" y="-2" z="7" spawntime="90" />
+		<monster name="Tortoise" x="-1" y="2" z="7" spawntime="90" />
+		<monster name="Tortoise" x="4" y="3" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="829" centery="287" centerz="7" radius="5">
+		<monster name="Tortoise" x="-3" y="-5" z="7" spawntime="90" />
+		<monster name="Crab" x="-1" y="-2" z="7" spawntime="90" />
+		<monster name="Coral Frog" x="-4" y="-1" z="7" spawntime="90" />
+		<monster name="Tortoise" x="4" y="-1" z="7" spawntime="90" />
+		<monster name="Seagull" x="2" y="1" z="7" spawntime="90" />
+		<monster name="Tortoise" x="4" y="4" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1111" centery="288" centerz="7" radius="2">
+		<monster name="Water Elemental" x="1" y="0" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1126" centery="291" centerz="7" radius="3">
+		<monster name="Crocodile" x="-2" y="-2" z="7" spawntime="90" />
+		<monster name="Cobra" x="2" y="0" z="7" spawntime="1445" />
+		<monster name="Hydra" x="2" y="1" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="859" centery="292" centerz="7" radius="5">
+		<monster name="Crocodile" x="0" y="-3" z="7" spawntime="90" />
+		<monster name="Crocodile" x="-4" y="1" z="7" spawntime="90" />
+		<monster name="Toad" x="4" y="1" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1096" centery="292" centerz="7" radius="2">
+		<monster name="Cobra" x="-2" y="0" z="7" spawntime="1445" />
+		<monster name="Slime" x="1" y="1" z="7" spawntime="90" />
+		<monster name="Crocodile" x="0" y="2" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="848" centery="293" centerz="7" radius="3">
+		<monster name="Crimson Frog" x="2" y="-2" z="7" spawntime="90" />
+		<monster name="Azure Frog" x="-2" y="1" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="868" centery="293" centerz="7" radius="2">
+		<monster name="Tortoise" x="1" y="-2" z="7" spawntime="90" />
+		<monster name="Orchid Frog" x="-2" y="0" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="877" centery="294" centerz="7" radius="2">
+		<monster name="Crab" x="1" y="0" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1106" centery="295" centerz="7" radius="3">
+		<monster name="Hydra" x="2" y="0" z="7" spawntime="90" />
+		<monster name="Seagull" x="0" y="3" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="818" centery="298" centerz="7" radius="3">
+		<monster name="Green Frog" x="-2" y="-2" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1118" centery="298" centerz="7" radius="3">
+		<monster name="Hydra" x="0" y="-1" z="7" spawntime="90" />
+		<monster name="Seagull" x="0" y="3" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1126" centery="300" centerz="7" radius="2">
+		<monster name="Slime" x="-1" y="-1" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1099" centery="301" centerz="7" radius="2">
+		<monster name="Crocodile" x="1" y="-2" z="7" spawntime="90" />
+		<monster name="Slime" x="1" y="0" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1089" centery="302" centerz="7" radius="3">
+		<monster name="Cobra" x="-1" y="-1" z="7" spawntime="1445" />
+		<monster name="Hydra" x="-1" y="1" z="7" spawntime="90" />
+		<monster name="Water Elemental" x="3" y="2" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="869" centery="303" centerz="7" radius="4">
+		<monster name="Orchid Frog" x="-3" y="-2" z="7" spawntime="90" />
+		<monster name="Coral Frog" x="3" y="-2" z="7" spawntime="90" />
+		<monster name="Toad" x="-2" y="0" z="7" spawntime="90" />
+		<monster name="Azure Frog" x="0" y="3" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1134" centery="303" centerz="7" radius="3">
+		<monster name="Slime" x="-1" y="-2" z="7" spawntime="90" />
+		<monster name="Hydra" x="2" y="1" z="7" spawntime="90" />
+		<monster name="Cobra" x="0" y="2" z="7" spawntime="1445" />
+		<monster name="Seagull" x="3" y="3" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1112" centery="305" centerz="7" radius="2">
+		<monster name="Cobra" x="-1" y="-2" z="7" spawntime="1445" />
+		<monster name="Crocodile" x="2" y="-2" z="7" spawntime="90" />
+		<monster name="Slime" x="0" y="-1" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="854" centery="307" centerz="7" radius="5">
+		<monster name="Tortoise" x="3" y="-5" z="7" spawntime="90" />
+		<monster name="Tortoise" x="-2" y="-4" z="7" spawntime="90" />
+		<monster name="Tortoise" x="2" y="-1" z="7" spawntime="90" />
+		<monster name="Toad" x="3" y="3" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1098" centery="310" centerz="7" radius="3">
+		<monster name="Crocodile" x="2" y="-3" z="7" spawntime="90" />
+		<monster name="Hydra" x="-2" y="-2" z="7" spawntime="90" />
+		<monster name="Cobra" x="0" y="-2" z="7" spawntime="1445" />
+		<monster name="Hydra" x="3" y="2" z="7" spawntime="90" />
+		<monster name="Water Elemental" x="0" y="3" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1106" centery="312" centerz="7" radius="2">
+		<monster name="Cobra" x="-1" y="-1" z="7" spawntime="1445" />
+		<monster name="Water Elemental" x="2" y="-1" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1122" centery="313" centerz="7" radius="3">
+		<monster name="Crocodile" x="0" y="-2" z="7" spawntime="90" />
+		<monster name="Hydra" x="0" y="1" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1114" centery="317" centerz="7" radius="2">
+		<monster name="Crocodile" x="2" y="1" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="1151" centery="328" centerz="7" radius="3">
+		<monster name="Water Elemental" x="1" y="0" z="7" spawntime="90" />
+		<monster name="Quara Pincher Scout" x="0" y="2" z="7" spawntime="90" />
+	</monster>
 	<monster centerx="903" centery="396" centerz="7" radius="1">
 		<monster name="Deepling Warrior" x="0" y="0" z="7" spawntime="60" />
 	</monster>
@@ -1548,6 +1909,13 @@
 	<monster centerx="952" centery="526" centerz="7" radius="1">
 		<monster name="Deepling Warrior" x="0" y="0" z="7" spawntime="60" />
 	</monster>
+	<monster centerx="1342" centery="591" centerz="7" radius="15">
+		<monster name="Black Knight" x="0" y="-2" z="7" spawntime="80" />
+		<monster name="Bonelord" x="-6" y="1" z="7" spawntime="90" />
+		<monster name="Scorpion" x="-4" y="1" z="7" spawntime="90" />
+		<monster name="Scorpion" x="4" y="1" z="7" spawntime="90" />
+		<monster name="Bonelord" x="6" y="1" z="7" spawntime="90" />
+	</monster>
 	<monster centerx="1162" centery="600" centerz="7" radius="1">
 		<monster name="Rootthing Nutshell" x="0" y="0" z="7" spawntime="60" />
 	</monster>
@@ -2703,6 +3071,15 @@
 	<monster centerx="974" centery="967" centerz="7" radius="1">
 		<monster name="Hidden Demon Goblin" x="0" y="0" z="7" spawntime="60" direction="3" />
 	</monster>
+	<monster centerx="1030" centery="974" centerz="7" radius="1">
+		<monster name="Seagull" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1025" centery="976" centerz="7" radius="1">
+		<monster name="Seagull" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1022" centery="982" centerz="7" radius="1">
+		<monster name="Seagull" x="0" y="0" z="7" spawntime="60" />
+	</monster>
 	<monster centerx="1041" centery="993" centerz="7" radius="1">
 		<monster name="Wisp" x="0" y="0" z="7" spawntime="60" />
 	</monster>
@@ -3703,5 +4080,155 @@
 	</monster>
 	<monster centerx="943" centery="1050" centerz="9" radius="1">
 		<monster name="Carrion Worm" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="989" centery="984" centerz="10" radius="3">
+		<monster name="Wereboar" x="-1" y="1" z="10" spawntime="60" />
+		<monster name="Werebear" x="-3" y="2" z="10" spawntime="60" />
+		<monster name="Werewolf" x="-2" y="2" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="961" centery="991" centerz="10" radius="3">
+		<monster name="Werebear" x="-1" y="-3" z="10" spawntime="60" />
+		<monster name="Werewolf" x="2" y="-3" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="968" centery="991" centerz="10" radius="4">
+		<monster name="Werebadger" x="0" y="-2" z="10" spawntime="60" />
+		<monster name="Werebadger" x="-2" y="1" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="982" centery="991" centerz="10" radius="3">
+		<monster name="Wereboar" x="3" y="-2" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="963" centery="1003" centerz="10" radius="1">
+		<monster name="Wereboar" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="964" centery="1005" centerz="10" radius="1">
+		<monster name="Werebadger" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="989" centery="1005" centerz="10" radius="3">
+		<monster name="Werebadger" x="-3" y="-2" z="10" spawntime="60" />
+		<monster name="Werebear" x="-2" y="-2" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="969" centery="1006" centerz="10" radius="1">
+		<monster name="Werebadger" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="989" centery="1012" centerz="10" radius="3">
+		<monster name="Wereboar" x="-1" y="2" z="10" spawntime="60" />
+		<monster name="Werebadger" x="1" y="2" z="10" spawntime="60" />
+		<monster name="Werebadger" x="0" y="3" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="961" centery="1019" centerz="10" radius="3">
+		<monster name="Werebadger" x="1" y="-2" z="10" spawntime="60" />
+		<monster name="Werewolf" x="2" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="996" centery="1019" centerz="10" radius="3">
+		<monster name="Werebear" x="-3" y="-1" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1003" centery="1019" centerz="10" radius="3">
+		<monster name="Wereboar" x="2" y="3" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1010" centery="1019" centerz="10" radius="3">
+		<monster name="Werebadger" x="-2" y="2" z="10" spawntime="60" />
+		<monster name="Wereboar" x="0" y="2" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1017" centery="1019" centerz="10" radius="3">
+		<monster name="Werefox" x="-3" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="968" centery="1026" centerz="10" radius="3">
+		<monster name="Werebear" x="0" y="-2" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="975" centery="1026" centerz="10" radius="3">
+		<monster name="Wereboar" x="-3" y="-3" z="10" spawntime="60" />
+		<monster name="Werebadger" x="-3" y="-1" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1003" centery="1026" centerz="10" radius="3">
+		<monster name="Werebadger" x="-2" y="-2" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1010" centery="1026" centerz="10" radius="3">
+		<monster name="Werebadger" x="0" y="-3" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1017" centery="1026" centerz="10" radius="3">
+		<monster name="Werewolf" x="1" y="-3" z="10" spawntime="60" />
+		<monster name="Fox" x="2" y="-1" z="10" spawntime="60" />
+		<monster name="Werefox" x="3" y="1" z="10" spawntime="60" />
+		<monster name="Werebadger" x="3" y="2" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1024" centery="1026" centerz="10" radius="3">
+		<monster name="Fox" x="-3" y="1" z="10" spawntime="60" />
+		<monster name="Werebadger" x="-3" y="3" z="10" spawntime="60" />
+		<monster name="Werewolf" x="-2" y="3" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="989" centery="1033" centerz="10" radius="3">
+		<monster name="Wereboar" x="-2" y="1" z="10" spawntime="60" />
+		<monster name="Werewolf" x="3" y="2" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1024" centery="1033" centerz="10" radius="3">
+		<monster name="Werewolf" x="-2" y="-3" z="10" spawntime="60" />
+		<monster name="Werebear" x="-1" y="-2" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1031" centery="1033" centerz="10" radius="3">
+		<monster name="Werebear" x="-3" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1038" centery="1033" centerz="10" radius="3">
+		<monster name="Werewolf" x="1" y="1" z="10" spawntime="60" />
+		<monster name="Wereboar" x="-2" y="3" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="989" centery="1040" centerz="10" radius="3">
+		<monster name="Werebear" x="0" y="-3" z="10" spawntime="60" />
+		<monster name="Werebadger" x="-2" y="-1" z="10" spawntime="60" />
+		<monster name="Werewolf" x="-1" y="0" z="10" spawntime="60" />
+		<monster name="Wereboar" x="2" y="1" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="996" centery="1040" centerz="10" radius="3">
+		<monster name="Werebadger" x="3" y="1" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1010" centery="1040" centerz="10" radius="3">
+		<monster name="Wereboar" x="-2" y="-1" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1017" centery="1040" centerz="10" radius="3">
+		<monster name="Werebadger" x="-1" y="2" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1024" centery="1040" centerz="10" radius="3">
+		<monster name="Werewolf" x="2" y="-3" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1031" centery="1040" centerz="10" radius="3">
+		<monster name="Werebear" x="0" y="-3" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="982" centery="1047" centerz="10" radius="3">
+		<monster name="Werebadger" x="2" y="0" z="10" spawntime="60" />
+		<monster name="Werewolf" x="-3" y="1" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1010" centery="1047" centerz="10" radius="3">
+		<monster name="Werebadger" x="-2" y="-3" z="10" spawntime="60" />
+		<monster name="Werebear" x="-3" y="0" z="10" spawntime="60" />
+		<monster name="Wereboar" x="-2" y="0" z="10" spawntime="60" />
+		<monster name="Werebadger" x="0" y="1" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1017" centery="1047" centerz="10" radius="3">
+		<monster name="Werewolf" x="-1" y="-2" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1038" centery="1047" centerz="10" radius="3">
+		<monster name="Werebadger" x="1" y="0" z="10" spawntime="60" />
+		<monster name="Werebadger" x="-3" y="1" z="10" spawntime="60" />
+		<monster name="Werebear" x="-3" y="2" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="975" centery="1054" centerz="10" radius="3">
+		<monster name="Werebadger" x="1" y="-1" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="982" centery="1054" centerz="10" radius="3">
+		<monster name="Werebear" x="-2" y="-2" z="10" spawntime="60" />
+		<monster name="Wereboar" x="-2" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1031" centery="1054" centerz="10" radius="3">
+		<monster name="Werewolf" x="3" y="-3" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="1038" centery="1054" centerz="10" radius="3">
+		<monster name="Werebadger" x="-3" y="-2" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="982" centery="1061" centerz="10" radius="3">
+		<monster name="Werebear" x="2" y="-3" z="10" spawntime="60" />
+		<monster name="Werebadger" x="1" y="0" z="10" spawntime="60" />
+		<monster name="Wereboar" x="-2" y="2" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="982" centery="1068" centerz="10" radius="3">
+		<monster name="Werewolf" x="0" y="-3" z="10" spawntime="60" />
 	</monster>
 </monsters>

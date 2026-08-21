@@ -3,6 +3,9 @@
 	<npc centerx="1017" centery="982" centerz="7" radius="1">
 		<npc name="King Tibianus" x="0" y="0" z="7" spawntime="60" />
 	</npc>
+	<npc centerx="1032" centery="986" centerz="7" radius="1">
+		<npc name="Sebastian (Nargor)" x="0" y="0" z="7" spawntime="60" />
+	</npc>
 	<npc centerx="981" centery="990" centerz="7" radius="1">
 		<npc name="Liane" x="0" y="0" z="7" spawntime="60" />
 	</npc>
@@ -14,6 +17,9 @@
 	</npc>
 	<npc centerx="997" centery="998" centerz="7" radius="1">
 		<npc name="Testserver Assistant" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="1004" centery="1008" centerz="7" radius="1">
+		<npc name="Archery" x="0" y="0" z="7" spawntime="60" />
 	</npc>
 	<npc centerx="989" centery="1010" centerz="7" radius="1">
 		<npc name="Asnarus" x="0" y="0" z="7" spawntime="60" />
