@@ -3391,6 +3391,8 @@
 		<monster name="Grim Reaper" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="942" centery="930" centerz="9" radius="1">
+		<monster name="Rotworm" x="0" y="-1" z="9" spawntime="90" />
+		<monster name="Rotworm" x="1" y="0" z="9" spawntime="90" />
 		<monster name="Rotworm" x="0" y="1" z="9" spawntime="90" />
 	</monster>
 	<monster centerx="1060" centery="930" centerz="9" radius="1">
@@ -3594,7 +3596,9 @@
 		<monster name="Carrion Worm" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="930" centery="994" centerz="9" radius="3">
+		<monster name="Rotworm" x="0" y="-3" z="9" spawntime="90" />
 		<monster name="Carrion Worm" x="-1" y="0" z="9" spawntime="90" />
+		<monster name="Rotworm" x="0" y="3" z="9" spawntime="90" />
 	</monster>
 	<monster centerx="958" centery="998" centerz="9" radius="1">
 		<monster name="Carrion Worm" x="0" y="0" z="9" spawntime="60" />
@@ -3637,6 +3641,7 @@
 	</monster>
 	<monster centerx="930" centery="1015" centerz="9" radius="3">
 		<monster name="Carrion Worm" x="1" y="2" z="9" spawntime="90" />
+		<monster name="Rotworm" x="2" y="3" z="9" spawntime="90" />
 	</monster>
 	<monster centerx="944" centery="1015" centerz="9" radius="1">
 		<monster name="Carrion Worm" x="0" y="0" z="9" spawntime="60" />
@@ -3695,5 +3700,8 @@
 		<monster name="Carrion Worm" x="0" y="-3" z="9" spawntime="60" />
 		<monster name="Carrion Worm" x="0" y="-1" z="9" spawntime="90" />
 		<monster name="Carrion Worm" x="-2" y="2" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="943" centery="1050" centerz="9" radius="1">
+		<monster name="Carrion Worm" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 </monsters>
