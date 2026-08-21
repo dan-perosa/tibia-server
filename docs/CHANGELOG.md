@@ -5,6 +5,36 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21
+
+### Mesclado o mapa do Pedro com a hunt do pântano do Daniel (edição em paralelo)
+Pedro voltou de viagem (fora 08/08-20/08) e o Dan tinha ficado trabalhando
+sozinho no mapa sem sincronizar — os dois arquivos divergiram: o `.otbm` do
+Pedro (salvo localmente, fora do git, em `tibia-server/meu-mapa/`) tinha
+lapidações próprias que não existiam em nenhum outro lugar, e o do Dan
+(commit `76af8c0a2`) tinha a hunt do pântano nova + ajustes em outras hunts,
+sem ter sido puxado ainda.
+
+**Resolução**: em vez de merge automático (formato `.otbm` é binário, não dá
+pra mesclar tipo texto), o mapa do Dan foi copiado pra uma pasta separada
+(`mapa-daniel-github/`) só de referência, e o Pedro trouxe manualmente as
+partes que queria (a hunt do pântano) pro mapa dele via copiar/colar no RME,
+numa área nova do mapa (~x673-1003/y403-1049) — sem sobrescrever a cidade
+original.
+
+**Verificação antes de subir**: comparação tile a tile com o `otbm.py`
+confirmou 94,5% dos tiles da cidade original do Pedro presentes na mesma
+coordenada no resultado final, 90,3% idênticos (ground + itens). Achado um
+buraco de 3.120 tiles perto do centro da cidade (x941-1060/y922-1094/z7) —
+o Pedro confirmou visualmente que não sentiu falta de nada, então foi
+considerado intencional/aceitável.
+
+**Lição pro futuro**: sempre que os dois estiverem editando o mapa na mesma
+janela de tempo, checar antes se algum dos dois tem trabalho local não
+commitado antes de decidir "quem está atualizado" — o commit mais recente no
+GitHub não é necessariamente a versão mais completa se alguém esqueceu de
+subir a própria.
+
 ## 2026-08-14 (4)
 
 ### 14 hunts vitrine: 2 por técnica nova sugerida
