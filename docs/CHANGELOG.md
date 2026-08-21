@@ -5,6 +5,13 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21 (17)
+
+### Elda: mais 4 amuletos elementais (set clássico)
+Adicionados Glacier Amulet, Lightning Pendant, Magma Amulet e Terra
+Amulet — 1000g cada (preço de memória, sinalizar se errado). Loja da
+Elda agora com 11 itens. Testado ao vivo, sem erro.
+
 ## 2026-08-21 (16)
 
 ### Elda: catálogo expandido (5 itens novos de joalheria)
