@@ -5,6 +5,19 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21 (18)
+
+### Elda: set completo de plasma (Falcon Bastion), um por vocação
+Adicionados os 8 itens do set de plasma — anel + colar de cada cor
+(vermelho=Knight, azul=Paladin, verde=Sorcerer/Druid, laranja=Monk),
+travados por vocação no próprio item. **Diferente do resto da loja**:
+são temporários (30min equipado, depois viram pó sozinhos) — no Tibia
+oficial nenhum NPC vende isso normalmente, só quest, então não tinha
+preço de referência real pra copiar. Preço estimado pensando na natureza
+consumível: 5000g (anel) / 8000g (colar).
+
+Testado ao vivo, sem erro.
+
 ## 2026-08-21 (17)
 
 ### Elda: mais 4 amuletos elementais (set clássico)

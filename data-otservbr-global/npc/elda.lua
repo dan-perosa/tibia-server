@@ -61,6 +61,19 @@ end
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
 npcConfig.shop = {
+	-- Plasma set (Falcon Bastion/Feyrist) -- temporario, 30min de duracao
+	-- depois de equipado, some sozinho. Trancado por vocacao. Sem preco
+	-- oficial de NPC pra copiar (normalmente so quest), valor estimado
+	-- pensando na natureza consumivel.
+	{ itemName = "collar of blue plasma", clientId = 23526, buy = 8000 },
+	{ itemName = "collar of green plasma", clientId = 23527, buy = 8000 },
+	{ itemName = "collar of orange plasma", clientId = 50153, buy = 8000 },
+	{ itemName = "collar of red plasma", clientId = 23528, buy = 8000 },
+	{ itemName = "ring of blue plasma", clientId = 23530, buy = 5000 },
+	{ itemName = "ring of green plasma", clientId = 23532, buy = 5000 },
+	{ itemName = "ring of orange plasma", clientId = 50151, buy = 5000 },
+	{ itemName = "ring of red plasma", clientId = 23534, buy = 5000 },
+
 	{ itemName = "energy ring", clientId = 3051, buy = 1500 },
 	{ itemName = "glacier amulet", clientId = 815, buy = 1000 },
 	{ itemName = "life ring", clientId = 3052, buy = 1500 },
