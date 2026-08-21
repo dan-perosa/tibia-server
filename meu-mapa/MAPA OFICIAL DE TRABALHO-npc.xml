@@ -19,7 +19,7 @@
 		<npc name="Cledwyn" x="0" y="0" z="7" spawntime="60" />
 	</npc>
 	<npc centerx="997" centery="998" centerz="7" radius="1">
-		<npc name="Testserver Assistant" x="0" y="0" z="7" spawntime="60" />
+		<npc name="Blessing Merchant" x="0" y="0" z="7" spawntime="60" />
 	</npc>
 	<npc centerx="1004" centery="1008" centerz="7" radius="1">
 		<npc name="Archery" x="0" y="0" z="7" spawntime="60" />
@@ -38,5 +38,8 @@
 	</npc>
 	<npc centerx="996" centery="1017" centerz="7" radius="1">
 		<npc name="Luna" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="1021" centery="991" centerz="7" radius="1">
+		<npc name="Elda" x="0" y="0" z="7" spawntime="60" />
 	</npc>
 </npcs>

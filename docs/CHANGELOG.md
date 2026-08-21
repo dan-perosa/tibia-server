@@ -5,6 +5,26 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21 (14)
+
+### Testserver Assistant renomeado para Blessing Merchant; Elda criada
+"Testserver Assistant" (o único NPC do mapa relacionado a bênção — na
+verdade dá bless/money/exp/reset de graça, ferramenta de teste) renomeado
+pra **Blessing Merchant**, a pedido. Só troca de nome, funcionalidade
+igual — sinalizado pro Pedro que ele faz mais que só bênção, caso queira
+separar depois.
+
+Criado NPC **Elda** (posição 1021,991,7), vendendo só Might Ring (3000g)
+e Stone Skin Amulet (18000g) — removidos da loja da Sarina, que volta a
+vender só backpacks/ferramentas gerais.
+
+**Nota de processo**: a renomeação do Testserver Assistant tinha sido
+feita direto no `-npc.xml` antes, mas sumiu — o RME resalvou o arquivo
+por cima antes de eu sincronizar (não fechou/reabriu entre uma coisa e
+outra). Refeita a mudança em cima do estado mais recente do arquivo.
+
+Testado ao vivo, sem erro.
+
 ## 2026-08-21 (13)
 
 ### Rojan reconstruído: vende os itens reais de exercise weapon (3 tiers)
