@@ -5,6 +5,27 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21 (9)
+
+### Investigado (não corrigido): Cledwyn mostra "Gold Coin" na janela de loja
+Pedro achou que o Cledwyn estava vendendo o set Rotten Blood por gold coin
+em vez de silver token. Conferido `cledwyn.lua`: **já tem**
+`npcConfig.currency = 22516` (silver token) configurado corretamente —
+não faltava nada no script (correção de uma suspeita minha errada na
+mesma sessão, cheguei a achar que faltava a linha, mas só tinha lido um
+trecho do arquivo).
+
+Print do jogo mostrou a janela de loja com "Currency: Gold Coin" mesmo
+assim. Investigação no C++ do servidor (`npc->getCurrency()`,
+`NpcType::info.currencyId`, `protocolgame.cpp`) não achou nenhum bug —
+o servidor sabe que a moeda é silver token (prova: o diálogo de encantar
+item gera dinamicamente "5 silver tokens", lendo a mesma função). Suspeita
+é bug **visual do lado do cliente (OTClient)**, não do servidor.
+
+**Pendente**: Pedro precisa testar comprando 1 item pra confirmar se
+desconta gold coin de verdade (bug real) ou só mostra errado na tela
+(cosmético). Não mexi em nada no Cledwyn até essa confirmação.
+
 ## 2026-08-21 (8)
 
 ### Sala secreta da World Wolves: Hellflayer guardião + baú de recompensa
