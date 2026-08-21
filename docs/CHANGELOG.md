@@ -5,6 +5,24 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21 (7)
+
+### Cidade principal renomeada para Skartholt
+"Cidade de Spawn" (placeholder desde o início do projeto) virou
+**Skartholt** — nome final da cidade onde todos nascem/respawnam
+(temple em 1000,1000,7). Resolve um dos itens "pendente" registrados na
+entrada do sistema de barco.
+
+O nome existia em **dois lugares que precisavam ficar sincronizados**:
+o registro de town dentro do `.otbm` (editado via `otbm.py`) e uma tabela
+`towns` separada no banco de dados (usada pelo MyAAC e pela criação de
+personagem) — só mudar o `.otbm` não seria suficiente, o site/criação de
+conta continuaria mostrando o nome antigo. Os dois foram atualizados.
+
+Backup do `.otbm` antes da mudança: `MAPA OFICIAL DE TRABALHO.otbm.bak3`.
+Testado ao vivo (restart do servidor + confirmado que o nome novo
+sobrevive ao reload da tabela `towns`), sem erro.
+
 ## 2026-08-21 (6)
 
 ### Protection Zone no píer de chegada da Mirror Island
