@@ -5,6 +5,26 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21 (12)
+
+### Rojan reposicionado: os dummies de verdade ficam dentro do DP
+O Rojan tinha sido colocado em (1342,585,7), perto de uns "training dummy"
+(item 5787/5788) achados num scan geral do mapa — mas essa área fica longe
+da cidade, provavelmente sobra da mesclagem com o mapa do Daniel, sem
+conexão andável. Pedro confirmou que os dummies de verdade ficam **dentro
+do DP**. Achado o item certo — **"exercise dummy" (28558)**, em (990,985,7),
+a dupla certa das armas de treino (mesma leva de conteúdo) — diferente do
+"training dummy" antigo que eu tinha achado por engano. Rojan movido pra
+(989,986,7), logo ao lado.
+
+**Lição**: ao procurar "onde fica X" por scan bruto do arquivo, sempre
+conferir se o resultado bate com uma área que o jogador realmente visita
+antes de assumir — nem todo item encontrado no mapa está num lugar
+acessível ou é a versão "certa" quando existem variantes com nome
+parecido.
+
+Testado ao vivo, sem erro.
+
 ## 2026-08-21 (11)
 
 ### Rojan: pedido "bulk" de armas de treino com mais cargas
