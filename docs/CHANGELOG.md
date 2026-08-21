@@ -5,6 +5,31 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21 (3)
+
+### Separada a loja do Asnarus: potes/runas ficam, distância vai pro Archery
+Pedro decidiu especializar as lojas — Asnarus deveria vender só poções e
+runas, e os itens de arqueiro/paladino (arrow, bolt, bow, crossbow,
+quiver, spear, throwing star) foram movidos pra um NPC dedicado. Em vez de
+criar um personagem do zero, reaproveitado o **Archery** — já existe no
+datapack, já com esse tema (dono de uma "Archery's Hut"), só faltava os
+preços calibrados: ele tinha só valores genéricos padrão do OTServBR (ex:
+infernal bolt 13, spectral bolt 70), bem abaixo do trabalho de precificação
+que o Daniel já tinha feito pro Asnarus (infernal bolt 114, spectral bolt
+210) — os preços do Asnarus foram transplantados pra manter a economia
+calibrada, e adicionado `poison arrow` que faltava no Archery. Removidos
+também do Asnarus os itens de loot/troféu que não eram nem poção nem runa
+(broken visor, frazzle skin/tongue, dead weight, hemp rope, etc.) — ficaram
+de fora por ora, sem destino definido ainda.
+
+Pedro já construiu o espaço físico pro Archery no mapa, logo ao norte do
+Haani (983-1004, y≈1013, z7) — falta só ele posicionar o NPC ali dentro do
+RME (feito por ele, não por script, pra não conflitar com a edição de mapa
+em andamento).
+
+Testado ao vivo via `docker compose cp` + restart nos dois arquivos: 49
+itens no Asnarus, 31 no Archery, zero erro de Lua.
+
 ## 2026-08-21 (2)
 
 ### Sarina passou a vender todas as 35 backpacks de 20 slots
