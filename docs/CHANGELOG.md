@@ -5,6 +5,31 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-21 (11)
+
+### Rojan: pedido "bulk" de armas de treino com mais cargas
+Pedro pediu versões das armas de treino com mais cargas, preço
+proporcional. **Achado importante no motor**: o preço de item na loja de
+NPC é resolvido só pelo item id (`src/creatures/npcs/npc.cpp`,
+`Npc::onPlayerBuyItem`), sem considerar subtype/cargas — cadastrar o mesmo
+id várias vezes na `npcConfig.shop` com preços diferentes faria toda
+compra daquele id cobrar o preço da **última** entrada registrada,
+independente da versão que o jogador clicasse (bug de preço/exploit em
+potencial). Resolvido com um fluxo de diálogo customizado fora do sistema
+de loja padrão: jogador fala `bulk` → escolhe a arma → escolhe 100/250/500
+cargas → confirma → recebe o item com `subType` = cargas, cobrado
+manualmente a 40 gold/carga (mesma taxa da versão base de 50 cargas/2000
+gold).
+
+### Sarina agora vende Might Ring e Stone Skin Amulet
+Nenhum NPC do mapa vendia esses dois (só existiam em NPCs do datapack
+original não posicionados em lugar nenhum). Adicionados na loja da
+Sarina: Might Ring por 3000 gold, Stone Skin Amulet por 18000 gold —
+valores de memória (Tibia global), não tem como conferir localmente por
+não existir precedente no servidor.
+
+Testado ao vivo (docker cp + restart), sem erro de Lua nos dois scripts.
+
 ## 2026-08-21 (10)
 
 ### NPC Rojan: vendedor de armas de treino, ao lado dos dummies
