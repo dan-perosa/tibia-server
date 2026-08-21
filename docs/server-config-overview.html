@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>O que dá pra configurar no servidor — config.lua</title>
+<style>
+  :root {
+    --bg: #0f1216; --bg-alt: #171b21; --card: #1b2028; --border: #2a313c;
+    --text: #e6e9ee; --text-dim: #9aa4b2; --accent: #ff8a4c; --accent2: #4cc2ff;
+    --good: #59d68d; --warn: #eda100; --mono-bg: #10141a;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f6f7f9; --bg-alt: #ffffff; --card: #ffffff; --border: #dde2e8;
+      --text: #1a1f27; --text-dim: #5b6472; --accent: #d9601a; --accent2: #0b74b0;
+      --good: #1a8f5e; --warn: #97650a; --mono-bg: #eef0f3;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1216; --bg-alt: #171b21; --card: #1b2028; --border: #2a313c;
+    --text: #e6e9ee; --text-dim: #9aa4b2; --accent: #ff8a4c; --accent2: #4cc2ff;
+    --good: #59d68d; --warn: #eda100; --mono-bg: #10141a;
+  }
+  :root[data-theme="light"] {
+    --bg: #f6f7f9; --bg-alt: #ffffff; --card: #ffffff; --border: #dde2e8;
+    --text: #1a1f27; --text-dim: #5b6472; --accent: #d9601a; --accent2: #0b74b0;
+    --good: #1a8f5e; --warn: #97650a; --mono-bg: #eef0f3;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; line-height: 1.55; }
+  .wrap { max-width: 1150px; margin: 0 auto; padding: 32px 20px 80px; }
+  h1 { font-size: 1.9rem; margin-bottom: 4px; }
+  .subtitle { color: var(--text-dim); margin-top: 0; margin-bottom: 24px; }
+  h2 { font-size: 1.3rem; margin-top: 46px; padding-bottom: 8px; border-bottom: 2px solid var(--border); color: var(--accent); }
+  p { color: var(--text); }
+  code { font-family: "SF Mono", Consolas, Menlo, monospace; font-size: 0.9em; background: var(--mono-bg); padding: 2px 6px; border-radius: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 22px; font-size: 0.92rem; }
+  th, td { border-bottom: 1px solid var(--border); text-align: left; padding: 7px 10px; vertical-align: top; }
+  th { color: var(--text-dim); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: .03em; }
+  tr:hover td { background: var(--bg-alt); }
+  .val { font-family: "SF Mono", Consolas, Menlo, monospace; font-size: 0.88em; color: var(--accent2); white-space: nowrap; }
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 24px; }
+  .toc ol { margin: 0; padding-left: 22px; columns: 3; column-gap: 30px; }
+  .toc li { margin-bottom: 5px; font-size: 0.92rem; }
+  .toc a { color: var(--text); text-decoration: none; }
+  .toc a:hover { color: var(--accent); }
+  .tag { display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 1px 7px; border-radius: 999px; margin-left: 4px; }
+  .tag-off { background: rgba(255,92,92,.15); color: #ff6b6b; }
+  .tag-on { background: rgba(89,214,141,.15); color: var(--good); }
+  .overflow { overflow-x: auto; }
+  .path { color: var(--text-dim); font-size: 0.82rem; margin-top: -8px; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>O que dá pra configurar no servidor</h1>
+<p class="subtitle">Todo o <code>config.lua</code>, organizado por sistema, com o valor atual e o que cada coisa faz. Serve pra escanear e decidir o que vale mexer — nada aqui foi alterado ainda.</p>
+
+<div class="toc">
+<ol>
+<li><a href="#combate">Combate / PvP / mortes</a></li>
+<li><a href="#rates">Taxas (XP, skill, loot, regeneração)</a></li>
+<li><a href="#criticos">Crítico, augments, weapon proficiency</a></li>
+<li><a href="#prey">Prey / Task Hunting / Forge / Hazard</a></li>
+<li><a href="#wheel">Wheel of Destiny / Bestiary / Bosstiary / Boosted</a></li>
+<li><a href="#vip">VIP / Loyalty / Livestream</a></li>
+<li><a href="#casas">Casas / Mercado / Depot</a></li>
+<li><a href="#mapa">Mapa / Save do servidor</a></li>
+<li><a href="#conexao">Conexão / rede / limites</a></li>
+<li><a href="#outros">Customs / diversos (autoloot, chain system, etc.)</a></li>
+<li><a href="#performance">Performance / dispatcher (avançado)</a></li>
+<li><a href="#infra">Banco de dados / status / discord (infraestrutura)</a></li>
+</ol>
+</div>
+
+<h2 id="combate">1. Combate / PvP / mortes</h2>
+<div class="overflow">
+<table>
+<tr><th>Config</th><th>Valor atual</th><th>O que faz</th></tr>
+<tr><td>worldType</td><td class="val">"pvp"</td><td>Tipo do mundo: <code>pvp</code>, <code>no-pvp</code> ou <code>pvp-enforced</code>. Já está no modo PvP normal.</td></tr>
+<tr><td>protectionLevel</td><td class="val">7</td><td>Nível mínimo pra poder atacar outro jogador (abaixo disso, imune a PvP).</td></tr>
+<tr><td>pzLocked</td><td class="val">60000 (1 min)</td><td>Tempo travado em "PZ lock" depois de atacar alguém, antes de poder entrar em zona protegida.</td></tr>
+<tr><td>whiteSkullTime</td><td class="val">15 min</td><td>Duração da caveira branca (marca de quem atacou sem ser provocado).</td></tr>
+<tr><td>dayKillsToRedSkull / weekKillsToRedSkull / monthKillsToRedSkull</td><td class="val">3 / 5 / 10</td><td>Quantos frags (mortes injustas) até ganhar caveira vermelha.</td></tr>
+<tr><td>redSkullDuration / blackSkullDuration / orangeSkullDuration</td><td class="val">1 / 3 / 7 dias</td><td>Quanto tempo cada caveira dura.</td></tr>
+<tr><td>timeToDecreaseFrags</td><td class="val">24h</td><td>Tempo pra cada frag "expirar" e deixar de contar.</td></tr>
+<tr><td>experienceByKillingPlayers</td><td class="val">false <span class="tag tag-off">desligado</span></td><td>Se true, matar outro jogador dá XP (baseado no level dele).</td></tr>
+<tr><td>expFromPlayersLevelRange</td><td class="val">75</td><td>Diferença máxima de level pra XP por PvP kill contar (só usado se a config acima estiver true).</td></tr>
+<tr><td>pvpRateDamageTakenPerLevel / pvpRateDamageReductionPerLevel</td><td class="val">0.0 / 0.0</td><td>Sistema de PvP customizado: % de dano extra tomado (ou reduzido) por diferença de level entre os jogadores. Zerado = desligado. O comentário no arquivo sugere começar com 0.1 se quiser ativar.</td></tr>
+<tr><td>pvpMaxLevelDifference</td><td class="val">0 (sem limite)</td><td>Diferença máxima de level pra dois jogadores poderem se atacar em PvP.</td></tr>
+<tr><td>deathLosePercent</td><td class="val">-1 (fórmula padrão)</td><td>Penalidade de morte. <code>-1</code> usa a fórmula padrão do jogo; <code>10</code> usa a fórmula antiga (mais punitiva); <code>0</code> = sem perda de XP/skill ao morrer.</td></tr>
+<tr><td>leavePartyOnDeath</td><td class="val">false</td><td>Se true, sair da party automaticamente ao morrer.</td></tr>
+<tr><td>hotkeyAimbotEnabled</td><td class="val">true</td><td>Permite usar hotkey pra mirar automaticamente em runas/magias direcionadas.</td></tr>
+<tr><td>removeChargesFromRunes / removeChargesFromPotions</td><td class="val">true / true</td><td>Se runas/potions perdem carga ao usar (desligar = uso infinito, bem mais fácil).</td></tr>
+<tr><td>removeWeaponAmmunition / removeWeaponCharges</td><td class="val">true / true</td><td>Se flechas/bolts/coisas com carga se consomem ao atacar.</td></tr>
+<tr><td>removeBeginningWeaponAmmunition / refundBeginningWeaponMana</td><td class="val">true / false</td><td>Armas iniciais (lança, wand of vortex etc.) têm munição/mana infinita pra treino.</td></tr>
+<tr><td>stairJumpExhaustion</td><td class="val">2s</td><td>Exhaustion ao usar escada pra "stair-hop" (técnica de fuga/combate).</td></tr>
+<tr><td>cleanProtectionZones</td><td class="val">false</td><td>Se true, limpa itens soltos em zonas protegidas periodicamente.</td></tr>
+</table>
+</div>
+
+<h2 id="rates">2. Taxas (XP, skill, loot, regeneração)</h2>
+<p class="path">Vocês já usam <code>data/stages.lua</code> pra XP/skill/magic escalonado — essas configs aqui só valem como <strong>fallback</strong> (<code>rateUseStages = false</code> hoje, então <code>data/stages.lua</code> é quem manda de fato).</p>
+<div class="overflow">
+<table>
+<tr><th>Config</th><th>Valor atual</th><th>O que faz</th></tr>
+<tr><td>rateUseStages</td><td class="val">false</td><td>Se true, usa as tabelas de <code>data/stages.lua</code> (o que vocês já fizeram); se false, usa os valores fixos abaixo pra TODO o jogo. <strong>Confirma que isso não foi mudado por engano</strong>, já que vocês investiram tempo no stages.lua.</td></tr>
+<tr><td>rateExp / rateSkill / rateMagic</td><td class="val">1 / 1 / 1</td><td>Multiplicador fixo de XP/skill/magic — só usado se <code>rateUseStages = false</code>.</td></tr>
+<tr><td>rateLoot</td><td class="val">1</td><td>Multiplicador de drop de itens dos monstros.</td></tr>
+<tr><td>rateSpawn</td><td class="val">1</td><td>Multiplicador de velocidade de respawn de monstros.</td></tr>
+<tr><td>lowLevelBonusExp</td><td class="val">50</td><td>Bônus de % de XP extra pra personagens até level 50 (facilita o início).</td></tr>
+<tr><td>rateHealthRegen / rateManaRegen / rateSoulRegen</td><td class="val">1.0 / 1.0 / 1.0</td><td>Multiplicador de quanto regenera por tick de vida/mana/soul.</td></tr>
+<tr><td>rateHealthRegenSpeed / rateManaRegenSpeed / rateSoulRegenSpeed</td><td class="val">1.0 / 1.0 / 1.0</td><td>Multiplicador de com que frequência regenera (velocidade, não quantidade).</td></tr>
+<tr><td>rateSpellCooldown</td><td class="val">1.0</td><td>Multiplicador de cooldown de magias (menor que 1 = cooldowns mais rápidos).</td></tr>
+<tr><td>rateAttackSpeed</td><td class="val">1.0</td><td>Velocidade de ataque geral.</td></tr>
+<tr><td>rateOfflineTrainingSpeed / rateExerciseTrainingSpeed</td><td class="val">= rateAttackSpeed</td><td>Velocidade de treino offline / com exercise weapons.</td></tr>
+<tr><td>rateMonsterHealth / rateMonsterAttack / rateMonsterDefense</td><td class="val">1.0 / 1.0 / 1.0</td><td>Multiplicadores globais de vida/ataque/defesa de <strong>todos os monstros comuns</strong>.</td></tr>
+<tr><td>rateBossHealth / rateBossAttack / rateBossDefense</td><td class="val">1.0 / 1.0 / 1.0</td><td>Mesma coisa, só pra bosses.</td></tr>
+<tr><td>rateNpcHealth</td><td class="val">1.0</td><td>Multiplicador de vida de NPCs (raramente relevante).</td></tr>
+<tr><td>rateKillingInTheNameOfPoints</td><td class="val">1</td><td>Multiplicador de pontos da quest "Killing in the Name of".</td></tr>
+<tr><td>sortLootByChance</td><td class="val">false</td><td>Se true, itens raros aparecem primeiro no corpo (evita perder item raro quando o corpo enche com rateLoot alto).</td></tr>
+</table>
+</div>
+
+<h2 id="criticos">3. Crítico, augments, weapon proficiency</h2>
+<div class="overflow">
+<table>
+<tr><th>Config</th><th>Valor atual</th><th>O que faz</th></tr>
+<tr><td>playerBaseCriticalChance</td><td class="val">0.05 (5%)</td><td>Chance base de crítico de todo jogador, antes de bônus de equipamento/talento.</td></tr>
+<tr><td>playerBaseCriticalDamage</td><td class="val">0.1 (10%)</td><td>Dano extra base num crítico.</td></tr>
+<tr><td>criticalChance</td><td class="val">10</td><td>Valor máximo de crítico configurável via imbuement.</td></tr>
+<tr><td>augmentIncreasedDamagePercent</td><td class="val">5%</td><td>% de dano extra do augment "Increased Damage" em itens (ver <code>formulas-de-dano.html</code> seção 4).</td></tr>
+<tr><td>augmentPowerfulImpactPercent</td><td class="val">7%</td><td>% do augment "Powerful Impact".</td></tr>
+<tr><td>augmentStrongImpactPercent</td><td class="val">10%</td><td>% do augment "Strong Impact".</td></tr>
+<tr><td>weaponProficiencyMaxLevels</td><td class="val">10</td><td>Quantos níveis de proficiência de arma existem (sistema de progressão por uso).</td></tr>
+<tr><td>weaponProficiencyMaxPerksPerLevel</td><td class="val">6</td><td>Quantos perks escolhíveis por nível de proficiência.</td></tr>
+<tr><td>weaponProficiencyGainMultiplier</td><td class="val">0.33</td><td>Velocidade de ganho de XP de proficiência de arma (0.33 = um terço da velocidade padrão — mais lento que o padrão).</td></tr>
+<tr><td>minElementalResistance / maxElementalResistance</td><td class="val">-200 / 200</td><td>Limites de quanto uma resistência elemental pode chegar (negativo = vulnerabilidade extra).</td></tr>
+<tr><td>maxDamageReflection</td><td class="val">200</td><td>Limite máximo de % de reflexão de dano.</td></tr>
+<tr><td>disableMonsterArmor</td><td class="val">false</td><td>Se true, ignora armadura/defesa dos monstros (todo hit conta cheio).</td></tr>
+</table>
+</div>
+
+<h2 id="prey">4. Prey / Task Hunting / Forge / Hazard</h2>
+<div class="overflow">
+<table>
+<tr><th>Config</th><th>Valor atual</th><th>O que faz</th></tr>
+<tr><td>preySystemEnabled</td><td class="val">true <span class="tag tag-on">ligado</span></td><td>Sistema de Prey (escolher criaturas pra bônus de loot/XP).</td></tr>
+<tr><td>preyFreeThirdSlot</td><td class="val">false</td><td>Se true, o 3º slot de prey é gratuito (normalmente é premium).</td></tr>
+<tr><td>preyRerollPricePerLevel / preySelectListPrice / preyBonusRerollPrice</td><td class="val">200 / 5 / 1</td><td>Preços em gold do sistema de prey.</td></tr>
+<tr><td>preyBonusTime / preyFreeRerollTime</td><td class="val">2h / 20h</td><td>Duração do bônus de prey / tempo pra reroll gratuito.</td></tr>
+<tr><td>taskHuntingSystemEnabled</td><td class="val">true <span class="tag tag-on">ligado</span></td><td>Sistema de Task Hunting (Bestiary tasks).</td></tr>
+<tr><td>taskHuntingFreeThirdSlot / taskHuntingLimitedTasksExhaust / etc.</td><td class="val">false / 20h / ...</td><td>Mesma lógica do prey, aplicada a tasks.</td></tr>
+<tr><td>toogleHazardSystem</td><td class="val">true <span class="tag tag-on">ligado</span></td><td>Sistema Hazard (zonas de alto risco/recompensa).</td></tr>
+<tr><td>hazardCriticalChance / hazardCriticalMultiplier / hazardDamageMultiplier / hazardDefenseMultiplier / hazardDodgeMultiplier</td><td class="val">750 / 25 / 200 / 0 / 85</td><td>Ajustam o quão punitivo o Hazard é pros monstros (dano/defesa/esquiva deles nessas zonas).</td></tr>
+<tr><td>hazardExpBonusMultiplier / hazardLootBonusMultiplier</td><td class="val">2 / 2</td><td>Bônus de XP/loot por caçar em zona hazard.</td></tr>
+<tr><td>forgeMaxItemTier</td><td class="val">10</td><td>Tier máximo que um item pode alcançar na Forja.</td></tr>
+<tr><td>forgeCostOneSliver / forgeSliverAmount / forgeCoreCost / forgeMaxDust</td><td class="val">20 / 3 / 50 / 225</td><td>Custos e limites do sistema de Forja (fusão/transferência de tiers).</td></tr>
+<tr><td>forgeBaseSuccessRate / forgeBonusSuccessRate</td><td class="val">50% / 15%</td><td>Chance base de sucesso na fusão de itens, e bônus por sliver extra usado.</td></tr>
+<tr><td>forgeInfluencedLimit / forgeFiendishLimit</td><td class="val">300 / 4</td><td>Quantos monstros "Influenced"/"Fiendish" (com bônus de dano/loot) podem existir por período.</td></tr>
+</table>
+</div>
+
+<h2 id="wheel">5. Wheel of Destiny / Bestiary / Bosstiary / Boosted</h2>
+<div class="overflow">
+<table>
+<tr><th>Config</th><th>Valor atual</th><th>O que faz</th></tr>
+<tr><td>wheelSystemEnabled</td><td class="val">true <span class="tag tag-on">ligado</span></td><td>Sistema Wheel of Destiny (talentos). Desligar tira toda a árvore de talentos dos personagens.</td></tr>
+<tr><td>wheelPointsPerLevel</td><td class="val">1</td><td>Quantos pontos de Wheel o jogador ganha por level. Aumentar isso faz a árvore preencher mais rápido.</td></tr>
+<tr><td>wheelMonkQuestBonus</td><td class="val">10</td><td>Bônus de pontos de Wheel pro Monk ao completar a quest dos santuários.</td></tr>
+<tr><td>wheelAtelierRotateLesserCost / RegularCost / GreaterCost</td><td class="val">125k / 250k / 500k</td><td>Custo em gold pra "girar" gemas no Gem Atelier.</td></tr>
+<tr><td>wheelAtelierRevealLesserCost / RegularCost / GreaterCost</td><td class="val">125k / 1M / 6M</td><td>Custo pra revelar o tipo da gema.</td></tr>
+<tr><td>bestiaryKillMultiplier / bosstiaryKillMultiplier</td><td class="val">1 / 1</td><td>Multiplicador de quantas kills contam pro progresso do bestiary/bosstiary por criatura morta.</td></tr>
+<tr><td>boostedBossSlot</td><td class="val">true</td><td>Se existe um "boss do dia" com bônus.</td></tr>
+<tr><td>boostedBossLootBonus / boostedBossKillBonus</td><td class="val">250% / 3x</td><td>Bônus de loot e de pontos por matar o boss/creature boostado do dia.</td></tr>
+<tr><td>familiarTime</td><td class="val">30 (min)</td><td>Duração total do familiar (Sorcerer/Druid) — metade é o tempo ativo, metade é cooldown.</td></tr>
+</table>
+</div>
+
+<h2 id="vip">6. VIP / Loyalty / Livestream</h2>
+<div class="overflow">
+<table>
+<tr><th>Config</th><th>Valor atual</th><th>O que faz</th></tr>
+<tr><td>vipSystemEnabled</td><td class="val">false <span class="tag tag-off">desligado</span></td><td>Sistema de VIP (bônus por assinatura/doação). Como é servidor privado com amigos, provavelmente não precisa.</td></tr>
+<tr><td>vipBonusExp / vipBonusLoot / vipBonusSkill</td><td class="val">0 / 0 / 0</td><td>% de bônus pra quem é VIP (só importa se o sistema acima for ligado).</td></tr>
+<tr><td>loyaltyEnabled</td><td class="val">true <span class="tag tag-on">ligado</span></td><td>Sistema de Loyalty (bônus por tempo de conta/premium).</td></tr>
+<tr><td>loyaltyPointsPerCreationDay</td><td class="val">1</td><td>Pontos de loyalty ganhos por dia desde a criação da conta.</td></tr>
+<tr><td>loyaltyBonusPercentageMultiplier</td><td class="val">1.0</td><td>Multiplicador geral do bônus de loyalty.</td></tr>
+<tr><td>livestreamExperienceMultiplier</td><td class="val">1.15</td><td>Bônus de XP pra quem está com stream ativa no jogo (1.0 = desliga o bônus).</td></tr>
+<tr><td>livestreamMaximumViewers / livestreamMaximumViewersPerIP</td><td class="val">10 / 2</td><td>Limite de espectadores por stream / por IP.</td></tr>
+<tr><td>livestreamCasterMinLevel</td><td class="val">200</td><td>Level mínimo pra poder abrir uma stream.</td></tr>
+<tr><td>onlyPremiumAccount</td><td class="val">false</td><td>Se true, exige conta premium pra jogar (não faz sentido pra servidor privado).</td></tr>
+<tr><td>freePremium</td><td class="val">false</td><td>Se true, todo mundo já é premium automaticamente — <strong>bom candidato pra ativar</strong> num servidor privado sem loja real.</td></tr>
+</table>
+</div>
+
+<h2 id="casas">7. Casas / Mercado / Depot</h2>
+<div class="overflow">
+<table>
+<tr><th>Config</th><th>Valor atual</th><th>O que faz</th></tr>
+<tr><td>toggleCyclopediaHouseAuction</td><td class="val">true</td><td>Sistema de leilão de casas (Cyclopedia). Se true, o comando <code>!buyhouse</code> não funciona.</td></tr>
+<tr><td>daysToCloseBid</td><td class="val">7</td><td>Duração de um leilão de casa.</td></tr>
+<tr><td>housePriceEachSQM</td><td class="val">1000</td><td>Preço por SQM de casa (-1 desativa compra pelo jogo).</td></tr>
+<tr><td>houseRentPeriod / houseRentRate</td><td class="val">monthly / 1.0</td><td>Período de cobrança de aluguel e multiplicador do valor.</td></tr>
+<tr><td>houseBuyLevel</td><td class="val">100</td><td>Level mínimo pra comprar casa (0 desativa a exigência).</td></tr>
+<tr><td>houseLoseAfterInactivity</td><td class="val">30 dias</td><td>Depois de quantos dias sem logar o dono perde a casa (0 = nunca).</td></tr>
+<tr><td>houseOwnedByAccount</td><td class="val">false</td><td>Se a casa pertence à conta (todos os personagens) ou só ao personagem específico.</td></tr>
+<tr><td>marketOfferDuration</td><td class="val">30 dias</td><td>Por quanto tempo uma oferta no mercado fica ativa.</td></tr>
+<tr><td>premiumToCreateMarketOffer</td><td class="val">true</td><td>Se precisa de premium pra criar oferta no mercado.</td></tr>
+<tr><td>maxMarketOffersAtATimePerPlayer</td><td class="val">100</td><td>Quantas ofertas simultâneas cada jogador pode ter.</td></tr>
+<tr><td>freeDepotLimit / premiumDepotLimit</td><td class="val">2000 / 10000</td><td>Limite de itens no depot pra conta free/premium.</td></tr>
+<tr><td>depotChest</td><td class="val">4</td><td>Qual depot chest (I a XVIII) recebe itens não-empilháveis automaticamente.</td></tr>
+<tr><td>autoBank</td><td class="val">false</td><td>Se true, gold dropado por monstro vai direto pro banco.</td></tr>
+<tr><td>autoLoot</td><td class="val">false</td><td>Sistema de autoloot geral (pegar itens automaticamente).</td></tr>
+</table>
+</div>
+
+<h2 id="mapa">8. Mapa / Save do servidor</h2>
+<div class="overflow">
+<table>
+<tr><th>Config</th><th>Valor atual</th><th>O que faz</th></tr>
+<tr><td>mapName</td><td class="val">"MAPA OFICIAL DE TRABALHO"</td><td>Nome do mapa que o servidor carrega (o de vocês).</td></tr>
+<tr><td>toggleMapCustom</td><td class="val">false</td><td>Se true, carrega todos os mapas extras da pasta de mapa customizado por cima do mapa principal.</td></tr>
+<tr><td>toggleDownloadMap</td><td class="val">true</td><td>Se baixa o mapa oficial da URL quando não existe local (não afeta vocês, já têm o mapa próprio).</td></tr>
+<tr><td>toggleSaveInterval / saveIntervalType / saveIntervalTime</td><td class="val">true / hour / 1</td><td>Salva o servidor automaticamente de quanto em quanto tempo.</td></tr>
+<tr><td>toggleSaveIntervalCleanMap</td><td class="val">true</td><td>Se limpa itens soltos no mapa durante o save automático.</td></tr>
+<tr><td>globalServerSaveTime</td><td class="val">"06:00:00"</td><td>Horário do save global diário (servidor "reinicia o dia" nesse horário).</td></tr>
+<tr><td>globalServerSaveShutdown</td><td class="val">true</td><td>Se o servidor reinicia de fato no save global (false = só salva, não reinicia).</td></tr>
+<tr><td>globalServerSaveNotifyDuration</td><td class="val">5 min</td><td>Com quanto tempo de antecedência avisa os jogadores do save global.</td></tr>
+</table>
+</div>
+
+<h2 id="conexao">9. Conexão / rede / limites</h2>
+<div class="overflow">
+<table>
+<tr><th>Config</th><th>Valor atual</th><th>O que faz</th></tr>
+<tr><td>ip</td><td class="val">"127.0.0.1"</td><td>IP que o servidor anuncia pro client. Pro seu amigo conectar de fora, precisa ser seu IP público (ou usar Tailscale/VPN).</td></tr>
+<tr><td>loginProtocolPort / gameProtocolPort / statusProtocolPort</td><td class="val">7171 / 7172 / 7171</td><td>Portas TCP do servidor.</td></tr>
+<tr><td>maxPlayers</td><td class="val">0 (sem limite)</td><td>Máximo de jogadores simultâneos.</td></tr>
+<tr><td>maxPlayersOnlinePerAccount / maxPlayersOutsidePZPerAccount</td><td class="val">1 / 1</td><td>Quantos personagens da mesma conta podem estar online / fora de zona protegida ao mesmo tempo.</td></tr>
+<tr><td>serverName / serverMotd</td><td class="val">"OTServBR-Global" / "Welcome to..."</td><td>Nome do servidor e mensagem do dia (aparece na lista de personagens). <strong>Provavelmente querem personalizar isso.</strong></td></tr>
+<tr><td>maxPacketsPerSecond</td><td class="val">25</td><td>Limite de pacotes/segundo por conexão (não recomendado mudar, evita bug de WPE).</td></tr>
+<tr><td>kickIdlePlayerAfterMinutes</td><td class="val">15</td><td>Kicka jogador AFK depois de quantos minutos.</td></tr>
+<tr><td>packetCompressionLevel</td><td class="val">6</td><td>Nível de compressão de rede (0=desligado, 9=máxima compressão/CPU).</td></tr>
+</table>
+</div>
+
+<h2 id="outros">10. Customs / diversos</h2>
+<div class="overflow">
+<table>
+<tr><th>Config</th><th>Valor atual</th><th>O que faz</th></tr>
+<tr><td>toggleServerIsRetroPVP</td><td class="val">false</td><td>Modo "retro" (desliga PARTY_PROTECTION e ADVANCED_SECURE_MODE) — deixa o PvP mais "cru", estilo servidores antigos.</td></tr>
+<tr><td>toggleTravelsFree</td><td class="val">false</td><td>Se true, viagem de barco fica de graça em todo lugar.</td></tr>
+<tr><td>toggleGoldPouchAllowAnything / toggleGoldPouchQuickLootOnly</td><td class="val">false / false</td><td>Controlam o que pode ir pra "gold pouch" (só gold, ou qualquer item).</td></tr>
+<tr><td>buyAolCommandFee / buyBlessCommandFee</td><td class="val">0 / 0</td><td>Taxa extra ao comprar amulet of loss / bênçãos pelo comando de chat (!aol / !bless).</td></tr>
+<tr><td>randomMonsterSpawn</td><td class="val">false</td><td>Se true, mistura os monstros de um mesmo spawn aleatoriamente — hunt fica menos previsível.</td></tr>
+<tr><td>enablePlayerPutItemInAmmoSlot</td><td class="val">false</td><td>Permite colocar qualquer item no slot de munição (usado em lojas customizadas).</td></tr>
+<tr><td>showLootsInBestiary</td><td class="val">false</td><td>Se true, mostra todos os loots no bestiary mesmo sem ter matado o suficiente ainda.</td></tr>
+<tr><td>stashMoving</td><td class="val">false</td><td>Permite guardar um container inteiro dentro do stash de uma vez.</td></tr>
+<tr><td>teleportSummons</td><td class="val">false</td><td>Se true, seu summon nunca se perde ao teleportar/mudar de andar.</td></tr>
+<tr><td>allowReload</td><td class="val">false <span class="tag tag-off">desligado</span></td><td>Permite usar o comando <code>/reload</code> pra recarregar scripts sem reiniciar. <strong>Vocês provavelmente querem isso true</strong>, já que estão editando scripts o tempo todo (senão precisa reiniciar o `canary.exe` a cada mudança em Lua).</td></tr>
+<tr><td>toggleChainSystem</td><td class="val">false</td><td>Sistema de "chain attack" (atingir múltiplos alvos em linha, estilo hit-chain de skills modernas).</td></tr>
+<tr><td>combatChainTargets / combatChainDelay</td><td class="val">5 / 50ms</td><td>Quantos alvos em cadeia e o delay entre cada hit, se o sistema acima for ligado.</td></tr>
+<tr><td>staminaSystem</td><td class="val">true</td><td>Sistema de stamina (afeta ganho de XP conforme joga muito tempo seguido).</td></tr>
+<tr><td>staminaTrainer / staminaPz</td><td class="val">false / false</td><td>Se a stamina também é consumida treinando em dummy / ficando em zona protegida.</td></tr>
+<tr><td>partyAutoShareExperience</td><td class="val">true</td><td>Compartilha XP automaticamente com a party.</td></tr>
+<tr><td>partyShareRangeMultiplier</td><td class="val">1.5</td><td>Alcance (em relação ao level médio da party) pra alguém contar no share de XP.</td></tr>
+<tr><td>partyShareLootBoosts</td><td class="val">false</td><td>Se bônus de loot (charm, VIP, etc.) de um membro da party se aplica a todos.</td></tr>
+</table>
+</div>
+
+<h2 id="performance">11. Performance / dispatcher (avançado, cuidado)</h2>
+<p class="path">Essas afetam como o servidor divide trabalho entre threads. Só vale mexer se sentirem lag/travamento com muita gente/monstros — mudar sem necessidade pode causar instabilidade.</p>
+<div class="overflow">
+<table>
+<tr><th>Config</th><th>Valor atual</th><th>O que faz</th></tr>
+<tr><td>monsterComputeThreads</td><td class="val">0 (auto)</td><td>Threads dedicadas a cálculo de IA de monstro. 0 deixa o servidor escolher pelo hardware. <strong>Precisa reiniciar</strong> pra mudar.</td></tr>
+<tr><td>defaultPriority</td><td class="val">"high"</td><td>Prioridade do processo no Windows — "high" já dá prioridade boa sobre outros programas.</td></tr>
+<tr><td>dispatcherSloMs / dispatcherEmergencyMs</td><td class="val">50 / 100</td><td>Limites (em ms) pra quando o servidor entra em modo "correndo atrás" ou "emergência" de sobrecarga.</td></tr>
+</table>
+</div>
+
+<h2 id="infra">12. Banco de dados / status / discord</h2>
+<div class="overflow">
+<table>
+<tr><th>Config</th><th>Valor atual</th><th>O que faz</th></tr>
+<tr><td>mysqlHost / mysqlUser / mysqlPass / mysqlDatabase / mysqlPort</td><td class="val">127.0.0.1 / root / *** / canary / 3306</td><td>Credenciais do banco (já configuradas, cuidado ao editar).</td></tr>
+<tr><td>ownerName / ownerEmail / location</td><td class="val">"OpenTibiaBR" / ... / "South America"</td><td>Informações mostradas na lista de servidores públicos — <strong>vale personalizar</strong> já que ainda está com o nome padrão do template.</td></tr>
+<tr><td>discordWebhookURL</td><td class="val">"" (vazio = desligado)</td><td>Se preenchido, manda aviso no Discord quando o servidor inicia, tem raid, ou desliga.</td></tr>
+<tr><td>metricsEnablePrometheus / metricsEnableOstream</td><td class="val">false / false</td><td>Exportar métricas de performance pra Prometheus ou console — só relevante se forem monitorar o servidor de fora.</td></tr>
+</table>
+</div>
+
+<p style="margin-top:48px; color:var(--text-dim); font-size:0.85rem;">Levantado direto do <code>config.lua</code> atual do projeto. Nada foi alterado — é só um mapa pra vocês navegarem e decidirem o que vale a pena mudar.</p>
+
+</div>
+</body>
+</html>

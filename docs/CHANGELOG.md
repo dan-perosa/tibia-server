@@ -5,6 +5,434 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-14 (4)
+
+### 14 hunts vitrine: 2 por técnica nova sugerida
+`build_technique_showcase.lua` — 2 variantes bem diferentes pra cada uma
+das 7 técnicas discutidas: `algo.erode` (vale estreito x vale largo
+ramificado), `algo.thermalErode` (encosta afiada x encosta suave),
+`noise.cellular` (células grandes x células pequenas), `noise.warp`
+(distorção sutil num círculo x distorção forte num tabuleiro),
+`geo.pointInPolygon` (pentagrama exato x polígono irregular quebrado),
+`geo.floodFill` (gruta pequena quase toda inundada x caverna grande com só
+um bolsão de água num canto), e `algo.voronoi` com contagem de pontos
+desigual (uma facção domina quase tudo x fronteira disputada com faixa
+neutra no meio). Todas em x0-2040/y1180-1461 (faixa vazia verificada),
+maiores que os lotes anteriores (até 260x100, formato baixo e largo pra
+caber lado a lado).
+
+**Erro pego antes de rodar**: a primeira fileira tinha 8 hunts planejadas
+em 7 posições — sobrepunham. Corrigido movendo uma pro final da segunda
+fileira, com espaçamento de 31 tiles reconferido em todas as 14.
+
+## 2026-08-14 (3)
+
+### Os 6 demos originais restantes corrigidos e substituídos
+Endurecidos os últimos 6 scripts que ainda eram os demos originais sem
+proteção: `cave_generator.lua` → `build_cave.lua`,
+`dungeon_generator.lua` → `build_dungeon.lua`, `maze_generator.lua` →
+`build_maze.lua`, `island_generator.lua` → `build_island.lua`,
+`river_generator.lua` → `build_river.lua`, `street_generator.lua` →
+`build_street.lua`. Originais apagados (mesma ressalva de sempre: `rme/`
+está no `.gitignore`, sem desfazer pelo git).
+
+Cada um ganhou: validação de brush, checagem de limite do mapa, e a
+correção do "cancelar com X". Achados específicos no caminho:
+
+- **Island Generator tinha quase todos os ids errados** — a "espada"
+  (id 2376) é uma cadeira estofada vermelha neste servidor; árvore/flor
+  usavam os mesmos ids errados (teia/parede) do Forest Generator. Trocado
+  por brush de verdade (`green trees`, `flowers (yellow)`, `campfire`) ou
+  id conferido de verdade (espada=3264, placa=2012).
+- **Achei uma função nativa que eu não sabia que existia**:
+  `creatureExists(nome)` — checa se um monstro tá registrado de verdade,
+  sem precisar grepar arquivo. `setCreature` não dá erro em nome errado,
+  só cria um "tipo de monstro faltando" — usar essa função antes de
+  chamar `setCreature`, sempre.
+- **Rio e rua são diferentes de caverna/masmorra/labirinto/ilha**: esses
+  últimos são "auto-contidos" (qualquer conflito é erro de verdade, aborta
+  tudo); rio e rua servem pra **ligar** lugares que já existem — então em
+  vez de abortar tudo, eles agora **pulam** o tile que já tem algo (nunca
+  sobrescrevem) e avisam quantos pintaram vs quantos puleram.
+
+Tudo registrado na skill como mistake #8 e #9.
+
+## 2026-08-14 (2)
+
+### Limpeza: apagados os scripts deprecados
+A pedido do Dan, apagados 4 scripts obsoletos do Script Manager:
+`city_lot_generator.lua` (substituído por `build_city_lots.lua`),
+`forest_generator.lua` (substituído por `build_forest.lua`),
+`fix_swamp_hunt_cave.lua` e `fix_swamp_hunt_monster_placement.lua`
+(correções já incorporadas em `build_swamp_hunt.lua`). `rme/` está no
+`.gitignore`, então essa exclusão não passa pelo git — sem desfazer por
+lá, mas o que cada um fazia já está registrado nas entradas anteriores
+deste changelog. Os demos originais da RME (cave/dungeon/maze/island/
+river/street generator) não foram apagados — não têm substituto corrigido
+ainda, só ainda não passaram pelo mesmo tratamento de segurança.
+
+## 2026-08-14
+
+### Forest Generator corrigido (ids de árvore do demo eram de outro servidor)
+O demo original (`forest_generator.lua`) usa `tile:addItem(id)` com ids
+brutos fixos (2700-2709 pra árvore, 2725-2739 pra flor/cogumelo) e um
+comentário próprio avisando "adjust for your server". Conferido contra
+`data/items/items.xml` deste projeto: esses ids **não são árvore nem
+flor aqui** — são teia de aranha, parede florida, parede com musgo. Se
+tivesse rodado sem checar, teria colocado isso ao invés de vegetação.
+
+Corrigido em `build_forest.lua`: em vez de id bruto, usa os brushes de
+doodad reais desse build da RME (`green trees`/`birch trees`/`alternate
+trees`, `flowers (yellow)/(moon)`/`sunflowers`, `light`/`dark mushrooms`,
+conferidos em `trees.xml`/`flowers.xml`) — mesmo caminho validado
+(`applyBrush` + `Brushes.get()`) que uso pra chão e parede, em vez de
+`addItem` com id cru. Adicionadas as mesmas 4 proteções dos scripts
+anteriores: validação de brush, checagem de conflito, limite do mapa, e
+correção do cancelar-com-X. Local de teste padrão: (1550,1800), 60x60,
+verificado vazio.
+
+## 2026-08-13 (10)
+
+### Diálogo gerava mesmo fechando com o X — corrigido, cidade agora 200x200
+O Dan abriu o diálogo do `build_city_lots.lua`, fechou com o X (pra
+cancelar) e ele gerou de qualquer jeito com os valores padrão. Causa:
+`dlg:show()` retorna tanto quando clica no botão quanto quando fecha a
+janela — não existe diferença nativa entre os dois; o script sempre segue
+em frente lendo `dlg.data`. Corrigido com uma flag `confirmed` que só vira
+`true` dentro do `onclick` do botão "Generate"; se `dlg:show()` retornar
+sem essa flag, o script cancela sem tocar em nada. Aplicado nos dois
+scripts com diálogo (`build_city_lots.lua`, `build_crystal_cave_test.lua`)
+e registrado na skill como regra pra qualquer diálogo futuro.
+
+Cidade padrão agora é 200x200 (era 80x80), 45 lotes, reposicionada pra
+(1300,1750) — verificada vazia e longe de tudo (canyon, as 20+11 hunts,
+cidade/pântano originais).
+
+## 2026-08-13 (9)
+
+### Teste de campo aberto (Cliff Canyon) e City Lot Generator corrigido
+Testado `build_cliff_canyon.lua` (ideia própria: terreno de um único campo
+de ruído contínuo `noise.fbm`, em vez de formas coladas). Resultado: a
+variedade de textura do terreno melhorou, mas a geometria de
+parede/rocha saiu errada — limiar de ruído puro não garante blob
+conectado como cellular automata garante. Registrado como lição na skill
+(mistake #6) e em memória (`map_terrain_noise_vs_walls.md`): ruído contínuo
+é bom pra textura de chão já andável, nunca pra decidir o que é parede.
+
+Também corrigido `scripts/city_lot_generator.lua` (script de exemplo da
+própria RME) → `build_city_lots.lua`: o original não valida nome de brush
+digitado no diálogo, não confere se as coordenadas já têm conteúdo, e não
+confere limite do header do mapa (2048x2048) — as 3 lacunas que já
+tínhamos corrigido nos outros scripts. Adicionadas as 3 checagens; posição
+padrão (900,1900, 80x80) já verificada vazia e dentro do limite.
+
+## 2026-08-13 (8)
+
+### Mais 20 hunts, ainda mais espaçadas e diferentes entre si
+Pedido: 20 hunts a mais, o mais diferentes possível entre si (tema, nível,
+tamanho, formato), sempre no preto e sem sobrepor nada. Temas escolhidos
+com ajuda de um agente que cruzou as pastas reais de monstro do datapack
+com agrupamentos reais do tibiaroute.com/br/hunting-places (confirmando,
+por exemplo, que Blue Djinn/Green Djinn/Efreet/Marid já formam uma hunt de
+verdade no Tibia oficial — "Yalahar Djinns"). Todos os ~80 nomes de monstro
+usados foram conferidos um por um contra `Game.createMonsterType("...")`
+nos arquivos reais antes de escrever qualquer coisa no script.
+
+1. Acampamento dos Dwarfs (masmorra BSP) — Dwarf, Dwarf Miner, Dwarf Guard, Dwarf Geomancer
+2. Caverna dos Morcegos (caverna bem aberta) — Bat, Mutated/Exotic Bat, Vicious Manbat
+3. Ninho de Insetos (labirinto pequeno) — Bug, Larva, Insect Swarm, Swarmer
+4. Covil das Aranhas (caverna densa e alta) — Spider, Tarantula, Sacred Spider, Exotic Cave Spider, Spidris
+5. Acampamento Goblin (mancha aberta pequena, nível baixo) — Goblin, Scavenger, Assassin, Leader
+6. Floresta dos Lobisomens (mancha aberta média) — Werefox, Werebadger, Wereboar, Werebear
+7. Território da Matilha (duas manchas unidas, forma de "amendoim") — Wolf, Winter Wolf, Gnarlhound, Ghost Wolf
+8. Enseada Pirata (lago com costa de areia) — Pirate Skeleton/Marauder/Cutthroat/Ghost/Buccaneer
+9. Labirinto do Minotauro (labirinto de verdade) — Minotaur Archer/Occultist/Mage/Guard
+10. Recife Quara (lago com recife de coral) — Quara Constrictor/Mantassin/Pincher/Predator
+11. Santuário da Esfinge (1 salão só, monstro raro/esparso) — Gazer, Bonelord, Sphinx, Feral Sphinx
+12. Covil dos Trolls (caverna pequena, nível baixo) — Island/Frost Troll, Troll Guard/Legionnaire
+13. Dunas dos Besouros (4 manchas sobrepostas, campo de dunas) — Sandcrawler, Terramite, Burrowing/Lancer Beetle
+14. Mansão Assombrada (masmorra BSP, parede de madeira) — Ghost, Spectre, Lost Soul, Mean Lost Soul
+15. Fundição dos Golens (masmorra BSP, parede de ferro) — Stone Golem, Iron Servant, Worker/War Golem
+16. Templo das Nagas (regiões voronoi) — Corrupt/Rogue Naga, Naga Archer/Warrior
+17. Recife das Serpentes (lago grande, chefe raro) — Young Sea Serpent, Sea Serpent, Seacrest Serpent, Mercurial Menace
+18. Palácio dos Djinns (mancha aberta, pátio de deserto) — Blue/Green Djinn, Efreet, Marid
+19. Reino dos Pesadelos (caverna alta e densa) — Nightmare Scion, Retching Horror, Choking Fear, Silencer
+20. Bosque Carnisylvan (mancha aberta corrompida) — Carnisylvan Sapling/Poisonous/Dark/Hulking
+
+Script: `build_twenty_hunts.lua`, grade de 20 blocos a leste de tudo (região
+verificada vazia), tamanhos e formatos bem diferentes (manchas simples,
+duas/quatro manchas unidas, masmorras BSP com parede diferente cada,
+labirintos, voronoi, um salão único). Checagem de brush no início (mesma
+proteção do lote anterior).
+
+**Erro pego antes de rodar**: ao planejar a grade de 20 blocos, a coluna
+mais a leste (com as hunts maiores) passava de x=2047 — o limite real do
+mapa (header diz 2048x2048) — em até 27 tiles, o que podia corromper ou
+falhar ao carregar. Só apareceu ao recalcular a caixa exata de cada uma das
+20 (não só olhar "centro da coluna + tamanho típico"). Corrigido deslocando
+a grade toda 50 tiles pra oeste. Registrado na skill: sempre confirmar os
+cantos extremos de cada zona contra os limites do header, não só o espaço
+entre vizinhas.
+
+## 2026-08-13 (7)
+
+### Caverna de Cristal (teste) agora se auto-limpa antes de gerar
+O Dan ficou travado num ciclo de ABORT mesmo depois de rodar o
+`clear_region.lua` manualmente — cada execução de um gerador cria 2+ undos
+separados (terreno, depois monstro), então contar Ctrl+Z certo é frágil, e
+o log do ABORT mostrava muito mais que os 5 tiles esperados (bug: o loop de
+conflito era `for y do for x do ... break end end` — o `break` só saía do
+loop de dentro, não do de fora, deixando escapar ~1 tile extra por linha).
+
+Como `build_crystal_cave_test.lua` é justamente uma sandbox pra testar
+parâmetro à vontade, mudei a lógica: em vez de abortar em conflito, ele
+agora **limpa sozinho** a própria área fixa (x1125-1235/y245-355) antes de
+gerar de novo — sem precisar do `clear_region.lua` nem contar Ctrl+Z. Só
+roda "Build Crystal Cave (Test)" de novo quantas vezes quiser. Esse
+autolimpar só é seguro aqui porque a área é fixa e pequena — os scripts que
+geram conteúdo permanente (hunts novas, mapa principal) continuam
+abortando em conflito, de propósito, pra nunca sobrescrever nada por
+engano.
+
+`clear_region.lua` continua existindo pra limpar qualquer outra área manualmente,
+se precisar.
+
+## 2026-08-13 (6)
+
+### Caverna de Cristal — hunt de teste com diálogo pra ajustar parâmetros
+O Dan pediu pra construir uma hunt junto, como teste, num lugar vazio perto
+das outras 10. Criado `build_crystal_cave_test.lua` (11ª área, x1125-1235/
+y245-355, verificada vazia) com monstros de tema cristal (Crystal Wolf,
+Crystalcrusher, Enraged Crystal Golem, Crystal Spider). Diferente dos
+scripts anteriores, esse abre um diálogo na RME antes de gerar, com os
+parâmetros do `algo.generateCave` (fill %, iterações, birth/death limit,
+seed, espaçamento de monstro) editáveis ali mesmo — dá pra ver o efeito de
+cada um ao vivo sem precisar pedir pra eu editar o arquivo.
+
+## 2026-08-13 (5)
+
+### 10 hunts novas, bem espaçadas e temáticas diferentes entre si
+Pedido: 10 opções de hunt diferentes, todas separadas na parte preta do
+mapa (sem sobrepor nada), com temáticas bem distintas entre si. Escolhidas
+pelas pastas reais de monstro do datapack
+(`data-otservbr-global/monster/*`), conferindo `Game.createMonsterType("...")`
+em cada arquivo pra garantir o nome exato (não adivinhado a partir do nome
+do arquivo):
+
+1. **Dunas Ardentes** (deserto, aberto) — Cobra, Dreadmaw, Adult Goanna, Liodile
+2. **Fenda de Magma** (caverna vulcânica, cellular automata + poças de lava) — Fire Devil, Fire Elemental, Massive Fire Elemental, Lava Lurker, Diabolic Imp
+3. **Planalto Congelado** (tundra aberta + lago congelado) — Frost Giant(ess), Ice Golem, Frost Dragon (Hatchling)
+4. **Floresta de Esporos** (selva fúngica aberta) — Carniphila, Humongous/Hideous Fungus, Rootthing Nutshell
+5. **Catacumbas Esquecidas** (masmorra BSP, salas pequenas) — Crypt Shambler/Warrior, Elder Mummy, Banshee, Betrayed Wraith
+6. **Brecha da Realidade** (labirinto) — Sparkion, Breach Brood, Mitmah Scout/Seer
+7. **Câmara Corrosiva** (caverna aberta) — Mercury/Acid/Death/Ink Blob
+8. **Gruta Submersa** (lago com ilhas) — Crab, Blood Crab, Deepling Scout/Worker/Warrior, Crustacea Gigantica
+9. **Bosque Encantado** (regiões voronoi, aberto) — Dryad, Pixie, Nymph, Dark Faun
+10. **Bastião Ogro** (masmorra BSP, salões grandes) — Cyclops, Ogre Shaman/Brute/Savage
+
+Técnicas de geração variadas de propósito (não é a mesma caverna reskinada
+10x): blob com ruído (deserto/tundra/selva/gruta submersa), cellular
+automata (vulcão/limo), BSP `algo.generateDungeon` (cripta/bastião, só
+mudando tamanho de sala), labirinto `algo.generateMaze` (brecha), voronoi
+`algo.voronoi` (bosque). Coordenadas verificadas vazias antes de gerar
+(`x60-1040, y60-540`, bem ao norte de tudo que já existe).
+
+**Erro pego antes de rodar**: usei `"dirt wall"` e `"dirt floor"` como nome
+de brush pro Bastião Ogro — nomes de *item* válidos, mas não são nomes de
+*brush* de verdade na RME (`applyBrush` falha **silenciosamente**, sem
+erro, se o nome não existir — teria saído um forte sem parede nenhuma).
+Trocado por `"muddy stone wall"` + `"cave"` (confirmados via grep direto em
+`grounds.xml`/`walls.xml`). Adicionada uma checagem no início do script
+(`Brushes.get(nome)` pra cada brush usado, aborta com lista clara se algum
+não existir) — registrado na skill como regra permanente: nunca inferir
+nome de brush a partir do nome do item, sempre grepar a definição real.
+
+## 2026-08-13 (4)
+
+### As duas correções incorporadas no script principal (não só nos fixes)
+O Dan perguntou, com razão, se toda hunt nova ia precisar desses scripts de
+"fix" separados. Não devia — os dois fixes (parâmetros do cellular automata,
+checagem de vizinho antes de colocar spawn) agora estão dentro do
+`build_swamp_hunt.lua` original, não só nos scripts de correção pontual.
+Uma hunt nova gerada a partir dele já sai certa numa passada só.
+`fix_swamp_hunt_cave.lua` e `fix_swamp_hunt_monster_placement.lua` continuam
+no repositório como registro de como o problema foi corrigido sem redesenhar
+a hunt inteira, mas não são mais o modelo pra copiar — isso agora é o
+`build_swamp_hunt.lua`.
+
+## 2026-08-13 (3)
+
+### Monstros "dentro da parede" na gruta — faltava checar os vizinhos
+Depois da caverna sair com a proporção certa de parede/piso, o Dan notou
+alguns Werecrocodiles parecendo estar dentro da rocha. Causa: eu só chequei
+"esse tile é piso?" pra escolher onde colocar spawn — não chequei se os
+tiles vizinhos também eram piso. Num mapa isométrico, o sprite da parede
+"vaza" visualmente sobre o tile vizinho, então um monstro numa frincha de
+piso de 1 tile encostada na rocha aparenta estar dentro da parede, mesmo
+estando em piso válido de verdade.
+
+Criado `fix_swamp_hunt_monster_placement.lua`: limpa os spawns antigos da
+área da gruta e recoloca só em tiles cujos 4 vizinhos ortogonais também são
+piso não-bloqueado (`tile.hasGround and not tile.isBlocking`, lendo o estado
+real do tile já borderizado, não o grid do gerador). Registrado na skill
+`tibia-map-building` como regra geral pra qualquer spawn dentro de caverna.
+
+## 2026-08-13 (2)
+
+### Gruta saiu 91% parede sólida — parâmetros do cellular automata errados
+O primeiro run do `build_swamp_hunt.lua` funcionou (checagem de segurança
+passou, salvou, sobreviveu a fechar/reabrir a RME), mas o minimapa mostrou a
+área da caverna quase inteiramente sólida, com só uns pontinhos marrons de
+piso — log confirmou: `caveFloor=1057 caveWall=11203` (91% parede).
+
+Causa: os parâmetros do `algo.generateCave` (`birthLimit=4, deathLimit=3`,
+5 iterações) fazem esse autômato celular "fugir" pra quase todo mundo virar
+parede. Diferente do algoritmo de borda (que é complexo e arriscado demais
+pra eu simular sozinho), essa regra é simples e totalmente especificada — deu
+pra portar pra Python (20 linhas, direto do `lua_api_algo.cpp`) e testar
+várias combinações antes de sugerir qualquer coisa. Achado bom:
+`fillProbability=0.45, iterations=4, birthLimit=5, deathLimit=4` → ~35%
+parede, 99% do piso conectado numa região só (conferido com flood-fill).
+
+Como o Dan já tinha fechado e reaberto a RME (perdendo o histórico de undo),
+não dava pra desfazer e refazer tudo — criado `fix_swamp_hunt_cave.lua`, que
+regenera **só** a área da gruta (limpa monstro/spawn antigo que possa ter
+ficado em cima de rocha agora, repinta com os parâmetros corrigidos,
+reborderiza só essa região) sem tocar no lago/pântano que já tinha saído bom.
+
+Lição pra skill: parâmetros de algoritmo determinístico e simples valem
+simulação em Python antes de recomendar (baixo risco, alta confiança);
+lógica de borda/engine complexa não (alto risco de erro que só descobrimos
+no print — foi exatamente o que aconteceu duas vezes antes).
+
+## 2026-08-13
+
+### Hunt do pântano refeita usando o script Lua da própria RME (não mais Python cru)
+Depois do Borderize Selection "quase não mudar nada" no RME, o Dan mandou o
+link de `OTAcademy/RME/scripts/terrain_generator_demo.lua` — que revelou que
+o build da RME deste projeto (`rme/canary-map-editor-v4.0-windows/`) já vem
+com um motor de script Lua embutido (menu **Scripts → Script Manager**),
+com `algo.generateCave` (cellular automata — o mesmo algoritmo usado por
+mapeadores reais pra cavernas orgânicas com loop), `noise.simplex` (raio
+distorcido por ruído, pra lagos/pântanos irregulares), e principalmente
+`tile:applyBrush(nome, false)` + `tile:borderize()` — que chamam o **mesmo
+código de borda da própria RME**, em vez de eu adivinhar qual variante de
+item usar (foi exatamente esse tipo de suposição que causou a parede quebrada
+da primeira tentativa).
+
+Também dá pra colocar monstro direto (`tile:setSpawn(1)` +
+`tile:setCreature(nome, 60)`) sem editar XML na mão, e a RME grava isso no
+`-monster.xml` sozinha ao salvar.
+
+**Não existe forma de rodar isso sem abrir a RME** — o `.exe` só aceita um
+caminho de mapa por linha de comando, sem flag pra rodar script headless
+(checado no código-fonte, `application.cpp`). Então o fluxo agora é: eu
+escrevo o `.lua`, o Dan abre a RME, Scripts → Script Manager → roda o
+script, salva.
+
+Restaurado o backup (desfeitas as duas tentativas em Python) e criado
+`rme/canary-map-editor-v4.0-windows/scripts/build_swamp_hunt.lua`, que
+regenera a hunt inteira (canal → lago/pântano com ruído → caverna orgânica
+com sala/corredor via cellular automata → monstros) com verificação de
+sobreposição embutida (aborta se algo já existir nas coordenadas). Skill
+`tibia-map-building` atualizada pra apontar esse método como preferencial —
+o `otbm.py` em Python continua útil só pra leitura/análise (contagem de
+tiles, preview em ASCII), não mais pra escrever bordas/paredes/spawns.
+
+## 2026-08-12
+
+### Nova área de caça: pântano + gruta a oeste da cidade (nível 200+)
+Pedido: criar uma hunt nova numa parte do mapa que ainda não tinha nenhum tile
+colocado, sem sobrepor nada do que já existia. Analisamos o `.otbm` atual via
+`tools/otbm-tools/otbm.py` e vimos que a borda oeste real do mapa inteiro
+(nenhum tile em nenhum andar) é `x=917` — e que, coincidentemente, o rio que já
+passa pela cidade termina exatamente ali, num "final abrupto". Em vez de abrir
+uma brecha numa parede existente, a nova área simplesmente **continua esse
+rio** para oeste.
+
+Pesquisamos hunting spots reais do Tibia pra nível 200+ com tema de pântano e
+usamos como base o Werecrocodile/Feral Werecrocodile (já existem como scripts
+em `data-otservbr-global/monster/lycanthropes/`, ~4100-5400 exp, ~5300-6400 HP,
+dificuldade "Hard"), com Hydra (`monster/dragons/hydra.lua`, 2100 exp) como
+camada intermediária e Marsh Stalker/Swampling como monstros de enchimento nas
+bordas mais fracas do pântano.
+
+**Primeira versão ficou ruim e foi refeita.** O Dan apontou dois problemas
+depois de ver o print no RME: (1) o layout era geometricamente perfeito —
+lago em círculo exato, gruta em retângulo exato, corredor reto, monstros num
+grid — nada parecido com uma hunt de verdade (comparou com um print de uma
+hunt real, toda com curvas e salas irregulares); (2) a parede da gruta usava
+o id 4457 ("mountain") nos 4 lados do retângulo, mas esse id é só a peça de
+borda **leste** de um conjunto de ~46 variantes direcionais (`borders.xml` da
+própria RME, border id 29) — usado nos 4 lados, ficou uma textura quebrada
+tipo grade/cerca em vez de rocha.
+
+**Correção**: em vez de tentar adivinhar à mão qual das ~46 variantes de borda
+usar em cada ponto (é exatamente esse tipo de escolha manual que causou o
+problema), o script agora só escreve **ground puro** (lago, pântano, piso de
+caverna, rocha de gruta) usando os mesmos ids/pesos que os brushes da própria
+RME declaram em `rme/canary-map-editor-v4.0-windows/data/materials/brushs/grounds.xml`
+— e a transição de borda entre eles fica pra RME resolver com
+**Edit → Border Options → Borderize Selection (Ctrl+B)**, que é a ferramenta
+feita exatamente pra isso e usa as mesmas regras de `borders.xml`. A gruta virou
+o brush "grotto" (ids 13594/13644/13645, rocha sólida) esculpido por uma
+caminhada aleatória (drunkard's walk com ricochete nas bordas do retângulo em
+vez de "colar" nelas) formando túneis e salas de tamanho variável — não mais
+um retângulo murado. O lago e o pântano usam raio perturbado por senoides (em
+vez de raio fixo) mais 4 "baías" extras coladas por cima, pra ter reentrâncias
+e não ficar um anel perfeito. Os spawns usam amostragem com espaçamento mínimo
+(tipo Poisson-disk) e clusters ocasionais de 2 monstros por ponto, em vez de
+grid fixo.
+
+**Layout final** (`tools/otbm-tools/build_swamp_hunt.py`, x685-920/y1010-1160, z=7):
+canal (continuação do rio, meandrando) → lago irregular (centro 818,1087) →
+pântano irregular com baías (Marsh Stalker/Swampling espalhados, Hydra na
+faixa mais úmida) → conector garantido → sistema de túneis/salas esculpidos
+na rocha "grotto" (Werecrocodile/Feral Werecrocodile).
+
+O script lê o `.otbm`, calcula os tiles novos, e **aborta sem escrever nada**
+se qualquer coordenada planejada já existir no mapa. Também acrescenta os
+spawns direto no `MAPA OFICIAL DE TRABALHO-monster.xml`, no mesmo formato que o
+resto do arquivo já usa. Backup dos dois arquivos (`.otbm.bak`,
+`-monster.xml.bak`) feito antes de rodar, e é seguro rodar de novo (não
+duplica — aborta no conflito).
+
+**Ainda falta**: abrir no RME, selecionar a área nova e rodar Borderize
+Selection (Ctrl+B) pra gerar as transições de borda corretas entre
+água/pântano/caverna/rocha antes de salvar.
+
+### Correção: quadrados pretos no pântano + skill de criação de mapa
+Depois de ver print no RME, apareceram vários quadrados pretos (não
+caminháveis, mas também sem parede) espalhados pelo pântano. Diagnóstico:
+os itens de decoração que o gerador espalhava (`swamp reed` 3688,
+`swamp lily` 3689, `swamp grass` 9686, ~8% dos tiles de lama) são válidos no
+`items.xml` do servidor mas não têm sprite no client carregado pela RME —
+preto sólido é exatamente como a RME renderiza um id sem sprite. Removidos
+do `build_swamp_hunt.py`; mapa regenerado sem eles.
+
+Como ainda não é 100% certo que a causa era só a decoração (os ids de
+"swamp" do ground em si — 4680 e variantes — também nunca tinham sido usados
+neste mapa antes, só confirmados por print como "parecem ok" na textura
+geral), se ainda sobrar algum quadrado preto depois de reabrir, o próximo
+passo é o Dan clicar/passar o mouse no tile pra ver o id exato na RME, em
+vez de eu adivinhar de novo.
+
+Também criada a skill `tibia-map-building`
+(`.claude/skills/tibia-map-building/SKILL.md`) com tudo que foi aprendido
+fazendo essa hunt: o fluxo obrigatório de backup/planejar/checar
+sobreposição antes de escrever, onde estão os dados reais de border/wall da
+própria RME (`rme/canary-map-editor-v4.0-windows/data/materials/`), a
+diferença entre "ground que bloqueia" (mountain/grotto) e "wall brush"
+(stone wall com peças horizontal/vertical/corner/pole), receitas de forma
+orgânica (raio perturbado por seno, drunkard's walk com ricochete,
+espalhamento tipo Poisson-disk pra monstro), e as duas lições tiradas dos
+erros desta sessão (nunca usar 1 variante de borda em todos os lados; nunca
+confiar que um id "existe no items.xml" prova que ele renderiza).
+
+Requer **restart completo do servidor** pra aparecer (mudança de mapa não é
+coberta por `/reload` nem por `Game.reload()` — ver decisão anterior sobre
+isso).
+
 ## 2026-08-08
 
 ### Loja da Asnarus: expansão de runes/munição, repreço completo das bolts
@@ -30,6 +458,17 @@ Loja da Sarina finalizada: reorganizada em ordem alfabética (os backpacks novos
 colados no fim da lista) — conteúdo (remoção de itens genéricos, adição da linha completa de
 backpacks) já estava certo, só faltava esse ajuste de formatação. Nenhum dos dois arquivos foi
 commitado ainda nesta sessão.
+
+### `sync-map-to-server.ps1` agora detecta sozinho nativo vs Docker
+Dan roda o servidor nativo (`canary.exe` local), Pedro roda via Docker
+(`docker/docker-compose.yml`, serviço `server`) — um único script não dava pra
+funcionar pros dois sem um sobrescrever a configuração do outro a cada
+`git pull`. Reescrito pra detectar automaticamente qual dos dois está disponível
+na máquina (`canary.exe` existe → modo nativo; senão, container do serviço
+`server` rodando via `docker compose ps -q server` → modo Docker) e escolher a
+sequência de comandos certa sozinho. Nenhuma configuração manual necessária;
+o arquivo continua único e versionado, sem risco de conflito entre as duas
+formas de rodar o servidor.
 
 ### Sala do "Demon" disfarçado (corredor de lava)
 Pedro montou um desafio de lava com um monstro que deveria parecer um Demon de
