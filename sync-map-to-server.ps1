@@ -75,6 +75,8 @@ if ($mode -eq "native") {
     $configContent = Get-Content $configPath -Raw
     $configContent = $configContent -replace 'mapName\s*=\s*"[^"]*"', "mapName = `"$mapName`""
     $configContent = $configContent -replace 'toggleMapCustom\s*=\s*true', 'toggleMapCustom = false'
+    $configContent = $configContent -replace 'rateUseStages\s*=\s*false', 'rateUseStages = true'
+    $configContent = $configContent -replace 'rateLoot\s*=\s*[\d.]+', 'rateLoot = 5'
     Set-Content -Path $configPath -Value $configContent -NoNewline
 
     Write-Host "Reiniciando o servidor..." -ForegroundColor Cyan
@@ -109,6 +111,8 @@ if ($mode -eq "native") {
         Write-Host "Apontando config.lua (dentro do container) para o mapa correto..." -ForegroundColor Cyan
         & docker compose exec -T $dockerServiceName sh -c "sed -i 's/^mapName = \`".*\`"/mapName = \`"$mapName\`"/' $containerConfigPath"
         & docker compose exec -T $dockerServiceName sh -c "sed -i 's/^toggleMapCustom = true/toggleMapCustom = false/' $containerConfigPath"
+        & docker compose exec -T $dockerServiceName sh -c "sed -i 's/^rateUseStages = false/rateUseStages = true/' $containerConfigPath"
+        & docker compose exec -T $dockerServiceName sh -c "sed -i 's/^rateLoot = .*/rateLoot = 5/' $containerConfigPath"
 
         Write-Host "Reiniciando o container do servidor..." -ForegroundColor Cyan
         & docker compose restart $dockerServiceName

@@ -8,7 +8,7 @@ experienceStages = {
 	{
 		minlevel = 1,
 		maxlevel = 100,
-		multiplier = 3,
+		multiplier = 6, -- doubled from 3 on 2026-08-24, low level felt too slow (see CHANGELOG)
 	},
 	{
 		minlevel = 101,
@@ -81,61 +81,69 @@ experienceStages = {
 	},
 }
 
-skillsStages = {
-	{
-		minlevel = 10,
-		maxlevel = 60,
-		multiplier = 15,
-	},
-	{
-		minlevel = 61,
-		maxlevel = 80,
-		multiplier = 10,
-	},
-	{
-		minlevel = 81,
-		maxlevel = 110,
-		multiplier = 6,
-	},
-	{
-		minlevel = 111,
-		maxlevel = 125,
-		multiplier = 4,
-	},
-	{
-		minlevel = 126,
-		multiplier = 2,
-	},
-}
+-- Left EMPTY and UNUSED (2026-08-24): skill/magic level rate no longer reads these tables at
+-- all. Player:onGainSkillTries (data/events/scripts/player.lua) now computes a custom 3-phase
+-- rate curve directly instead of calling getRateFromTable() against these -- see
+-- docs/skill-power-design.md for the full design. rateSkill/rateMagic in config.lua are also
+-- unused for this reason. Kept here (still empty) only so the template defaults below aren't
+-- lost, in case skill/magic ever need to go back to the stock stages-table approach.
+skillsStages = {}
+-- skillsStages = {
+-- 	{
+-- 		minlevel = 10,
+-- 		maxlevel = 60,
+-- 		multiplier = 15,
+-- 	},
+-- 	{
+-- 		minlevel = 61,
+-- 		maxlevel = 80,
+-- 		multiplier = 10,
+-- 	},
+-- 	{
+-- 		minlevel = 81,
+-- 		maxlevel = 110,
+-- 		multiplier = 6,
+-- 	},
+-- 	{
+-- 		minlevel = 111,
+-- 		maxlevel = 125,
+-- 		multiplier = 4,
+-- 	},
+-- 	{
+-- 		minlevel = 126,
+-- 		multiplier = 2,
+-- 	},
+-- }
 
-magicLevelStages = {
-	{
-		minlevel = 0,
-		maxlevel = 60,
-		multiplier = 10,
-	},
-	{
-		minlevel = 61,
-		maxlevel = 80,
-		multiplier = 7,
-	},
-	{
-		minlevel = 81,
-		maxlevel = 100,
-		multiplier = 5,
-	},
-	{
-		minlevel = 101,
-		maxlevel = 110,
-		multiplier = 4,
-	},
-	{
-		minlevel = 111,
-		maxlevel = 125,
-		multiplier = 3,
-	},
-	{
-		minlevel = 126,
-		multiplier = 2,
-	},
-}
+magicLevelStages = {}
+-- magicLevelStages = {
+-- 	{
+-- 		minlevel = 0,
+-- 		maxlevel = 60,
+-- 		multiplier = 10,
+-- 	},
+-- 	{
+-- 		minlevel = 61,
+-- 		maxlevel = 80,
+-- 		multiplier = 7,
+-- 	},
+-- 	{
+-- 		minlevel = 81,
+-- 		maxlevel = 100,
+-- 		multiplier = 5,
+-- 	},
+-- 	{
+-- 		minlevel = 101,
+-- 		maxlevel = 110,
+-- 		multiplier = 4,
+-- 	},
+-- 	{
+-- 		minlevel = 111,
+-- 		maxlevel = 125,
+-- 		multiplier = 3,
+-- 	},
+-- 	{
+-- 		minlevel = 126,
+-- 		multiplier = 2,
+-- 	},
+-- }

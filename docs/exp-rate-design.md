@@ -1,8 +1,16 @@
 # Taxa de experiência (stages.lua) — implementado
 
-**Status: APLICADO em `data/stages.lua` em 2026-08-07.** Este documento registra o
-raciocínio/números por trás da tabela, pra caso alguém (Pedro, Dan, ou eu numa sessão futura)
-precise entender o porquê de um valor específico ou recalibrar depois de testes reais.
+**Status: APLICADO em `data/stages.lua` em 2026-08-07, e ATIVADO de verdade em
+2026-08-23** (a tabela ficou pronta no arquivo mas `rateUseStages` continuou
+`false` no `config.lua` por 16 dias — o servidor rodou nesse período com rate
+flat 1x em tudo, sem ninguém perceber, até o Pedro perguntar e eu conferir o
+config ao vivo). `rateUseStages = true` aplicado direto no container rodando
+e também adicionado ao `sync-map-to-server.ps1` (mesmo padrão do
+`toggleMapCustom`), porque `/canary/config.lua` não fica em volume
+persistente — some se o container for recriado do zero. Este documento
+registra o raciocínio/números por trás da tabela, pra caso alguém (Pedro,
+Dan, ou eu numa sessão futura) precise entender o porquê de um valor
+específico ou recalibrar depois de testes reais.
 
 ## Objetivo original
 

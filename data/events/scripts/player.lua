@@ -605,6 +605,25 @@ function Player:onLoseExperience(exp)
 	return exp
 end
 
+-- Custom skill/magic level rate curve (designed 2026-08-24, see docs/skill-power-design.md).
+-- Replaces skillsStages/magicLevelStages/rateSkill/rateMagic entirely -- those config values
+-- and tables are no longer read for this. Three phases, keyed by the skill's OWN current value:
+--   10-100:  fast, 2.68 * 1.0846^(level-10)          -- early game should feel quick
+--            (2026-08-24: doubled from 1.34 -> 2.68, temporary, just to test faster --
+--            revert to 1.34 once done; this range no longer lines up continuously with the
+--            100-150 phase below since only this one was doubled)
+--   100-150: transition, 2000 * 1.0171^(level-100)   -- lands exactly on 4674x at level 150
+--   150+:    hard, uncapped, 4674 * 1.05^(level-150) -- keeps climbing forever, no wall
+local function customSkillRate(currentSkillLevel)
+	if currentSkillLevel <= 100 then
+		return 2.68 * (1.0846 ^ (currentSkillLevel - 10))
+	elseif currentSkillLevel <= 150 then
+		return 2000 * (1.0171 ^ (currentSkillLevel - 100))
+	else
+		return 4674 * (1.05 ^ (currentSkillLevel - 150))
+	end
+end
+
 function Player:onGainSkillTries(skill, tries)
 	-- Dawnport skills limit
 	if IsRunningGlobalDatapack() and isSkillGrowthLimited(self, skill) then
@@ -615,20 +634,9 @@ function Player:onGainSkillTries(skill, tries)
 		return tries
 	end
 
-	-- Default skill rate settings
-	local rateSkillStages = configManager.getBoolean(configKeys.RATE_USE_STAGES) and skillsStages or nil
-	local currentSkillLevel = self:getSkillLevel(skill)
-	local baseRate = configManager.getNumber(configKeys.RATE_SKILL)
+	local currentSkillLevel = (skill == SKILL_MAGLEVEL) and self:getBaseMagicLevel() or self:getSkillLevel(skill)
 
-	-- Special case for magic level
-	if skill == SKILL_MAGLEVEL then
-		rateSkillStages = configManager.getBoolean(configKeys.RATE_USE_STAGES) and magicLevelStages or nil
-		currentSkillLevel = self:getBaseMagicLevel()
-		baseRate = configManager.getNumber(configKeys.RATE_MAGIC)
-	end
-
-	-- Calculate skill rate from stages and schedule
-	local skillRate = getRateFromTable(rateSkillStages, currentSkillLevel, baseRate)
+	local skillRate = customSkillRate(currentSkillLevel)
 	skillRate = (SCHEDULE_SKILL_RATE ~= 100) and (skillRate * SCHEDULE_SKILL_RATE / 100) or skillRate
 
 	-- Apply VIP boost if applicable
@@ -641,16 +649,56 @@ function Player:onGainSkillTries(skill, tries)
 	return tries * skillRate
 end
 
+-- Custom damage power scaling (designed 2026-08-24, see docs/skill-power-design.md).
+-- Applies on top of whatever damage the engine already computed (autoattack, spell, or rune --
+-- doesn't matter which), so it needs no C++ recompile and no per-spell edits. Bonus = 1x at the
+-- starting skill/magic level (10) and grows without ceiling from there: sqrt(stat / 10).
+local physicalWeaponSkill = {
+	[WEAPON_FIST] = SKILL_FIST,
+	[WEAPON_SWORD] = SKILL_SWORD,
+	[WEAPON_CLUB] = SKILL_CLUB,
+	[WEAPON_AXE] = SKILL_AXE,
+	[WEAPON_DISTANCE] = SKILL_DISTANCE,
+}
+
+local magicCombatTypes = {
+	[COMBAT_ENERGYDAMAGE] = true,
+	[COMBAT_EARTHDAMAGE] = true,
+	[COMBAT_FIREDAMAGE] = true,
+	[COMBAT_ICEDAMAGE] = true,
+	[COMBAT_HOLYDAMAGE] = true,
+	[COMBAT_DEATHDAMAGE] = true,
+	[COMBAT_LIFEDRAIN] = true,
+	[COMBAT_MANADRAIN] = true,
+}
+
 function Player:onCombat(target, item, primaryDamage, primaryType, secondaryDamage, secondaryType)
-	if not item or not target then
+	if not target then
 		return primaryDamage, primaryType, secondaryDamage, secondaryType
 	end
 
-	if ItemType(item:getId()):getWeaponType() == WEAPON_AMMO then
+	if item and ItemType(item:getId()):getWeaponType() == WEAPON_AMMO then
 		if table.contains({ ITEM_OLD_DIAMOND_ARROW, ITEM_DIAMOND_ARROW }, item:getId()) then
 			return primaryDamage, primaryType, secondaryDamage, secondaryType
 		end
 		item = self:getSlotItem(CONST_SLOT_LEFT)
+	end
+
+	if primaryType ~= COMBAT_HEALING then
+		local relevantStat
+		if magicCombatTypes[primaryType] then
+			relevantStat = self:getBaseMagicLevel()
+		else
+			local skill = SKILL_FIST
+			if item then
+				skill = physicalWeaponSkill[ItemType(item:getId()):getWeaponType()] or SKILL_FIST
+			end
+			relevantStat = self:getSkillLevel(skill)
+		end
+
+		local powerMultiplier = math.sqrt(math.max(relevantStat, 10) / 10)
+		primaryDamage = primaryDamage * powerMultiplier
+		secondaryDamage = secondaryDamage * powerMultiplier
 	end
 
 	return primaryDamage, primaryType, secondaryDamage, secondaryType
