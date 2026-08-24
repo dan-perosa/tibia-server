@@ -134,7 +134,7 @@ sanity check de ordem de grandeza durante o desenho.
 ### Fórmula final
 
 ```lua
-local powerMultiplier = math.sqrt(math.max(relevantStat, 10) / 10)
+local powerMultiplier = (math.max(relevantStat, 10) / 10) ^ 0.3
 primaryDamage = primaryDamage * powerMultiplier
 secondaryDamage = secondaryDamage * powerMultiplier
 ```
@@ -145,14 +145,29 @@ secondaryDamage = secondaryDamage * powerMultiplier
   desarmado).
 - Cura (`COMBAT_HEALING`) fica de fora, de propósito — mesmo critério da sessão anterior.
 - Bônus = **1x exatamente** na skill/ML inicial (10) — dano vanilla, sem mudança — e cresce **sem
-  teto** dali em diante (raiz quadrada, nunca achata pra um valor fixo).
+  teto** dali em diante (nunca achata pra um valor fixo).
+
+**Expoente ajustado em 24/08 (mesmo dia): 0,5 (raiz quadrada) → 0,3.** O Daniel mencionou já ter
+escrito o esquema antigo de expoente embutido (`n = 1.1`, ver seção "Histórico" acima) — nunca
+chegou a testar rodando (mesma limitação: precisa recompilar, ele roda nativo, não testou). Pedro
+pediu um meio-termo entre esse `n = 1.1` antigo e o `√` que ficou forte demais. Comparando o
+"quanto mais forte" na mesma régua (skill 10 → 200):
+
+| Expoente | Dano a mais (skill 10→200) |
+|---|---|
+| `n = 1,1` (esquema antigo do Daniel, nunca testado rodando) | ~43% |
+| `^0,3` (atual) | ~146% |
+| `^0,5` / raiz quadrada (versão anterior de hoje) | ~347% |
+
+Botão de ajuste: o `0.3` no final da fórmula — sobe = mais forte, desce = mais fraco (mantém o
+mesmo formato "1x na skill 10, sem teto" não importa o valor).
 
 | Skill/ML | Bônus |
 |---|---|
 | 10 | 1x |
-| 100 | 3,16x |
-| 200 | 4,47x |
-| 300 | 5,48x |
+| 100 | 2,00x |
+| 200 | 2,46x |
+| 300 | 2,78x |
 
 ## Pendências
 

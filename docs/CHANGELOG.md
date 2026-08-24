@@ -5,6 +5,16 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-24 (4)
+
+### Expoente do bônus de dano reduzido (^0,5 → ^0,3)
+Pedro conversou com o Daniel, que mencionou já ter escrito o esquema antigo de expoente embutido
+(`n = 1.1`, nunca testado rodando — mesma limitação de recompilar). Pedindo um meio-termo entre
+esse `n=1.1` e o `√(stat/10)` de mais cedo (que ficou forte demais, +347% no skill 200), ajustado
+pra `(stat/10)^0.3` — fica em +146% no skill 200. Só troca o número final da fórmula em
+`Player:onCombat`, mesma estrutura (1x na skill 10, sem teto). Detalhes e tabela comparativa em
+`docs/skill-power-design.md`.
+
 ## 2026-08-24 (3)
 
 ### XP de nível baixo dobrada (faixa 1-100: 3x → 6x)
