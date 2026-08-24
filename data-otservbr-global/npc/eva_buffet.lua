@@ -1,4 +1,4 @@
-local internalNpcName = "Eva"
+local internalNpcName = "Eva Buffet"
 local npcType = Game.createNpcType(internalNpcName)
 local npcConfig = {}
 
@@ -11,12 +11,12 @@ npcConfig.walkInterval = 0
 npcConfig.walkRadius = 2
 
 npcConfig.outfit = {
-	lookType = 136,
-	lookHead = 96,
-	lookBody = 98,
-	lookLegs = 95,
-	lookFeet = 0,
-	lookAddons = 0,
+	lookType = 140, -- Noblewoman (female)
+	lookHead = 114,
+	lookBody = 3,
+	lookLegs = 72,
+	lookFeet = 16,
+	lookAddons = 3,
 }
 
 npcConfig.flags = {

@@ -1,4 +1,4 @@
-local internalNpcName = "Boatman"
+local internalNpcName = "Sebastian Farwind"
 local npcType = Game.createNpcType(internalNpcName)
 local npcConfig = {}
 
@@ -11,12 +11,12 @@ npcConfig.walkInterval = 2000
 npcConfig.walkRadius = 2
 
 npcConfig.outfit = {
-	lookType = 129,
-	lookHead = 19,
-	lookBody = 69,
-	lookLegs = 125,
-	lookFeet = 50,
-	lookAddons = 0,
+	lookType = 151, -- Pirate (male) -- barqueiro modesto, visual de marinheiro
+	lookHead = 0,
+	lookBody = 38,
+	lookLegs = 19,
+	lookFeet = 76,
+	lookAddons = 1,
 }
 
 npcConfig.flags = {
@@ -60,16 +60,24 @@ local STORAGE_BOATMAN_UNLOCKED = 900001
 
 local MIRROR_ISLAND_DESTINATION = Position(811, 219, 7)
 
--- TODO: a ilha secreta (boss Gorgo) ainda nao foi construida no mapa.
--- Atualizar assim que existir (placeholder aponta pro templo da cidade por
--- enquanto, pra nao teleportar o jogador pra um lugar quebrado).
-local SECRET_ISLAND_DESTINATION = Position(1000, 1000, 7)
+local SECRET_ISLAND_DESTINATION = Position(911, 260, 7)
 local SECRET_ISLAND_CHANCE = 5 -- % de chance por viagem
+
+-- Segunda ilha (clone "resolvido"): Gorgo morto, Castaway Corwin nao esta
+-- mais la. Storage 900002 marca, por jogador, se ele ja caiu na ilha
+-- secreta alguma vez -- da segunda visita em diante, cai sempre aqui.
+local SECRET_ISLAND_RESOLVED_DESTINATION = Position(910, 225, 7)
+local STORAGE_SECRET_ISLAND_VISITED = 900002
 
 local function sailToDestination(player)
 	local destination = MIRROR_ISLAND_DESTINATION
 	if math.random(1, 100) <= SECRET_ISLAND_CHANCE then
-		destination = SECRET_ISLAND_DESTINATION
+		if player:getStorageValue(STORAGE_SECRET_ISLAND_VISITED) == 1 then
+			destination = SECRET_ISLAND_RESOLVED_DESTINATION
+		else
+			destination = SECRET_ISLAND_DESTINATION
+			player:setStorageValue(STORAGE_SECRET_ISLAND_VISITED, 1)
+		end
 	end
 	player:teleportTo(destination)
 	destination:sendMagicEffect(CONST_ME_TELEPORT)

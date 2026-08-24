@@ -1,4 +1,4 @@
-local internalNpcName = "Rojan"
+local internalNpcName = "Rojan Training"
 local npcType = Game.createNpcType(internalNpcName)
 local npcConfig = {}
 
@@ -11,12 +11,12 @@ npcConfig.walkInterval = 2000
 npcConfig.walkRadius = 2
 
 npcConfig.outfit = {
-	lookType = 136,
-	lookHead = 41,
-	lookBody = 72,
-	lookLegs = 95,
-	lookFeet = 96,
-	lookAddons = 0,
+	lookType = 142, -- Warrior (female)
+	lookHead = 97,
+	lookBody = 23,
+	lookLegs = 28,
+	lookFeet = 76,
+	lookAddons = 3,
 }
 
 npcConfig.flags = {

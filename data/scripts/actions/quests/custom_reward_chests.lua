@@ -2,8 +2,11 @@
 Reusable one-time quest reward chest.
 
 Usage in RME:
-  1. Place item 2472 ("chest") wherever your quest ends.
-  2. Give that chest tile an Action ID from the list below (or add a new one).
+  1. Place item 2472 ("chest") wherever your quest ends -- or 7160/7161
+     ("frozen chest") for a themed variant; both are registered below.
+  2. Give that chest tile an Action ID from the list below (or add a new one,
+     and add its item id to the questChest:id(...) call at the bottom if it's
+     not 2472/7160/7161).
   3. Add an entry to CustomQuestChests matching that Action ID with the
      reward items. Each player can only claim it once.
 
@@ -94,8 +97,14 @@ local CustomQuestChests = {
 	[24603] = { items = { { id = 11651, count = 1 }, { id = 3043, count = 5 } } }, -- elite draken mail + 50k
 	[24604] = { items = { { id = 8060, count = 1 }, { id = 3043, count = 5 } } }, -- master archer's armor + 50k
 
-	-- Hidden Demon Goblin lava corridor reward chest (979,967,7)
+	-- Hidden Demon Goblin lava corridor reward chest (moved to 987,965,7)
 	[24701] = { items = { { id = 3389, count = 1 } } }, -- demon legs
+
+	-- New dragon arena, similar layout to the Demon Goblin one (993,974,7)
+	[24702] = { items = { { id = 3363, count = 1 } } }, -- dragon scale legs
+
+	-- Ice arena (Furious Yeti), frozen chest at (968,959,7)
+	[24703] = { items = { { id = 19391, count = 1 } } }, -- furious frock
 
 	-- World Wolves secret hunt -- Hellflayer guardian room
 	[24801] = {
@@ -105,6 +114,14 @@ local CustomQuestChests = {
 			{ id = 3043, count = 20 }, -- 200k gold (crystal coin = 10k each)
 		},
 	},
+
+	-- Level 100 gate quest -- final boss room, 5 independent chests
+	-- (1247,1131,9)/(1255,1136,9)/(1247,1139,9)/(1255,1139,9)/(1251,1136,9)
+	[24901] = { items = { { id = 3229, count = 1 }, { id = 3043, count = 25 } } }, -- helmet of the ancients + 250k
+	[24902] = { items = { { id = 16109, count = 1 }, { id = 3043, count = 25 } } }, -- prismatic helmet + 250k
+	[24903] = { items = { { id = 16104, count = 1 }, { id = 3043, count = 25 } } }, -- gill gugel + 250k
+	[24904] = { items = { { id = 50190, count = 1 }, { id = 3043, count = 25 } } }, -- dark vision bandana + 250k
+	[24905] = { items = { { id = 29427, count = 1 }, { id = 3043, count = 25 } } }, -- dark whispers + 250k
 }
 
 local GroupStorage = {
@@ -198,5 +215,5 @@ function questChest.onUse(player, item, fromPosition, target, toPosition, isHotk
 	return true
 end
 
-questChest:id(2472)
+questChest:id(2472, 7160, 7161) -- 7160/7161: "frozen chest", added 2026-08-23 for the ice arena
 questChest:register()

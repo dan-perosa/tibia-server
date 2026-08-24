@@ -15,12 +15,12 @@ npcConfig.walkInterval = 2000
 npcConfig.walkRadius = 2
 
 npcConfig.outfit = {
-	lookType = 140,
-	lookHead = 60,
-	lookBody = 24,
-	lookLegs = 38,
-	lookFeet = 0,
-	lookAddons = 0,
+	lookType = 136, -- Citizen (female) -- mesmo visual da Norma, NPC oficial de bencao
+	lookHead = 78,
+	lookBody = 76,
+	lookLegs = 72,
+	lookFeet = 96,
+	lookAddons = 2,
 }
 
 npcConfig.flags = {

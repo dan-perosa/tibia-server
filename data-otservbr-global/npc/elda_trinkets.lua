@@ -1,4 +1,4 @@
-local internalNpcName = "Elda"
+local internalNpcName = "Elda Trinkets"
 local npcType = Game.createNpcType(internalNpcName)
 local npcConfig = {}
 
@@ -74,15 +74,19 @@ npcConfig.shop = {
 	{ itemName = "ring of orange plasma", clientId = 50151, buy = 5000 },
 	{ itemName = "ring of red plasma", clientId = 23534, buy = 5000 },
 
+	{ itemName = "amulet of loss", clientId = 3057, buy = 50000 },
+	{ itemName = "bonfire amulet", clientId = 9301, buy = 25000 },
 	{ itemName = "energy ring", clientId = 3051, buy = 1500 },
 	{ itemName = "glacier amulet", clientId = 815, buy = 1000 },
+	{ itemName = "leviathan's amulet", clientId = 9303, buy = 25000 },
 	{ itemName = "life ring", clientId = 3052, buy = 1500 },
 	{ itemName = "lightning pendant", clientId = 816, buy = 1000 },
 	{ itemName = "magma amulet", clientId = 817, buy = 1000 },
-	{ itemName = "might ring", clientId = 3048, buy = 3000 },
-	{ itemName = "sacred tree amulet", clientId = 9302, buy = 35000 },
-	{ itemName = "shockwave amulet", clientId = 9304, buy = 35000 },
-	{ itemName = "stone skin amulet", clientId = 3081, buy = 18000 },
+	{ itemName = "might ring", clientId = 3048, buy = 6000 },
+	{ itemName = "ring of healing", clientId = 3098, buy = 2000 },
+	{ itemName = "sacred tree amulet", clientId = 9302, buy = 25000 },
+	{ itemName = "shockwave amulet", clientId = 9304, buy = 25000 },
+	{ itemName = "stone skin amulet", clientId = 3081, buy = 36000 },
 	{ itemName = "terra amulet", clientId = 814, buy = 1000 },
 	{ itemName = "time ring", clientId = 3053, buy = 5000 },
 }

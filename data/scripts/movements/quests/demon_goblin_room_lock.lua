@@ -11,10 +11,22 @@ player dies (their corpse/respawn no longer counts as "alive") or reaches
 the exit -- no edge case can leave it stuck locked.
 ]]
 
-local ENTRANCE_LANDING = { x = 971, y = 967, z = 7 } -- where the entrance teleport (968,967,7 -> here) drops you
+-- 2026-08-23: Pedro re-pointed each entrance teleport at its own landing tile
+-- instead of both sharing one (971,967,7) -- both are the "north" gates of
+-- the complex, entering this room specifically:
+local ENTRANCE_LANDINGS = {
+	{ x = 979, y = 965, z = 7 }, -- from the (976,965,7) entrance teleport
+	{ x = 993, y = 964, z = 7 }, -- from the (989,964,7) entrance teleport
+}
 local ENTRANCE_WAIT_SPOT = { x = 967, y = 967, z = 7 } -- one tile before the entrance teleport, outside the room
 local ROOM_CENTER = { x = 976, y = 968, z = 7 }
-local ROOM_RANGE = { minX = -15, maxX = 15, minY = -11, maxY = 11 } -- covers the whole lava corridor (963-991,957-979) with margin
+-- Trimmed 2026-08-23: used to reach maxY=11 (y up to 979), which swallowed the
+-- new dragon arena room built just south of here (its chamber/chest start at
+-- y=970/971) -- see dragon_arena_room_lock.lua. Capped at maxY=0 (y=968) so a
+-- player fighting in the dragon arena no longer falsely blocks this room's
+-- entrance. Covers this room's own chamber (977-984,962-968) and chest nook
+-- (985-991,963-966) with margin; y=969 is left as an unclaimed buffer row.
+local ROOM_RANGE = { minX = -15, maxX = 15, minY = -11, maxY = 0 }
 
 local function playerAlreadyInside(enteringPlayer)
 	local spectators = Game.getSpectators(Position(ROOM_CENTER), false, true, ROOM_RANGE.minX, ROOM_RANGE.maxX, ROOM_RANGE.minY, ROOM_RANGE.maxY)
@@ -44,5 +56,7 @@ function demonRoomEntrance.onStepIn(creature, item, position, fromPosition)
 	return true
 end
 
-demonRoomEntrance:position(ENTRANCE_LANDING)
+for _, landing in ipairs(ENTRANCE_LANDINGS) do
+	demonRoomEntrance:position(landing)
+end
 demonRoomEntrance:register()

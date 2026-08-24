@@ -1,4 +1,4 @@
-local internalNpcName = "Haani"
+local internalNpcName = "Haani Homes"
 local npcType = Game.createNpcType(internalNpcName)
 local npcConfig = {}
 
@@ -60,6 +60,7 @@ npcConfig.shop = {
 	{ itemName = "barrel kit", clientId = 2523, buy = 12 },
 	{ itemName = "big table kit", clientId = 2314, buy = 30 },
 	{ itemName = "birdcage kit", clientId = 2976, buy = 50 },
+	{ itemName = "blood herb", clientId = 3734, buy = 650 },
 	{ itemName = "blue footboard", clientId = 32482, buy = 40 },
 	{ itemName = "blue headboard", clientId = 32473, buy = 40 },
 	{ itemName = "blue pillow", clientId = 2394, buy = 25 },
@@ -134,6 +135,7 @@ npcConfig.shop = {
 	{ itemName = "straw mat foot section", clientId = 32489, buy = 40 },
 	{ itemName = "straw mat head section", clientId = 32480, buy = 40 },
 	{ itemName = "table lamp kit", clientId = 2934, buy = 35 },
+	{ itemName = "talon", clientId = 3034, buy = 400 },
 	{ itemName = "telescope kit", clientId = 3485, buy = 70 },
 	{ itemName = "treasure chest", clientId = 2478, buy = 1000 },
 	{ itemName = "trophy stand", clientId = 872, buy = 50 },

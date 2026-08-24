@@ -136,10 +136,19 @@ A from-scratch OTBM v5 reader/writer (matches this project's RME build,
 - `OtbmTile(x, y, z, house_id=None, flags=0, ground=None, items=[], zones=[])`
   — `ground` is a plain `int` item id (or `None`), `items` is a list of
   `OtbmItem`.
-- `OtbmItem(id, count=None, action_id=None, unique_id=None, text=None, ...)`
-  — only `id` is required.
-- Does **not** support container item children (fine for terrain/building
-  work, not for pre-filled containers).
+- `OtbmItem(id, count=None, action_id=None, unique_id=None, text=None, ...,
+  children=[])` — only `id` is required. `children` is a list of
+  `OtbmItem` and supports arbitrary nesting (a pre-filled box/chest, or a
+  container inside a container) — added 2026-08-23, format confirmed
+  against RME source (`Container::serializeItemNode_OTBM`/
+  `unserializeItemNode_OTBM` in `iomap_otbm.cpp`): a container's contents
+  are just further `OTBM_ITEM` nodes nested inside the container's own
+  node, no separate marker. Round-trip tested (read → add child → write →
+  read back, full-map diff clean) before ever touching a real map file.
+  To fill an existing container found on a tile: locate it in
+  `tile.items` by id, then `box.children.append(OtbmItem(id=...))` — do
+  **not** overwrite `.children` on a container that already has some
+  (check first, abort if non-empty and you didn't intend to touch it).
 - Run scripts with the real Python (Git Bash's `python3` hits the Windows
   Store stub on this machine): `/c/Python312/python.exe your_script.py`,
   with `sys.path.insert(0, "tools/otbm-tools")` before `from otbm import ...`.
@@ -405,6 +414,21 @@ with doors). Don't mix conventions on the same wall for no reason.
 3. **`data/items/items.xml`** (the server's copy) — confirms an id is
    accepted server-side and gives its name/attributes, but per mistake #2
    above, this alone does not prove it renders.
+
+**When a wall family has no brush entry in `walls.xml`** (checked and it's
+genuinely not there — this happens; not every item range that's
+`primarytype="walls"` in `items.xml` got a matching brush definition),
+there's no authoritative source to consult remotely and no way for this
+tool to view the actual sprite (client assets are a compiled/LZMA-packed
+catalog, not viewable image files — see the sprite-format notes given to
+Pedro when he asked about custom item sprites). The fastest safe path is
+letting the user try candidate ids directly in RME at the corner tile and
+report which one looks right, rather than guessing. Confirmed example
+(2026-08-23): **"ice wall" (items 6728-6738, no `walls.xml` brush entry)**
+— horizontal piece is **6731**, vertical is **6735**, diagonal/corner piece
+is **6730** (found by Pedro trying candidates in RME after I narrowed the
+family and ruled out already-used ids). Worth trying first if this exact
+family comes up again.
 
 ## Delegate border art to RME — don't hand-simulate it
 

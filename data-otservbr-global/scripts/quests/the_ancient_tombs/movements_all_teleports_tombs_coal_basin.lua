@@ -1,4 +1,5 @@
 local config = {
+	[60000] = { flamePosition = Position(1014, 1011, 7), toPosition = Position(1167, 1082, 8) }, -- Skartholt custom tomb entrance
 	[9033] = { flamePosition = Position(33097, 32816, 13), toPosition = Position(33093, 32824, 13) },
 	[9034] = { flamePosition = Position(33293, 32742, 13), toPosition = Position(33299, 32742, 13) },
 	[9035] = {

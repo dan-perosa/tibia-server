@@ -3005,6 +3005,11 @@ Storage = {
 		OnlineCoinsGain = 150002,
 		OnlineTokensGain = 150003,
 	},
+
+	Carmeni = {
+		-- Reserved storage from 900000 - 900000 (per-player)
+		LastBuyDate = 900000, -- ultima data (YYYYMMDD) que o personagem comprou o item do dia
+	},
 }
 
 GlobalStorage = {
@@ -3075,6 +3080,11 @@ GlobalStorage = {
 	IceCrack = 65016,
 	UglyMonster = 65017,
 	KeysUpdate = 40000, -- Reserved storage from 40000 - 40000
+	Carmeni = {
+		-- Reserved storage from 65100 - 65101
+		DailyTier = 65100, -- 1=Fraco 2=Mediano 3=Bom 4=Jackpot
+		DailyItem = 65101, -- itemid do item sorteado hoje
+	},
 }
 
 startupGlobalStorages = {
