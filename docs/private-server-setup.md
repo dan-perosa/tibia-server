@@ -24,10 +24,11 @@ sem Docker.
   sempre em mapas customizados (a cidade "Thais" do mundo oficial não existe
   no nosso mapa).
 - `sync-map-to-server.ps1` — script que sincroniza o mapa editado no RME para
-  o servidor rodando em Docker, aplica as correções acima automaticamente, e
-  reinicia o servidor. **Os caminhos dentro desse script são fixos para a
-  máquina do Pedro** (`C:\Users\Pedro\...`) — ajuste antes de usar em outra
-  máquina.
+  o servidor (nativo ou Docker), aplica as correções acima automaticamente, e
+  reinicia o servidor. Ele detecta sozinho qual dos dois modos está disponível
+  na máquina (`canary.exe` na raiz do repo → nativo; senão, container Docker
+  do serviço `server` rodando → Docker) — não precisa editar nada no script
+  para trocar de máquina ou de modo.
 
 ---
 
@@ -110,6 +111,12 @@ passos 4-6 automaticamente, incluindo a correção de piso descrita abaixo.
 Rodar sem Docker significa compilar o Canary localmente e instalar o MariaDB
 na própria máquina. É mais trabalhoso, mas útil se você quiser depurar o
 código C++/Lua diretamente ou não puder usar Docker.
+
+**Já tem uma instalação Docker rodando com contas/personagens criados e quer
+migrar para nativo sem perder esses dados?** Use
+[`docs/migracao-docker-para-nativo.md`](migracao-docker-para-nativo.md) em
+vez de seguir os passos abaixo do zero — ele cobre o backup/restore do banco
+além dos mesmos passos de instalação.
 
 ### 1. Compilar o Canary
 
