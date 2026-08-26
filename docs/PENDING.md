@@ -64,6 +64,10 @@ depois do ajuste, pode precisar de mais uma volta):
 - **Ao redor da terceira arena (gelo)**: preencher com gelo/decorações, esconder um
   buraco/passagem descendo até uma hunt de Frost Dragon (`monster/dragons/frost_dragon.lua`,
   1.800 HP — bem mais fraco que os bosses das arenas, é hunt de farm/nível mais baixo).
+  **Em progresso (26/08)**: primeiro buraco de acesso criado em (963,958,7) — usar pick ali
+  teleporta pro andar de baixo (963,958,8), ver `onUsePick` em
+  `data-otservbr-global/scripts/lib/register_actions.lua`. O andar de baixo ainda está vazio
+  (só o chão), falta construir a hunt de verdade do Frost Dragon lá.
 
 ## Pendências de 2026-08-23
 

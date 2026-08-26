@@ -513,6 +513,18 @@ function onUseShovel(player, item, fromPosition, target, toPosition, isHotkey)
 end
 
 function onUsePick(player, item, fromPosition, target, toPosition, isHotkey)
+	-- CUSTOM (Pedro's map, 2026-08-26): ice hole near the ice arena that lets players dig
+	-- through to the floor below (planned access to a future Frost Dragon hunt, see
+	-- docs/PENDING.md). Repeatable, not a one-time quest reward -- it's just a hole.
+	local customIceHolePos = Position(963, 958, 7)
+	if toPosition == customIceHolePos then
+		local destination = Position(963, 958, 8)
+		player:teleportTo(destination)
+		destination:sendMagicEffect(CONST_ME_ICEATTACK)
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You break through the ice and drop to the floor below.")
+		return true
+	end
+
 	local stonePos = Position(32648, 32134, 10)
 	if toPosition == stonePos then
 		local tile = Tile(stonePos)
