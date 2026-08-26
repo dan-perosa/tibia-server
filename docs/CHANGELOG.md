@@ -9,6 +9,18 @@ por sessão de trabalho, mais recente no topo.
 
 Confirmação ao vivo de bugs de 25/08, mais correção e uma investigação funda que ficou pro Daniel.
 
+### Ajustes de balanceamento (rate de XP baixo + dano por skill)
+Feedback direto do Pedro depois do teste real: personagens ficando fortes demais cedo demais,
+level subindo devagar demais. Dois ajustes juntos, mesmo desbalanceamento:
+- `data/stages.lua`: faixa de XP 1-100 dobrada de novo (6x → 12x; já tinha ido de 3x → 6x em
+  24/08).
+- `data/events/scripts/player.lua` (`Player:onCombat`): expoente do bônus de dano por skill
+  reduzido de 0,3 para 0,15 (+146% → +57% no skill 200) -- mais perto do resultado da fórmula
+  antiga do Daniel (`n=1.1`, ~+43% no skill 200), embora não seja diretamente equivalente por ser
+  uma estrutura de fórmula diferente (aquela ficava embutida por fórmula de dano, essa é central).
+- Rotworms reduzidos no início da hunt -- feito pelo próprio Pedro direto no mapa (RME), sem
+  necessidade de mudança de script.
+
 ### Confirmado: popup de skill-up corrigido
 Pedro testou ao vivo e o popup de "você subiu de skill" agora mostra o nome certo. Fechado.
 

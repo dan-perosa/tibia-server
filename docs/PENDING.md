@@ -24,18 +24,15 @@ implementar algo daqui, é só remover o item e registrar no `CHANGELOG.md`.
 
 ## Pendências de 2026-08-25
 
-**Balanceamento:**
-- Reduzir o número de rotworms no início da hunt
-- Rate de level muito devagar nos levels baixos (distinto da rate de skill/ML, essa é XP pra
-  level)
+**Balanceamento** (ajustado em 26/08, ver `CHANGELOG.md` — ainda não testado com jogo real
+depois do ajuste, pode precisar de mais uma volta):
+- Rate de XP 1-100: 6x → 12x (`data/stages.lua`)
+- Expoente de dano por skill: 0,3 → 0,15 (`Player:onCombat`, `data/events/scripts/player.lua`)
+- Rotworms no início da hunt: reduzidos pelo próprio Pedro direto no mapa
+
 - Acelerar a velocidade de consumo das exercise weapons — talvez atrelar a alguma quest ou marco
   importante em vez de ser sempre rápido (`data/scripts/actions/items/exercise_training_weapons.lua`,
   `RATE_EXERCISE_TRAINING_SPEED`/multiplicador "fast-exercise")
-- Reduzir o escalonamento de dano por skill — personagens causando dano alto cedo demais em
-  relação ao level, enquanto upar level continua lento (mesmo desbalanceamento do item acima,
-  visto junto). É o bônus `√(skill_ou_ML/10)` central em `Player:onCombat`
-  (`data/events/scripts/player.lua`) — os expoentes/âncoras de lá são os botões certos pra
-  recalibrar pra baixo.
 
 **Decisão de escopo pendente (perguntar pro Pedro antes de mexer):**
 - NPC de bless (`data-otservbr-global/npc/test_server.lua`) dá dinheiro e experiência de graça

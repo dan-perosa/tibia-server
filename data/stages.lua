@@ -8,7 +8,7 @@ experienceStages = {
 	{
 		minlevel = 1,
 		maxlevel = 100,
-		multiplier = 6, -- doubled from 3 on 2026-08-24, low level felt too slow (see CHANGELOG)
+		multiplier = 12, -- doubled again from 6 on 2026-08-26 (was 3 originally, doubled 2026-08-24) -- still felt too slow after real playtesting
 	},
 	{
 		minlevel = 101,

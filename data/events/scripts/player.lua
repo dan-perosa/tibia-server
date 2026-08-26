@@ -652,9 +652,11 @@ end
 -- Custom damage power scaling (designed 2026-08-24, see docs/skill-power-design.md).
 -- Applies on top of whatever damage the engine already computed (autoattack, spell, or rune --
 -- doesn't matter which), so it needs no C++ recompile and no per-spell edits. Bonus = 1x at the
--- starting skill/magic level (10) and grows without ceiling from there: (stat / 10)^0.3
--- (2026-08-24: reduced from ^0.5 to ^0.3 -- +146% at skill 200 instead of +347%, a middle ground
--- between this and the old n=1.1 exponent approach, ~+43% at skill 200).
+-- starting skill/magic level (10) and grows without ceiling from there: (stat / 10)^0.15
+-- (2026-08-24: reduced from ^0.5 to ^0.3 -- +146% at skill 200 instead of +347%.
+-- 2026-08-26: reduced again to ^0.15 after real playtesting felt too strong too early --
+-- +57% at skill 200, close to the old n=1.1 exponent-per-formula approach's ~+43% at skill 200,
+-- which only ever worked for spells/runes anyway since melee/distance needed a C++ recompile).
 local physicalWeaponSkill = {
 	[WEAPON_FIST] = SKILL_FIST,
 	[WEAPON_SWORD] = SKILL_SWORD,
@@ -698,7 +700,7 @@ function Player:onCombat(target, item, primaryDamage, primaryType, secondaryDama
 			relevantStat = self:getSkillLevel(skill)
 		end
 
-		local powerMultiplier = (math.max(relevantStat, 10) / 10) ^ 0.3
+		local powerMultiplier = (math.max(relevantStat, 10) / 10) ^ 0.15
 		primaryDamage = primaryDamage * powerMultiplier
 		secondaryDamage = secondaryDamage * powerMultiplier
 	end
