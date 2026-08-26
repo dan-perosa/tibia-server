@@ -18,9 +18,16 @@ implementar algo daqui, é só remover o item e registrar no `CHANGELOG.md`.
   binário compilado do OTClient (client-side, C++), fora do alcance de uma correção só em Lua —
   precisa instrumentar/recompilar o client pra ver o pacote de rede real saindo da máquina do
   jogador.
-- Barra de skill não sobe: corrigida uma segunda causa (mesmo tipo de bug do Magic Level em
-  25/08, mas afetando todas as skills — polling estendido em `game_skills/skills.lua`). Ainda não
-  confirmado ao vivo se resolveu de vez.
+- **Barra de skill não sobe visualmente, mesmo depois de duas tentativas de correção.**
+  Diagnóstico corrigido em 26/08 (à noite) — não é um bug de arredondamento nem de sinal de
+  evento faltando: o progresso real (usado pelo servidor pra decidir o level-up) avança rápido e
+  correto o tempo todo; é a **exibição no client** que fica presa num percentual pequeno/velho
+  ("99% faltando") durante quase todo o percurso e só corrige o número certo bem no momento do
+  level-up (por isso completa "em 2 hits" pra quem está olhando a tela, mesmo já tendo avançado
+  bastante por trás). Polling (reler o valor com mais frequência) não resolve, porque o valor
+  cacheado no client já está congelado — o defeito deve estar em como o binário compilado do
+  OTClient processa certos pacotes de atualização em tempo real. Mesma classe de problema do item
+  do chase mode acima — ver `CHANGELOG.md` 2026-08-26 pro histórico completo das duas tentativas.
 
 ## Pendências de 2026-08-25
 

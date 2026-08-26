@@ -24,14 +24,34 @@ level subindo devagar demais. Dois ajustes juntos, mesmo desbalanceamento:
 ### Confirmado: popup de skill-up corrigido
 Pedro testou ao vivo e o popup de "você subiu de skill" agora mostra o nome certo. Fechado.
 
-### Barra de skill não sobe, segunda causa encontrada
-O bug de escala de 25/08 estava corrigido, mas Pedro reportou que **nenhuma** barra de skill
-progredia visualmente mesmo assim (os valores de skill claramente tinham avançado -- Shielding em
-11, Magic Level em 13 -- só a barra que não se mexia). Mesma classe de problema já vista só pro
-Magic Level em 25/08 ("não recebe sinal de atualização ao vivo confiável nesse build"), só que
-afetando todas as skills. Corrigido estendendo o polling que já existia
+### Barra de skill não sobe -- diagnóstico corrigido, ainda não resolvido (PRECISA DO DANIEL)
+Tentativa 1 (25/08): bug de escala de percentual (client lendo valor bruto *100 sem dividir),
+corrigido em `statsbar.lua`/`XPAanalyser.lua`/`offlinetraining1524.lua`.
+
+Tentativa 2 (26/08, insuficiente): Pedro reportou que **nenhuma** barra de skill progredia
+visualmente mesmo assim (os valores de skill claramente tinham avançado -- Shielding em 11, Magic
+Level em 13 -- só a barra que não se mexia). Hipótese na hora: mesmo tipo de "sinal de atualização
+não confiável" já visto só pro Magic Level, então estendido o polling que já existia
 (`game_skills/skills.lua`, evento que já rodava a cada 1s só pra magic level percent) pra também
-reler e reemitir level percent e todas as skills de arma. Ainda não confirmado ao vivo.
+reler e reemitir level percent e todas as skills de arma.
+
+**Reportado de novo depois do fix, com um detalhe que muda o diagnóstico**: o tooltip da barra de
+Magic Level mostrava "99,75% faltando" e, ~2-3 minutos depois, "99,45% faltando" (progresso real,
+pequeno) -- mas o nível **completou de verdade só 2 hits de exercise rod depois**, poucos segundos
+após o segundo check. Isso é incompatível com progresso linear a partir do valor mostrado (nesse
+ritmo, faltariam várias horas, não segundos).
+
+**Diagnóstico corrigido**: o progresso real (usado pelo servidor pra decidir o level-up) avança
+rápido e corretamente o tempo todo -- é a **exibição no client** que fica presa num valor pequeno/
+desatualizado durante quase todo o percurso, só "acertando" o número certo bem no momento do
+level-up (dando a falsa impressão de salto súbito). Isso bate com o comentário que já existia no
+código *antes* de qualquer coisa ser mexida aqui ("Magic level percent não recebe sinal de
+atualização confiável nesse build"). **O polling não resolve isso**: se o valor cacheado no client
+(`localPlayer:getMagicLevelPercent()`) já está congelado, reler ele com mais frequência só mostra
+o mesmo número congelado mais vezes -- não ataca a causa raiz, que deve estar em como o binário
+compilado do OTClient processa (ou deixa de processar) certos pacotes de atualização em tempo
+real. Mesma classe de problema do bug de chase mode abaixo -- ambos provavelmente precisam do
+Daniel instrumentar/recompilar o client, fora do alcance de uma correção só em Lua.
 
 ### Investigação funda: personagem gruda no monstro durante ataque (não resolvido)
 Bug sério reportado por Pedro: com "modo perseguição" desmarcado na tela, o personagem ainda assim
