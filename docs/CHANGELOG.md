@@ -5,6 +5,53 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-26
+
+Confirmação ao vivo de bugs de 25/08, mais correção e uma investigação funda que ficou pro Daniel.
+
+### Confirmado: popup de skill-up corrigido
+Pedro testou ao vivo e o popup de "você subiu de skill" agora mostra o nome certo. Fechado.
+
+### Barra de skill não sobe, segunda causa encontrada
+O bug de escala de 25/08 estava corrigido, mas Pedro reportou que **nenhuma** barra de skill
+progredia visualmente mesmo assim (os valores de skill claramente tinham avançado -- Shielding em
+11, Magic Level em 13 -- só a barra que não se mexia). Mesma classe de problema já vista só pro
+Magic Level em 25/08 ("não recebe sinal de atualização ao vivo confiável nesse build"), só que
+afetando todas as skills. Corrigido estendendo o polling que já existia
+(`game_skills/skills.lua`, evento que já rodava a cada 1s só pra magic level percent) pra também
+reler e reemitir level percent e todas as skills de arma. Ainda não confirmado ao vivo.
+
+### Investigação funda: personagem gruda no monstro durante ataque (não resolvido)
+Bug sério reportado por Pedro: com "modo perseguição" desmarcado na tela, o personagem ainda assim
+anda até ficar colado no monstro ao atacar, com qualquer arma (inclusive distância, ex: snakebite
+rod, alcance 3 -- o personagem vai até alcance 1 mesmo assim). Já acontecia antes de 25/08, não é
+regressão de nada feito aqui.
+
+Criado um comando de debug (`!checkchase`, em `data/scripts/talkactions/player/givemanapotions_debug.lua`)
+que lê `player:getFollowCreature()` direto do servidor. Confirmado com prova concreta: o servidor
+está com um alvo de perseguição ativo (`followCreature = Demon`) durante o ataque, **mesmo com a
+tela mostrando desligado**. (Nota lateral: a primeira versão do comando usava
+`player:getAttackedCreature()`, que não existe nessa API Lua -- dava erro silencioso, sem nenhuma
+mensagem visível em chat nenhum. Corrigido removendo essa chamada.)
+
+Eliminado como causa, com evidência:
+- Constantes do client (`gamelib/const.lua`): `DontChase=0`/`ChaseOpponent=1`, corretas, não
+  trocadas.
+- Clique no botão "Stand"/"Follow" (`game_inventory/inventory.lua`, `selectPosture`): chama
+  `g_game.setChaseMode()` corretamente com o valor certo.
+- Lógica do servidor em C++ (`Player::setChaseMode`/`Player::setAttackedCreature`,
+  `player.cpp`): ambos respeitam a flag `chaseMode` corretamente antes de setar
+  `followCreature` -- rastreado até `Creature::onThink`/`goToFollowCreature`, tudo consistente.
+- Nenhum script Lua do datapack (`data/` e `data-otservbr-global/`) chama `setFollowCreature` num
+  jogador por fora do sistema normal de chase.
+
+Conclusão: a lógica que dá pra ler (Lua + C++ do servidor) parece correta dos dois lados -- o
+defeito deve estar no binário compilado do OTClient (a parte que efetivamente monta o pacote de
+rede ao clicar), sem código-fonte disponível aqui pra inspecionar. Pedro já perguntou pro Daniel se
+ele consegue resolver -- precisaria instrumentar/recompilar pra ver o pacote de rede real chegando
+no servidor, fora do alcance de uma investigação só em Lua. Detalhes completos e próximos passos em
+`docs/PENDING.md`.
+
 ## 2026-08-25
 
 Dia longo: migração de infra completa, primeiro teste real com um amigo via Hamachi, e uma boa

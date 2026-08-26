@@ -32,3 +32,22 @@ end
 
 giverod:groupType("gamemaster")
 giverod:register()
+
+-- Temporary debug command: reports the player's real, server-side chase state while
+-- reproducing the "character walks into the monster while attacking, chase mode has no
+-- effect" bug (2026-08-26). Say this WHILE actively attacking and getting pulled in, to
+-- see whether followCreature is actually set (chase system engaged) or not (something
+-- else is causing the movement). Safe to delete once the bug is found.
+local checkchase = TalkAction("!checkchase")
+
+function checkchase.onSay(player, words, param)
+	local followed = player:getFollowCreature()
+	player:sendTextMessage(MESSAGE_LOOK, string.format(
+		"followCreature=%s",
+		followed and followed:getName() or "nil"
+	))
+	return true
+end
+
+checkchase:groupType("normal")
+checkchase:register()

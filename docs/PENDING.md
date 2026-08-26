@@ -5,21 +5,27 @@ implementar algo daqui, é só remover o item e registrar no `CHANGELOG.md`.
 
 ---
 
-## Pendências de 2026-08-25
+## Pendências de 2026-08-26 (PRIORIDADE — provavelmente precisa de C++, não só Lua)
 
-**Pra reconferir ao vivo** (já corrigidos ontem, só falta confirmar em jogo — ver `CHANGELOG.md`
-2026-08-25 pra detalhes de cada bug):
-- Barra de skill não sobe (bug de escala de percentual corrigido em vários arquivos do client)
-- Personagem persegue monstro sozinho mesmo com "modo perseguição" desmarcado (bug de ordem de
-  execução corrigido em `game_inventory/inventory.lua` — mas o fix só corrige a exibição, pode
-  sobrar comportamento real de perseguição num modo que ficou "ligado" de sessão anterior)
-- Popup de "você subiu de skill" com nome errado (`infobanner.lua` — IDs de skill corrigidos pra
-  bater com o enum real do protocolo)
+- **Personagem gruda no monstro durante o ataque, mesmo com "modo perseguição" desmarcado na
+  tela — com qualquer arma, inclusive distância (ex: snakebite rod, alcance 3, mas o personagem
+  vai até alcance 1 mesmo assim).** Já acontecia antes de 25/08, não é regressão de nada mexido
+  aqui. Investigação completa em `CHANGELOG.md` 2026-08-26 — resumo: confirmado com um comando de
+  debug (`!checkchase`) que o servidor tem `followCreature` ativo durante o ataque mesmo com a
+  tela mostrando desligado. Eliminado como causa: constantes do client, lógica do botão de
+  toggle, lógica C++ do servidor (`Player::setChaseMode`/`setAttackedCreature`, ambos corretos),
+  e nenhum script Lua do datapack mexendo nisso por fora do sistema normal. Suspeita: bug no
+  binário compilado do OTClient (client-side, C++), fora do alcance de uma correção só em Lua —
+  precisa instrumentar/recompilar o client pra ver o pacote de rede real saindo da máquina do
+  jogador.
+- Barra de skill não sobe: corrigida uma segunda causa (mesmo tipo de bug do Magic Level em
+  25/08, mas afetando todas as skills — polling estendido em `game_skills/skills.lua`). Ainda não
+  confirmado ao vivo se resolveu de vez.
+
+## Pendências de 2026-08-25
 
 **Balanceamento:**
 - Reduzir o número de rotworms no início da hunt
-- Espalhar bichos mais fracos ao redor dos pontos de teleporte (ex: larva perto da hunt de
-  scarab) — transição suave de dificuldade
 - Rate de level muito devagar nos levels baixos (distinto da rate de skill/ML, essa é XP pra
   level)
 - Acelerar a velocidade de consumo das exercise weapons — talvez atrelar a alguma quest ou marco
