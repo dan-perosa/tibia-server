@@ -1,7 +1,7 @@
 -- Drops custom loot for all monsters
-local allLootConfig = {
-	{ id = 6526, chance = 100000, minCount = 1, maxCount = 10 }, -- Example of loot (100% chance)
-}
+-- Empty by default -- the stock example here (item 6526, 100% drop on every monster) was
+-- placeholder/demo content left over from Canary's base scripts, not an intentional drop.
+local allLootConfig = {}
 
 -- Custom loot for specific monsters (this has the same usage options as normal monster loot)
 local customLootConfig = {

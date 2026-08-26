@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<houses>
+	<house name="Skartholt House #1" houseid="1" entryx="1014" entryy="1019" entryz="7" rent="80000" townid="1" size="92" clientid="1" beds="3" />
+	<house name="Skartholt House #2" houseid="2" entryx="1022" entryy="1019" entryz="7" rent="120000" townid="1" size="154" clientid="2" beds="3" />
+	<house name="" houseid="3633" entryx="0" entryy="0" entryz="0" rent="0" townid="0" size="4" clientid="0" beds="0" />
+</houses>

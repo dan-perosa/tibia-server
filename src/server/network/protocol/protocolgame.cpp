@@ -621,13 +621,16 @@ ProtocolGame::ProtocolGame(const Connection_ptr &initConnection) :
 }
 
 void ProtocolGame::onConnectionAccepted() {
+	g_logger().error("[ProtocolGame::onConnectionAccepted] - DIAGNOSTIC: entered");
 	const auto* portPinnedProfile = ProtocolProfileRegistry::getProfile(ProtocolProfileId::Current);
 	sessionHintLease.reset();
 	auto transportState = InitialTransportState::ResolvedModernDefault;
 
 	if (const auto connection = getConnection()) {
+		g_logger().error("[ProtocolGame::onConnectionAccepted] - DIAGNOSTIC: got connection, localPort={}, connectionPtr={}", connection->getLocalPort(), static_cast<const void*>(connection.get()));
 		portPinnedProfile = getPortPinnedProfile(connection->getLocalPort());
 		if (!portPinnedProfile || !ProtocolProfileRegistry::isProfileAllowed(portPinnedProfile->id)) {
+			g_logger().error("[ProtocolGame::onConnectionAccepted] - DIAGNOSTIC: rejected, portPinnedProfile null={}", portPinnedProfile == nullptr);
 			connection->setInitialTransportState(InitialTransportState::Rejected);
 			connection->close(FORCE_CLOSE);
 			return;
@@ -1411,6 +1414,7 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage &msg) {
 }
 
 void ProtocolGame::sendLoginChallenge() {
+	g_logger().error("[ProtocolGame::sendLoginChallenge] - DIAGNOSTIC: entered");
 	auto output = OutputMessagePool::getOutputMessage();
 	static std::random_device rd;
 	static std::ranlux24 generator(rd());
@@ -1455,7 +1459,9 @@ void ProtocolGame::sendLoginChallenge() {
 	// To support 11.10-, not have problems with 11.11+
 	output->add<uint32_t>(adlerChecksum(output->getOutputBuffer() + sizeof(uint32_t), 8));
 
+	g_logger().error("[ProtocolGame::sendLoginChallenge] - DIAGNOSTIC: calling send(), length={}", output->getLength());
 	send(output);
+	g_logger().error("[ProtocolGame::sendLoginChallenge] - DIAGNOSTIC: send() returned");
 }
 
 void ProtocolGame::disconnectClient(const std::string &message) const {

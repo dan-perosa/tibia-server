@@ -62,7 +62,7 @@ public:
 	// Constructor end
 
 	// Destructor
-	~Connection() = default;
+	~Connection();
 
 	// Singleton - ensures we don't accidentally copy it
 	Connection(const Connection &) = delete;

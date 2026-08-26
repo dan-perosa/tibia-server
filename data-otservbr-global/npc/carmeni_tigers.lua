@@ -18,12 +18,12 @@ npcConfig.walkInterval = 2000
 npcConfig.walkRadius = 2
 
 npcConfig.outfit = {
-	lookType = 146,
-	lookHead = 94,
-	lookBody = 39,
-	lookLegs = 87,
-	lookFeet = 76,
-	lookAddons = 2,
+	lookType = 155, -- "Pirate" outfit (same base type real pirate NPCs in this datapack use, e.g. Captain Dreadnought)
+	lookHead = 78, -- brown hair
+	lookBody = 88, -- dark red coat
+	lookLegs = 58, -- dark grey trousers
+	lookFeet = 38, -- brown boots
+	lookAddons = 3,
 }
 
 npcConfig.flags = {

@@ -1,0 +1,153 @@
+local internalNpcName = "Sarina"
+local npcType = Game.createNpcType(internalNpcName)
+local npcConfig = {}
+
+npcConfig.name = internalNpcName
+npcConfig.description = internalNpcName
+
+npcConfig.health = 100
+npcConfig.maxHealth = npcConfig.health
+npcConfig.walkInterval = 2000
+npcConfig.walkRadius = 2
+
+npcConfig.outfit = {
+	lookType = 136,
+	lookHead = 41,
+	lookBody = 72,
+	lookLegs = 95,
+	lookFeet = 96,
+	lookAddons = 0,
+}
+
+npcConfig.flags = {
+	floorchange = false,
+	profession = "banker",
+}
+npcConfig.speechBubble = SPEECHBUBBLE_BANKER
+
+npcConfig.voices = {
+	interval = 15000,
+	chance = 50,
+	{ text = "General equipment and all sorts of goods. Visit my store!" },
+}
+
+local keywordHandler = KeywordHandler:new()
+local npcHandler = NpcHandler:new(keywordHandler)
+
+npcType.onThink = function(npc, interval)
+	npcHandler:onThink(npc, interval)
+end
+
+npcType.onAppear = function(npc, creature)
+	npcHandler:onAppear(npc, creature)
+end
+
+npcType.onDisappear = function(npc, creature)
+	npcHandler:onDisappear(npc, creature)
+end
+
+npcType.onMove = function(npc, creature, fromPosition, toPosition)
+	npcHandler:onMove(npc, creature, fromPosition, toPosition)
+end
+
+npcType.onSay = function(npc, creature, type, message)
+	npcHandler:onSay(npc, creature, type, message)
+end
+
+npcType.onCloseChannel = function(npc, creature)
+	npcHandler:onCloseChannel(npc, creature)
+end
+
+local function creatureSayCallback(npc, creature, type, message)
+	local player = Player(creature)
+	local playerId = player:getId()
+
+	if not npcHandler:checkInteraction(npc, creature) then
+		return false
+	end
+
+	if MsgContains(message, "football") then
+		npcHandler:say("Do you want to buy a football for 111 gold?", npc, creature)
+		npcHandler:setTopic(playerId, 1)
+	elseif MsgContains(message, "yes") then
+		if npcHandler:getTopic(playerId) == 1 then
+			local player = Player(creature)
+			if player:getMoney() + player:getBankBalance() >= 111 then
+				npcHandler:say("Here it is.", npc, creature)
+				player:addItem(2990, 1)
+				player:removeMoneyBank(111)
+			else
+				npcHandler:say("You don't have enough money.", npc, creature)
+			end
+			npcHandler:setTopic(playerId, 0)
+		end
+	end
+	return true
+end
+
+npcHandler:setMessage(MESSAGE_GREET, "Oh, please come in, |PLAYERNAME|. What can I do for you? If you need adventure equipment, ask me for a {trade}.")
+npcHandler:setMessage(MESSAGE_FAREWELL, "Good bye, |PLAYERNAME|.")
+npcHandler:setMessage(MESSAGE_WALKAWAY, "Good bye, |PLAYERNAME|.")
+npcHandler:setMessage(MESSAGE_SENDTRADE, "Of course, just browse through my wares. {Footballs} have to be purchased separately.")
+npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
+npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
+
+npcConfig.shop = {
+	{ itemName = "backpack", clientId = 2854, buy = 20 },
+	{ itemName = "beach backpack", clientId = 5949, buy = 20 },
+	{ itemName = "birthday backpack", clientId = 24395, buy = 20 },
+	{ itemName = "blue backpack", clientId = 2869, buy = 20 },
+	{ itemName = "brocade backpack", clientId = 8860, buy = 20 },
+	{ itemName = "buggy backpack", clientId = 14249, buy = 20 },
+	{ itemName = "cake backpack", clientId = 20347, buy = 20 },
+	{ itemName = "camouflage backpack", clientId = 2872, buy = 20 },
+	{ itemName = "changing backpack", clientId = 37536, buy = 20 },
+	{ itemName = "crowbar", clientId = 3304, buy = 260, sell = 50 },
+	{ itemName = "crown backpack", clientId = 9605, buy = 800 },
+	{ itemName = "crystal backpack", clientId = 16100, buy = 20 },
+	{ itemName = "deepling backpack", clientId = 14248, buy = 20 },
+	{ itemName = "demon backpack", clientId = 9601, buy = 20 },
+	{ itemName = "dragon backpack", clientId = 10326, buy = 20 },
+	{ itemName = "expedition backpack", clientId = 10324, buy = 20 },
+	{ itemName = "feedbag", clientId = 21292, buy = 20 },
+	{ itemName = "fishing rod", clientId = 3483, buy = 150, sell = 40 },
+	{ itemName = "fur backpack", clientId = 7342, buy = 20 },
+	{ itemName = "glooth backpack", clientId = 21295, buy = 20 },
+	{ itemName = "golden backpack", clientId = 2871, buy = 20 },
+	{ itemName = "green backpack", clientId = 2865, buy = 20 },
+	{ itemName = "grey backpack", clientId = 2870, buy = 20 },
+	{ itemName = "heart backpack", clientId = 10202, buy = 500 },
+	{ itemName = "light shovel", clientId = 5710, buy = 400 },
+	{ itemName = "machete", clientId = 3308, buy = 35, sell = 6 },
+	{ itemName = "minotaur backpack", clientId = 10327, buy = 20 },
+	{ itemName = "moon backpack", clientId = 9604, buy = 20 },
+	{ itemName = "mushroom backpack", clientId = 16099, buy = 20 },
+	{ itemName = "old and used backpack", clientId = 3244, buy = 20 },
+	{ itemName = "orange backpack", clientId = 9602, buy = 20 },
+	{ itemName = "pannier backpack", clientId = 19159, buy = 20 },
+	{ itemName = "pick", clientId = 3456, buy = 50, sell = 15 },
+	{ itemName = "pirate backpack", clientId = 5926, buy = 20 },
+	{ itemName = "present", clientId = 3218, buy = 10 },
+	{ itemName = "purple backpack", clientId = 2868, buy = 20 },
+	{ itemName = "raccoon backpack", clientId = 35577, buy = 20 },
+	{ itemName = "red backpack", clientId = 2867, buy = 20 },
+	{ itemName = "rope", clientId = 3003, buy = 50, sell = 15 },
+	{ itemName = "santa backpack", clientId = 10346, buy = 20 },
+	{ itemName = "scythe", clientId = 3453, buy = 50, sell = 10 },
+	{ itemName = "shovel", clientId = 3457, buy = 50, sell = 8 },
+	{ itemName = "wolf backpack", clientId = 22084, buy = 20 },
+	{ itemName = "worm", clientId = 3492, buy = 1 },
+	{ itemName = "yellow backpack", clientId = 2866, buy = 20 },
+}
+-- On buy npc shop message
+npcType.onBuyItem = function(npc, player, itemId, subType, amount, ignore, inBackpacks, totalCost)
+	npc:sellItem(player, itemId, amount, subType, 0, ignore, inBackpacks)
+end
+-- On sell npc shop message
+npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name, totalCost)
+	player:sendTextMessage(MESSAGE_TRADE, string.format("Sold %ix %s for %i gold.", amount, name, totalCost))
+end
+-- On check npc shop message (look item)
+npcType.onCheckItem = function(npc, player, clientId, subType) end
+
+npcType:register(npcConfig)

@@ -51,6 +51,9 @@ local CustomQuestChests = {
 			{ id = 3371, count = 1 }, -- knight legs
 			{ id = 3436, count = 1 }, -- medusa shield
 			{ id = 3079, count = 1 }, -- boots of haste
+			{ id = 28552, count = 1 }, -- exercise sword
+			{ id = 28553, count = 1 }, -- exercise axe
+			{ id = 28554, count = 1 }, -- exercise club
 		},
 	},
 	[24466] = { -- Paladin
@@ -62,6 +65,7 @@ local CustomQuestChests = {
 			{ id = 3392, count = 1 }, -- royal helmet
 			{ id = 3436, count = 1 }, -- medusa shield
 			{ id = 3079, count = 1 }, -- boots of haste
+			{ id = 28555, count = 1 }, -- exercise bow
 		},
 	},
 	[24467] = { -- Sorcerer
@@ -73,6 +77,7 @@ local CustomQuestChests = {
 			{ id = 3210, count = 1 }, -- hat of the mad
 			{ id = 645, count = 1 }, -- blue legs
 			{ id = 3079, count = 1 }, -- boots of haste
+			{ id = 28557, count = 1 }, -- exercise wand
 		},
 	},
 	[24468] = { -- Druid
@@ -84,6 +89,7 @@ local CustomQuestChests = {
 			{ id = 3210, count = 1 }, -- hat of the mad
 			{ id = 645, count = 1 }, -- blue legs
 			{ id = 3079, count = 1 }, -- boots of haste
+			{ id = 28556, count = 1 }, -- exercise rod
 		},
 	},
 
@@ -152,7 +158,14 @@ local function hasRoomForReward(player, items)
 			totalWeight = totalWeight + ItemType(REWARD_BACKPACK_ID):getWeight()
 		end
 	end
-	if (player:getFreeCapacity() / 100) < totalWeight then
+	-- getFreeCapacity() and ItemType():getWeight() are both in the same raw
+	-- (hundredths-of-oz) scale -- confirmed in src/creatures/players/player.cpp
+	-- (Player::getFreeCapacity) and src/lua/functions/items/item_type_functions.cpp
+	-- (luaItemTypeGetWeight), and matches how gnomally.lua/imbuement_assistant.lua/
+	-- hireling.lua compare them elsewhere in this datapack. A stray "/ 100" here
+	-- previously made this check ~100x stricter than it should be, so a reward
+	-- chest could refuse "not enough room" even with plenty of free capacity.
+	if player:getFreeCapacity() < totalWeight then
 		return false
 	end
 

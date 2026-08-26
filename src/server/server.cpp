@@ -106,6 +106,7 @@ void ServicePort::onAccept(const Connection_ptr &connection, const std::error_co
 				connection->acceptInternal();
 			}
 		} else {
+			g_logger().error("[ServicePort::onAccept] - DIAGNOSTIC: closing due to ban check, this={}", static_cast<const void*>(connection.get()));
 			connection->close(FORCE_CLOSE);
 		}
 

@@ -5005,6 +5005,7 @@
 		<attribute key="containersize" value="15"/>
 		<attribute key="rotateto" value="2481"/>
 		<attribute key="weight" value="12000"/>
+		<attribute key="movable" value="0"/>
 	</item>
 	<item id="2473" article="a" name="box">
 		<attribute key="primarytype" value="containers"/>

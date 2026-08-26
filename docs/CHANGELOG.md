@@ -5,6 +5,82 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-25
+
+Dia longo: migração de infra completa, primeiro teste real com um amigo via Hamachi, e uma boa
+quantidade de bugs de cliente/servidor encontrados e corrigidos ao vivo durante esse teste.
+
+### Migração completa: Docker → XAMPP nativo
+Pedro e o Tael (amigo do Dan, programador) tiraram o projeto do Docker de vez. Servidor agora roda
+como `canary.exe` nativo direto de `canary/`, banco é uma **MariaDB 11.4 standalone** instalada
+como serviço do Windows (não é o `mysqld` que vem junto do XAMPP — esse fica sem uso, só ocupando
+espaço), site (MyAAC) direto em `C:\xampp\htdocs\` via Apache, phpMyAdmin pra administração do
+banco. Detalhes completos e credenciais em `[[project-tibia-server]]` (memória do Claude).
+
+### Bug feio: script de sync empurrava mapa de 3 dias atrás pro servidor
+`canary/sync-map-to-server.ps1` calculava o caminho do mapa como `$PSScriptRoot\meu-mapa` — como o
+script mora dentro de `canary/`, isso resolvia pra uma pasta **separada e congelada desde
+21/08 20:32** (`canary/meu-mapa/`), não a pasta real que o RME edita (`meu-mapa/`, na raiz do
+repo). Toda sincronização (várias rodadas ao longo do dia) mandava esse snapshot velho pro
+servidor sem erro nenhum pra avisar — parecia que "áreas inteiras do mapa tinham sumido" (um
+porto/barco inteiro, entre outras coisas) quando na real nada tinha sido perdido, só o servidor
+estava sempre 3 dias atrasado. Corrigido resolvendo o caminho relativo à raiz do repo
+(`Split-Path $repoRoot -Parent`), não à pasta do próprio script.
+
+### Bugs de exibição no OTClient (várias telas de skill/combate)
+- **Barra de skill "parecia cheia" ou travada**: `statsbar.lua`, `XPAanalyser.lua` e
+  `offlinetraining1524.lua` liam o percentual bruto do protocolo (que vem multiplicado por 100)
+  sem dividir de volta — resultado, a barra ficava cheia com qualquer progresso mínimo, ou
+  mostrava número errado. Corrigido dividindo por 100 nesses três arquivos (o `skills.lua`
+  principal já fazia isso certo desde 24/08).
+- **Personagem persegue monstro sozinho mesmo com a caixa desmarcada**: bug de ordem de execução
+  em `game_inventory/inventory.lua` — `onGameStart` restaurava o modo de combate salvo da sessão
+  anterior *antes* de conectar o listener que sincroniza a caixinha visual, então a tela mentia
+  sobre o estado real. Corrigido forçando um resync (`combatEvent()`) logo após restaurar.
+- **Popup de "você subiu de skill" com o nome errado** (Shielding aparecia como "Distance
+  Fighting", e a maioria das outras skills caía num texto genérico): a tabela `SkillId` em
+  `game_notifications/controllers/infobanner.lua` usava uma sequência 1..8 chutada, em vez dos
+  valores reais do protocolo (`CipbiaSkills_t` no C++ do Canary — só Magic Level por coincidência
+  batia). Corrigido com os valores certos (Shield=6, Distance=7, Sword=8, Club=9, Axe=10, Fist=11,
+  Fishing=13).
+
+### Primeiro teste real com um amigo (via Hamachi) — bugs encontrados na hora
+Processo completo documentado em `[[project-tibia-hamachi-onboarding]]`. Bugs reais achados e
+corrigidos durante o teste:
+- `site_url` do MyAAC fixo em `http://localhost/` quebrava CSS/JS pra qualquer um que não fosse o
+  Pedro (recursos carregavam via URL absoluta apontando pra "localhost" da máquina de quem
+  acessava). Corrigido pro IP do Hamachi.
+- Tabela `myaac_account_actions` com esquema antigo, faltando a coluna `ipv6` — dava erro 500 toda
+  vez que alguém criava conta/logava (a ação em si funcionava, só o log dela quebrava).
+  `ALTER TABLE ... ADD COLUMN ipv6 VARBINARY(16)`.
+- Baú de recompensa de quest (`custom_reward_chests.lua`) recusava dar o prêmio mesmo com espaço
+  de sobra — a checagem de capacidade dividia `getFreeCapacity()` por 100 sem necessidade, exigindo
+  100x mais espaço livre do que o item realmente pesava (confirmado no C++ que as duas grandezas já
+  usam a mesma escala). Corrigido removendo a divisão.
+
+### Limpeza de conteúdo "de fábrica" nunca customizado
+- `custom_monster_loot.lua` tinha um exemplo/demo esquecido dando **Christmas Token com 100% de
+  chance em todo monstro do jogo** — não era evento nenhum, só placeholder nunca removido.
+  Esvaziado.
+- `freePremium` ligado (`false` → `true`) — personagens não conseguiam conjurar magias que exigem
+  conta premium.
+
+### Melhorias pontuais
+- Kits iniciais de classe (`custom_reward_chests.lua`, action ids 24465-24468) agora incluem uma
+  exercise weapon apropriada por vocação (Knight: sword/axe/club, Paladin: bow, Sorcerer: wand,
+  Druid: rod) — personagem novo já nasce podendo treinar.
+- Baús de recompensa de quest (item 2472 "chest") agora têm `movable="0"` no `items.xml` — não
+  podiam mais ser tirados do lugar por jogadores (frozen chest 7160/7161 já vinha travado por ser
+  `primarytype="refuse"`; o "chest" comum não tinha equivalente). RME tem cópia própria de
+  `items.xml` (`tools/rme/.../data/items/items.xml`) — espelhada a mesma mudança lá, mas o painel
+  de propriedades do RME deriva "Movable" do `primarytype`, não do atributo `movable`, então
+  continua mostrando "Yes" mesmo com o item já travado de verdade no servidor (confirmado
+  testando in-game). Chest ainda não bloqueava passagem por cima do tile — isso é uma propriedade
+  de sprite/aparência (`appearances.dat`, binário), não editável via texto; resolvido pelo Pedro
+  colocando um objeto sólido adicional no local.
+- NPC Carmeni Tigers (comerciante do porto) trocado de outfit "Oriental" pra "Pirate" (lookType
+  155, mesmo tipo do Captain Dreadnought), combinando com o tema de expedições.
+
 ## 2026-08-24 (4)
 
 ### Expoente do bônus de dano reduzido (^0,5 → ^0,3)

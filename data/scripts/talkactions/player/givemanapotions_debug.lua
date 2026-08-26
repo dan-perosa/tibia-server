@@ -14,7 +14,7 @@ function givemanapotions.onSay(player, words, param)
 	return true
 end
 
-givemanapotions:groupType("normal")
+givemanapotions:groupType("gamemaster")
 givemanapotions:register()
 
 local giverod = TalkAction("!giverod")
@@ -25,10 +25,10 @@ function giverod.onSay(player, words, param)
 		return true
 	end
 
-	player:addItem(35283, 1, true, 1800) -- durable exercise rod, 1800 charges
-	player:sendTextMessage(MESSAGE_LOOK, "Received a durable exercise rod (debug command).")
+	player:addItem(28556, 1, true, 14400) -- exercise rod, 14400 charges (~8h at the dummy)
+	player:sendTextMessage(MESSAGE_LOOK, "Received an exercise rod with 14400 charges (debug command).")
 	return true
 end
 
-giverod:groupType("normal")
+giverod:groupType("gamemaster")
 giverod:register()

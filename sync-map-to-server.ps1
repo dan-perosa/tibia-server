@@ -10,7 +10,12 @@
 $ErrorActionPreference = "Stop"
 
 $repoRoot = $PSScriptRoot
-$mapDir = Join-Path $repoRoot "meu-mapa"
+# meu-mapa/ lives at the top-level repo root (one level up from canary/, where this
+# script lives), NOT inside canary/. A previous version of this line pointed at
+# "$repoRoot\meu-mapa" (i.e. canary\meu-mapa), a separate stale folder frozen since
+# 2026-08-21 -- every sync silently pushed that 3-day-old snapshot to the server
+# instead of the real, actively-edited map. Fixed 2026-08-25.
+$mapDir = Join-Path (Split-Path $repoRoot -Parent) "meu-mapa"
 $mapName = "MAPA OFICIAL DE TRABALHO"
 $canaryExe = Join-Path $repoRoot "canary.exe"
 $dockerComposeFile = Join-Path $repoRoot "docker\docker-compose.yml"

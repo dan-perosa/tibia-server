@@ -72,13 +72,17 @@ OutputMessage_ptr Protocol::getOutputBuffer(int32_t size) {
 
 void Protocol::send(OutputMessage_ptr msg) const {
 	if (auto connection = getConnection()) {
+		g_logger().error("[Protocol::send] - DIAGNOSTIC: got connection, forwarding to Connection::send");
 		connection->send(msg);
+	} else {
+		g_logger().error("[Protocol::send] - DIAGNOSTIC: getConnection() returned NULL, message dropped silently");
 	}
 }
 
 bool Protocol::dispatchProtocolTask(std::function<void()> &&task, std::string_view context, uint32_t expiresAfterMs) const {
 	const bool accepted = g_dispatcher().addProtocolEvent(std::move(task), context, reinterpret_cast<uintptr_t>(this), expiresAfterMs);
 	if (!accepted) {
+		g_logger().error("[Protocol::dispatchProtocolTask] - DIAGNOSTIC: task '{}' REJECTED by dispatcher, closing connection", context);
 		if (const auto &connection = getConnection()) {
 			connection->close(FORCE_CLOSE);
 		}

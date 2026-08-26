@@ -58,9 +58,15 @@ Connection::Connection(asio::io_service &initIoService, ConstServicePort_ptr ini
 	service_port(std::move(initservicePort)),
 	transportCodec(&TransportCodecs::rawClientFirst()),
 	socket(initIoService), m_msg() {
+	g_logger().error("[Connection::Connection] - DIAGNOSTIC: constructed, this={}", static_cast<const void*>(this));
+}
+
+Connection::~Connection() {
+	g_logger().error("[Connection::~Connection] - DIAGNOSTIC: destroyed, this={}", static_cast<const void*>(this));
 }
 
 void Connection::close(bool force) {
+	g_logger().error("[Connection::close] - DIAGNOSTIC: called, this={}, force={}, priorState={}", static_cast<const void*>(this), force, static_cast<int>(connectionState));
 	ConnectionManager::getInstance().releaseConnection(shared_from_this());
 
 	std::scoped_lock lock(connectionLock);
@@ -108,13 +114,18 @@ void Connection::closeSocket() {
 void Connection::accept(Protocol_ptr protocolPtr) {
 	connectionState = CONNECTION_STATE_IDENTIFYING;
 	protocol = std::move(protocolPtr);
+	g_logger().error("[Connection::accept] - DIAGNOSTIC: this={}, calling onConnectionAccepted", static_cast<const void*>(this));
 	protocol->onConnectionAccepted();
+	g_logger().error("[Connection::accept] - DIAGNOSTIC: this={}, onConnectionAccepted returned, state={}", static_cast<const void*>(this), static_cast<int>(connectionState));
 
 	if (connectionState == CONNECTION_STATE_CLOSED) {
+		g_logger().error("[Connection::accept] - DIAGNOSTIC: this={}, bailing, state is CLOSED", static_cast<const void*>(this));
 		return;
 	}
 
+	g_logger().error("[Connection::accept] - DIAGNOSTIC: this={}, calling acceptInternal", static_cast<const void*>(this));
 	acceptInternal(false);
+	g_logger().error("[Connection::accept] - DIAGNOSTIC: this={}, acceptInternal returned", static_cast<const void*>(this));
 }
 
 void Connection::acceptInternal(bool toggleParseHeader) {
@@ -137,12 +148,12 @@ void Connection::acceptInternal(bool toggleParseHeader) {
 
 void Connection::parseProxyIdentification(const std::error_code &error) {
 	std::scoped_lock lock(connectionLock);
+	g_logger().error("[Connection::parseProxyIdentification] - DIAGNOSTIC: entered, this={}, error={}", static_cast<const void*>(this), error.message());
 	readTimer.cancel();
 
 	if (error || connectionState == CONNECTION_STATE_CLOSED) {
-		if (error != asio::error::operation_aborted && error != asio::error::eof && error != asio::error::connection_reset) {
-			g_logger().debug("[Connection::parseProxyIdentification] - Read error: {}", error.message());
-		}
+		// TEMP DIAGNOSTIC (2026-08-24): log unconditionally, including reset/eof/aborted.
+		g_logger().error("[Connection::parseProxyIdentification] - DIAGNOSTIC: this={}, Read error: {} (state closed: {})", static_cast<const void*>(this), error.message(), connectionState == CONNECTION_STATE_CLOSED);
 		close(FORCE_CLOSE);
 		return;
 	}
@@ -191,12 +202,12 @@ void Connection::parseProxyIdentification(const std::error_code &error) {
 
 void Connection::parseHeader(const std::error_code &error) {
 	std::scoped_lock lock(connectionLock);
+	g_logger().error("[Connection::parseHeader] - DIAGNOSTIC: entered, this={}, error={}", static_cast<const void*>(this), error.message());
 	readTimer.cancel();
 
 	if (error) {
-		if (error != asio::error::operation_aborted && error != asio::error::eof && error != asio::error::connection_reset) {
-			g_logger().debug("[Connection::parseHeader] - Read error: {}", error.message());
-		}
+		// TEMP DIAGNOSTIC (2026-08-24): log unconditionally, including reset/eof/aborted.
+		g_logger().error("[Connection::parseHeader] - DIAGNOSTIC: this={}, Read error: {}", static_cast<const void*>(this), error.message());
 		close(FORCE_CLOSE);
 		return;
 	} else if (connectionState == CONNECTION_STATE_CLOSED) {
@@ -313,7 +324,9 @@ void Connection::resumeWork() {
 
 void Connection::send(const OutputMessage_ptr &outputMessage) {
 	std::scoped_lock lock(connectionLock);
+	g_logger().error("[Connection::send] - DIAGNOSTIC: entered, this={}", static_cast<const void*>(this));
 	if (connectionState == CONNECTION_STATE_CLOSED) {
+		g_logger().error("[Connection::send] - DIAGNOSTIC: bailing out, this={}, connectionState already CLOSED", static_cast<const void*>(this));
 		return;
 	}
 
@@ -323,6 +336,7 @@ void Connection::send(const OutputMessage_ptr &outputMessage) {
 	if (noPendingWrite) {
 		if (socket.is_open()) {
 			try {
+				g_logger().error("[Connection::send] - DIAGNOSTIC: posting internalWorker");
 				asio::post(socket.get_executor(), [self = shared_from_this()] { self->internalWorker(); });
 			} catch (const std::system_error &e) {
 				g_logger().error("[Connection::send] - Exception in posting write operation: {}", e.what());
@@ -332,11 +346,14 @@ void Connection::send(const OutputMessage_ptr &outputMessage) {
 			g_logger().error("[Connection::send] - Socket is not open for writing.");
 			close(FORCE_CLOSE);
 		}
+	} else {
+		g_logger().error("[Connection::send] - DIAGNOSTIC: pending write already in flight, queued instead");
 	}
 }
 
 void Connection::internalWorker() {
 	std::unique_lock lock(connectionLock);
+	g_logger().error("[Connection::internalWorker] - DIAGNOSTIC: entered, queueSize={}, state={}", messageQueue.size(), static_cast<int>(connectionState));
 	if (messageQueue.empty()) {
 		if (connectionState == CONNECTION_STATE_CLOSED) {
 			closeSocket();
@@ -349,6 +366,15 @@ void Connection::internalWorker() {
 	protocol->onSendMessage(outputMessage);
 	lock.lock();
 
+	// The lock was released above -- another thread may have closed this connection
+	// (and the underlying socket) in the meantime. Writing to an already-closed socket
+	// here would surface as a Win32 ERROR_INVALID_HANDLE from async_write. Bail out instead.
+	if (connectionState == CONNECTION_STATE_CLOSED || !socket.is_open()) {
+		g_logger().error("[Connection::internalWorker] - DIAGNOSTIC: bailing out after onSendMessage, state={}, socketOpen={}", static_cast<int>(connectionState), socket.is_open());
+		return;
+	}
+
+	g_logger().error("[Connection::internalWorker] - DIAGNOSTIC: calling internalSend");
 	internalSend(outputMessage);
 }
 
