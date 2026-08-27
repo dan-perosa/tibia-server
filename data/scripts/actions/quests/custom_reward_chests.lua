@@ -128,6 +128,9 @@ local CustomQuestChests = {
 	[24903] = { items = { { id = 16104, count = 1 }, { id = 3043, count = 25 } } }, -- gill gugel + 250k
 	[24904] = { items = { { id = 50190, count = 1 }, { id = 3043, count = 25 } } }, -- dark vision bandana + 250k
 	[24905] = { items = { { id = 29427, count = 1 }, { id = 3043, count = 25 } } }, -- dark whispers + 250k
+
+	-- Chest placed by Pedro at (973,1049,9), 2026-08-26
+	[24906] = { items = { { id = 3380, count = 1 } } }, -- noble armor
 }
 
 local GroupStorage = {

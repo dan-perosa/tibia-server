@@ -33,51 +33,51 @@ experienceStages = {
 	{
 		minlevel = 501,
 		maxlevel = 700,
-		multiplier = 34,
+		multiplier = 20, -- reduced from 34 on 2026-08-27, see docs/exp-rate-design.md
 	},
 	{
 		minlevel = 701,
 		maxlevel = 850,
-		multiplier = 43,
+		multiplier = 25, -- reduced from 43
 	},
 	{
 		minlevel = 851,
 		maxlevel = 1000,
-		multiplier = 52,
+		multiplier = 30, -- reduced from 52
 	},
 	{
 		minlevel = 1001,
 		maxlevel = 1200,
-		multiplier = 58,
+		multiplier = 34, -- reduced from 58
 	},
 	{
 		minlevel = 1201,
 		maxlevel = 1350,
-		multiplier = 63,
+		multiplier = 37, -- reduced from 63
 	},
 	{
 		minlevel = 1351,
 		maxlevel = 1500,
-		multiplier = 68,
+		multiplier = 40, -- reduced from 68
 	},
 	{
 		minlevel = 1501,
 		maxlevel = 1750,
-		multiplier = 74,
+		multiplier = 43, -- reduced from 74
 	},
 	{
 		minlevel = 1751,
 		maxlevel = 2000,
-		multiplier = 80,
+		multiplier = 47, -- reduced from 80
 	},
 	{
 		minlevel = 2001,
 		maxlevel = 2500,
-		multiplier = 85,
+		multiplier = 50, -- reduced from 85
 	},
 	{
 		minlevel = 2501,
-		multiplier = 91,
+		multiplier = 53, -- reduced from 91
 	},
 }
 

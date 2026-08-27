@@ -5,6 +5,22 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-27
+
+### Rate de XP: faixas 501+ reduzidas em ~40%
+Pedro identificou dois fatores que a calibração original (baseada em XP/hora do Tibia global)
+não considerava: hunts com monstros customizados dando mais XP, e personagens batendo mais forte
+por causa do escalonamento de dano por skill (`docs/skill-power-design.md`). Somados, esses dois
+efeitos deixariam o XP/hora real acima do baseline usado pra calcular os multiplicadores das
+faixas altas -- risco de overshoot, que é bem mais chato de corrigir depois (nerfar quem já
+progrediu) do que subir a rate se ficar devagar. Decisão: começar conservador de 501 em diante,
+reduzindo ~40% em cada faixa (`data/stages.lua`), e reajustar com dado real de playtest se
+necessário. De quebra suavizou um salto abrupto na fronteira (401-500 em 15x → 501-700 em 34x,
+virou 15x → 20x). 1-500 não foi alterado nesta rodada. Detalhes/tabela completa em
+`docs/exp-rate-design.md`.
+
+---
+
 ## 2026-08-26
 
 Confirmação ao vivo de bugs de 25/08, mais correção e uma investigação funda que ficou pro Daniel.

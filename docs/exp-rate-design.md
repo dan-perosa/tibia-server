@@ -12,6 +12,21 @@ registra o raciocínio/números por trás da tabela, pra caso alguém (Pedro,
 Dan, ou eu numa sessão futura) precise entender o porquê de um valor
 específico ou recalibrar depois de testes reais.
 
+**Atualização 2026-08-27 — faixas 501+ reduzidas em ~40%.** Depois de rodar
+com dado real, o Pedro identificou dois fatores que a calibração original (via
+XP/hora do Tibia global) não tinha como prever: (1) as hunts do servidor vão
+ter monstros customizados dando mais XP que os equivalentes globais, e (2) os
+personagens batem muito mais forte por causa do escalonamento de dano por
+skill (ver `docs/skill-power-design.md`), então matam mais rápido — as duas
+coisas juntas fazem o XP/hora real ficar acima do baseline usado pra calcular
+os multiplicadores, especificamente nas faixas altas (o 1-100 já tinha sido
+ajustado à parte, ver histórico abaixo). Em vez de arriscar overshoot (difícil
+de reverter sem nerfar quem já progrediu), a decisão foi começar conservador
+de 501 em diante e subir depois se o playtest mostrar que ficou lento demais.
+De quebra, isso resolveu um salto abrupto que incomodava (401-500 em 15x pra
+501-700 em 34x, mais que o dobro) — a tabela nova suaviza essa transição.
+1-500 não foi mexido nesta rodada.
+
 ## Objetivo original
 
 Servidor privado, só para amigos, **sem bots permitidos** (tudo manual). Pedro queria uma
@@ -58,25 +73,29 @@ progressão de XP escalonada por level que:
    "XP/hora real médio naquele level", faixa por faixa, ao invés de chutar números por
    sensação.
 
-## Tabela final de multiplicadores (aprovada em 2026-08-06)
+## Tabela final de multiplicadores (aprovada em 2026-08-06, revisada em 2026-08-27)
 
-| Faixa de nível | Multiplicador |
-|---|---|
-| 1-100 | 3x |
-| 101-200 | 7x |
-| 201-300 | 11x |
-| 301-400 | 13x |
-| 401-500 | 15x |
-| 501-700 | 34x |
-| 701-850 | 43x |
-| 851-1000 | 52x |
-| 1001-1200 | 58x |
-| 1201-1350 | 63x |
-| 1351-1500 | 68x |
-| 1501-1750 | 74x |
-| 1751-2000 | 80x |
-| 2001-2500 | 85x |
-| 2501-3000 | 91x |
+1-100 mudou fora desta tabela original (ver histórico de decisões abaixo: 3x →
+6x em 24/08 → 12x em 26/08, valor vigente). Faixas 501+ reduzidas em ~40% em
+27/08 (ver atualização no topo do documento).
+
+| Faixa de nível | Multiplicador original (06/08) | Vigente |
+|---|---|---|
+| 1-100 | 3x | **12x** |
+| 101-200 | 7x | 7x |
+| 201-300 | 11x | 11x |
+| 301-400 | 13x | 13x |
+| 401-500 | 15x | 15x |
+| 501-700 | 34x | **20x** |
+| 701-850 | 43x | **25x** |
+| 851-1000 | 52x | **30x** |
+| 1001-1200 | 58x | **34x** |
+| 1201-1350 | 63x | **37x** |
+| 1351-1500 | 68x | **40x** |
+| 1501-1750 | 74x | **43x** |
+| 1751-2000 | 80x | **47x** |
+| 2001-2500 | 85x | **50x** |
+| 2501-3000 | 91x | **53x** |
 
 Sobe em degraus suaves de propósito — a versão inicial tinha só 5-6 faixas com saltos grandes
 (ex: 58x → 100x direto no level 1000), o que criava uma inconsistência real: um jogador level
@@ -85,23 +104,29 @@ abrupto de multiplicador bem na fronteira. Mais faixas = transição suave = sem
 
 ## Tempo estimado resultante (acumulado desde o level 1)
 
-| Nível | Solo | Grupo x4 |
+Coluna "Original" usa a tabela de 06/08 (com 1-100 ainda em 3x, sem o boost de
+24/08 e 26/08). Coluna "Vigente" usa a tabela de 27/08 (1-100 em 12x, 501+
+reduzido ~40%) — é a que reflete o comportamento real do servidor hoje. Não
+considera o efeito de monstros customizados nem o dano extra por skill, que
+na prática devem compensar parte do aumento abaixo.
+
+| Nível | Original (solo) | Vigente (solo) |
 |---|---|---|
-| 100 | ~4,4h | ~2,9h |
-| 200 | ~12,1h | ~8,1h |
-| 300 | ~23,9h | ~15,9h |
-| 400 | ~35,6h | ~23,8h |
-| 500 | ~47,4h | ~31,6h |
-| 700 | ~62h | ~41,3h |
-| 850 | ~74,8h | ~49,9h |
-| 1000 | ~88,5h | ~59h |
-| 1200 | ~110,6h | ~73,8h |
-| 1350 | ~130,6h | ~87h |
-| 1500 | ~152,9h | ~101,9h |
-| 1750 | ~195,4h | ~130,2h |
-| 2000 | ~245,3h | ~163,5h |
-| 2500 | ~369,6h | ~246,4h |
-| 3000 | ~529,7h | ~353,1h |
+| 100 | ~4,4h | ~1,1h |
+| 500 | ~47,4h | ~44,1h |
+| 700 | ~62h | ~72,2h |
+| 850 | ~74,8h | ~94,2h |
+| 1000 | ~88,5h | ~117,9h |
+| 1200 | ~110,6h | ~155,6h |
+| 1350 | ~130,6h | ~189,7h |
+| 1500 | ~152,9h | ~227,6h |
+| 1750 | ~195,4h | ~300,7h |
+| 2000 | ~245,3h | ~385,6h |
+| 2500 | ~369,6h | ~596,9h |
+| 3000 | ~529,7h | ~871,7h |
+
+(Grupo x4 continua na ordem de ~1,5x mais rápido que solo, mesma proporção
+observada nos dados originais.)
 
 Exemplos pontuais já calculados no processo:
 - Level 80 → 100 sozinho: ~2h10min (quase metade do tempo total pra chegar no 100, mesmo
@@ -127,7 +152,13 @@ Exemplos pontuais já calculados no processo:
    de gear) — multiplicadores dessa faixa foram reduzidos pela metade (6x→3x, 14x→7x,
    22x→11x, 25x→13x, 28x→15x), dobrando o tempo até o level 500.
 6. Redução sutil final (~10-15%) nas faixas acima de 500, junto com mais subdivisão de
-   faixas — versão vigente deste documento.
+   faixas — versão de 06/08.
+7. 1-100 dobrado duas vezes após playtest real (3x → 6x em 24/08, 6x → 12x em 26/08) — ver
+   `CHANGELOG.md` de 26/08.
+8. 27/08: faixas 501+ reduzidas em ~40% (ver "Atualização 2026-08-27" no topo deste
+   documento) — motivo diferente das reduções anteriores: não foi sensação de ritmo, foi
+   correção preventiva por dois fatores que a calibração original não incluía (monstros
+   customizados com XP maior, dano mais alto por escalonamento de skill).
 
 ## Pendências pra quando for implementar de verdade
 
