@@ -30,15 +30,41 @@ Daniel, byte a byte).
 
 ## 2. Pegar o `login-server.exe`
 
-Esse binário também não é versionado, e diferente do client não tem uma
-fonte/commit fixado documentado em lugar nenhum — o Daniel vai te mandar o
-arquivo diretamente (Discord/Drive/etc), pasta `login-server/` inteira:
+Esse binário também não é versionado no repo do Canary, mas é um projeto
+separado open-source com release oficial no GitHub —
+[`opentibiabr/login-server`](https://github.com/opentibiabr/login-server/releases).
+O arquivo do Daniel (`login-server.exe`, 22/nov/2021) bate exatamente com a
+release **v1.1.3** (23/nov/2021), então é só baixar essa:
 
-- `login-server.exe`
-- `.env` — **não copiar o do Daniel direto**, os dois precisam ter as
-  mesmas credenciais de MySQL (`MYSQL_USER`/`MYSQL_PASS`) que vocês já
-  combinaram deixar iguais (`root`/`123`) — se já estiver assim, pode
-  copiar sem problema.
+```powershell
+# Baixa e extrai login-server-v1.1.3-windows-amd64.zip pra uma pasta login-server/
+```
+
+Ou direto pelo browser:
+`https://github.com/opentibiabr/login-server/releases/tag/v1.1.3` →
+`login-server-v1.1.3-windows-amd64.zip`.
+
+Depois de extrair, criar um `login-server/.env` com suas próprias
+credenciais de MySQL locais (mesmo formato do exemplo abaixo — já devem
+estar iguais às do Daniel, `root`/`123`, se vocês já sincronizaram isso):
+
+```
+ENV=dev
+LOGIN_IP=0.0.0.0
+LOGIN_HTTP_PORT=8088
+LOGIN_GRPC_PORT=9090
+MYSQL_HOST=127.0.0.1
+MYSQL_PORT=3306
+MYSQL_DBNAME=canary
+MYSQL_USER=root
+MYSQL_PASS=123
+SERVER_NAME=OTServBR-Global
+SERVER_IP=127.0.0.1
+SERVER_PORT=7172
+SERVER_LOCATION=BRA
+RATE_LIMITER_RATE=2
+RATE_LIMITER_BURST=5
+```
 
 ## 3. Configurar o `client/conf/config.ini` do seu client novo
 
