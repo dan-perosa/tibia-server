@@ -1,5 +1,13 @@
 local exhaustionTime = 10
 
+-- PENDING.md 2026-08-25 asked to speed up exercise weapon consumption but
+-- gate it behind a milestone instead of it always being fast. No specific
+-- quest was picked yet, so this uses reaching level 8 as a placeholder
+-- milestone (change FAST_EXERCISE_MIN_LEVEL, or swap the level check below
+-- for a storage check, once Pedro decides on an actual quest/marco).
+local FAST_EXERCISE_MIN_LEVEL = 8
+local MILESTONE_SPEED_MULTIPLIER = 0.5 -- same factor as the "fast-exercise" event scheduler
+
 local exerciseWeaponsTable = {
 	-- MELE
 	[50292] = { skill = SKILL_FIST },
@@ -133,8 +141,10 @@ local function exerciseTrainingEvent(playerId, tilePosition, weaponId, dummyId)
 	local eventSpeedMultiplier = 1
 	local scopedFastExercise = KV.scoped("eventscheduler"):get("fast-exercise")
 	if scopedFastExercise then
-		eventSpeedMultiplier = 0.5
+		eventSpeedMultiplier = MILESTONE_SPEED_MULTIPLIER
 		logger.debug("Fast exercise is enabled.")
+	elseif player:getLevel() >= FAST_EXERCISE_MIN_LEVEL then
+		eventSpeedMultiplier = MILESTONE_SPEED_MULTIPLIER
 	end
 
 	local vocation = player:getVocation()

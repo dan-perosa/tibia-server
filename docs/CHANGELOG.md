@@ -37,6 +37,46 @@ O binário atual é idêntico ao do commit `07b5ea4da`, só recompilado.
 
 ## 2026-08-27
 
+### Loot Pouch ligado; exercise weapon com gate de nível; sala de arenas descartada por ora
+Passada pelo backlog (`docs/PENDING.md`) puxando itens de programação:
+- **Loot Pouch + Seal of Quality**: já vinha pronto no motor do Canary (auto-coleta de loot via
+  `Player::checkAutoLoot`, venda em lote via `Npc::onPlayerSellAllLoot`), só estava com o switch
+  mestre desligado. Ligado `autoLoot = true` em `config.lua`. Cada jogador ainda escolhe seu
+  próprio filtro de auto-loot (0/1/2, feature KV `features.autoloot`) pelo cliente -- ligar o
+  switch do servidor só destrava a opção, não força em ninguém. `vipAutoLootVipOnly` é irrelevante
+  aqui porque `vipSystemEnabled = false`. Não existe um "Seal of Quality" separado nesse fork --
+  o item 34079 é só flavor (prêmio de CM), a venda em lote já funciona sem ele.
+- **Exercise weapons**: pendência pedia "acelerar consumo, talvez atrelado a quest/marco em vez
+  de sempre rápido" -- ambíguo (acelerar consumo = a arma dura menos tempo real, estranho como
+  prêmio). Implementado como placeholder até o Pedro decidir o marco de verdade: nível 8 libera o
+  mesmo multiplicador 0.5x que o evento "fast-exercise" do scheduler já usa
+  (`FAST_EXERCISE_MIN_LEVEL`/`MILESTONE_SPEED_MULTIPLIER` em
+  `data/scripts/actions/items/exercise_training_weapons.lua`). Fácil de trocar por uma storage de
+  quest depois.
+- **Sala de recompensas por arenas completadas**: achadas as storages de conclusão das 3 arenas
+  existentes (chests 24701/24702/24703 -> storages 86701-86703, `BASE_STORAGE + actionId` em
+  `custom_reward_chests.lua`), mas não construída. Com só 3 arenas, uma sala em faixas (2=bronze,
+  4=prata) não tem massa crítica -- só compensa se houver mais arenas no futuro, como o próprio
+  PENDING.md já apontava.
+- Investigados os dois bugs do topo do `PENDING.md` (chase mode grudando, barra de skill travada).
+  Confirmado que `dudantas/tibia-client` é só distribuição de assets/binário do client oficial
+  fechado da CipSoft, sem código-fonte acessível -- não dá pra ler/corrigir o client diretamente.
+  Auditada mais a fundo a camada de protocolo do servidor (que é aberta): serialização de skill
+  percent (`AddPlayerSkills` em `protocolgame.cpp`) e parsing de chase mode
+  (`parseFightModes`/`parseAttack`) -- tudo correto. Em vez de parar aí, **instrumentado o
+  servidor com logs de debug temporários** pra transformar suspeita em prova:
+  - `src/server/network/protocol/protocolgame.cpp`: `parseFightModes` e `parseAttack` logam
+    `[chase-debug]` com o valor de chaseMode recebido a cada pacote `0xA0`/`0xA1`.
+  - `src/creatures/players/player.cpp`: `Player::addSkillAdvance` loga `[skillbar-debug]` a cada
+    mudança de percentual de skill e se isso disparou envio pro client.
+  Com `logLevel = "debug"` no `config.lua` (padrão é `"info"`), reproduzir os bugs e grepar essas
+  tags no log do servidor decide, com dado real, se a causa é o client não mandar/processar o
+  pacote certo (então realmente não tem solução por código) ou se sobrou algum caso não coberto
+  do lado do servidor. Não foi possível compilar aqui pra validar (sem árvore de build configurada
+  neste checkout, e um build limpo com vcpkg levaria muito tempo) -- revisão manual cuidadosa dos
+  dois trechos (contagem de placeholders de log, tipos, métodos existentes), mas precisa de build
+  real do lado de quem for reproduzir.
+
 ### Rate de XP: faixas 501+ reduzidas em ~40%
 Pedro identificou dois fatores que a calibração original (baseada em XP/hora do Tibia global)
 não considerava: hunts com monstros customizados dando mais XP, e personagens batendo mais forte

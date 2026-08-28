@@ -10,12 +10,13 @@
 $ErrorActionPreference = "Stop"
 
 $repoRoot = $PSScriptRoot
-# meu-mapa/ lives at the top-level repo root (one level up from canary/, where this
-# script lives), NOT inside canary/. A previous version of this line pointed at
-# "$repoRoot\meu-mapa" (i.e. canary\meu-mapa), a separate stale folder frozen since
-# 2026-08-21 -- every sync silently pushed that 3-day-old snapshot to the server
-# instead of the real, actively-edited map. Fixed 2026-08-25.
-$mapDir = Join-Path (Split-Path $repoRoot -Parent) "meu-mapa"
+# meu-mapa/ lives directly at the repo root, alongside this script (both are at
+# D:\Tibia\tibia-pedro). The 2026-08-25 fix assumed this script lives one level
+# down in a "canary/" subfolder and went up an extra level to compensate --
+# wrong on this checkout, so it pointed at a nonexistent "D:\Tibia\meu-mapa"
+# and made fix_ground_20888.py crash with FileNotFoundError before the server
+# ever launched (found 2026-08-28). Fixed to use $repoRoot directly.
+$mapDir = Join-Path $repoRoot "meu-mapa"
 $mapName = "MAPA OFICIAL DE TRABALHO"
 $canaryExe = Join-Path $repoRoot "canary.exe"
 $dockerComposeFile = Join-Path $repoRoot "docker\docker-compose.yml"
@@ -87,10 +88,40 @@ if ($mode -eq "native") {
     Write-Host "Reiniciando o servidor..." -ForegroundColor Cyan
     Get-Process -Name "canary" -ErrorAction SilentlyContinue | Stop-Process -Force
     Start-Sleep -Seconds 2
-    Start-Process -FilePath $canaryExe -WorkingDirectory $repoRoot
+    # Saida redirecionada pra canary_live.log/canary_live_err.log (raiz do repo) --
+    # sobrescrito a cada run -- pra dar pra investigar sem precisar ficar de olho na
+    # janela do console. Adicionado 2026-08-28 durante o debug do chase mode/skill bar.
+    $liveLog = Join-Path $repoRoot "canary_live.log"
+    $liveLogErr = Join-Path $repoRoot "canary_live_err.log"
+    Start-Process -FilePath $canaryExe -WorkingDirectory $repoRoot -RedirectStandardOutput $liveLog -RedirectStandardError $liveLogErr
 
     Write-Host "Aguardando o servidor subir..." -ForegroundColor Cyan
-    Start-Sleep -Seconds 8
+    # 8s nao e suficiente -- o boot completo (ate "server online" no log) leva uns
+    # 26s medidos em 2026-08-28 (mais devagar ainda com logLevel=debug ligado, que e
+    # bem mais verboso). Tentar conectar antes disso da "connection refused" porque
+    # a porta do jogo ainda nao esta escutando.
+    Start-Sleep -Seconds 30
+
+    # O client oficial nao fala com o canary.exe diretamente pro login -- ele manda um
+    # POST http pro login-server (login-server\login-server.exe), que fica escutando em
+    # 8088 (ver client\conf\config.ini, loginWebService) e so depois redireciona pro
+    # canary.exe (7172). Sem esse processo de pe, o client mostra "Connection refused"
+    # mesmo com o canary.exe 100% saudavel -- confundiu a investigacao em 2026-08-28
+    # porque o canary.exe sozinho parecia perfeito. Reiniciado junto porque ele guarda
+    # a conexao com o canary.exe antigo na inicializacao e nao reconecta sozinho.
+    $loginServerDir = Join-Path $repoRoot "login-server"
+    $loginServerExe = Join-Path $loginServerDir "login-server.exe"
+    if (Test-Path $loginServerExe) {
+        Write-Host "Reiniciando o login-server..." -ForegroundColor Cyan
+        Get-Process -Name "login-server" -ErrorAction SilentlyContinue | Stop-Process -Force
+        Start-Sleep -Seconds 1
+        $loginLiveLog = Join-Path $loginServerDir "login-server_live.log"
+        $loginLiveLogErr = Join-Path $loginServerDir "login-server_live_err.log"
+        Start-Process -FilePath $loginServerExe -WorkingDirectory $loginServerDir -RedirectStandardOutput $loginLiveLog -RedirectStandardError $loginLiveLogErr
+        Start-Sleep -Seconds 3
+    } else {
+        Write-Host "login-server.exe nao encontrado em login-server\ -- pulando (login via client oficial vai falhar sem ele)." -ForegroundColor Yellow
+    }
 } else {
     # ---- Modo Docker: copia pra dentro do container e reinicia via docker compose ----
     $containerWorldDir = "/canary/data-otservbr-global/world"
