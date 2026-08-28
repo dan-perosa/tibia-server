@@ -5,6 +5,36 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-28
+
+### Login não aparecia lista de personagens após reiniciar o PC
+PC foi reiniciado, e nenhum dos três serviços (MariaDB, Apache/XAMPP, `canary.exe`) sobe
+sozinho -- precisam ser ligados manualmente toda vez. Religar isso resolveu parte do
+problema (MariaDB via `services.msc`, que exige admin; Apache e canary.exe eu consigo
+ligar sozinho).
+
+**Causa raiz real, depois de descartar bug de servidor:** o `config.otml` do OTClient
+(`%APPDATA%\otcr\otclient\otclient\config.otml`) tinha `httpLogin: true` (login via HTTP,
+buscando a lista de personagens em `login.php` do MyAAC) combinado com `host: 127.0.0.1` /
+`port: 7171` -- que é o endereço RAW do jogo, não do site. O client tentava mandar uma
+requisição HTTP pra porta 7171 (a porta do `canary.exe`), que não entende HTTP e rejeitava
+a conexão sem erro visível na tela. Corrigido trocando pra `host: http://127.0.0.1/login.php`
+/ `port: 80` (a porta do Apache), que já estava salvo como uma segunda entrada válida no
+`ServerList` do mesmo arquivo -- só não era a selecionada.
+
+**Lição:** se a lista de personagens não aparece, checar primeiro o `httpLogin`/`host`/`port`
+do `config.otml` do client antes de suspeitar do servidor -- é rápido e foi a causa real
+desta vez, depois de bastante tempo investigando (sem necessidade) o código C++ de rede do
+Canary.
+
+**Efeito colateral:** no meio da investigação, recompilei o `canary.exe` (via
+`canary/rebuild_canary.bat`, que precisa rodar em PowerShell -- `cmd.exe /c` pelo Git Bash
+falha silenciosamente por causa de tradução de path do MSYS) com uma linha de log de debug
+temporária, depois revertida (`git checkout -- src/server/network/connection/connection.cpp`).
+O binário atual é idêntico ao do commit `07b5ea4da`, só recompilado.
+
+---
+
 ## 2026-08-27
 
 ### Rate de XP: faixas 501+ reduzidas em ~40%
