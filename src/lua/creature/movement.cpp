@@ -364,6 +364,11 @@ uint32_t MoveEvents::onItemMove(const std::shared_ptr<Item> &item, const std::sh
 		ret &= moveEvent->fireAddRemItem(item, tile->getPosition());
 	}
 
+	// TEMP DEBUG (2026-08-28, investigacao do basin de Skartholt) -- ver PENDING.md.
+	if (isAdd && item && item->getID() == 3042) {
+		g_logger().debug("[basin-debug] onItemMove: scanning tile {} indices [{}, {})", tile->getPosition().toString(), tile->getFirstIndex(), tile->getLastIndex());
+	}
+
 	for (size_t i = tile->getFirstIndex(), j = tile->getLastIndex(); i < j; ++i) {
 		const auto &thing = tile->getThing(i);
 		if (!thing) {
@@ -373,6 +378,10 @@ uint32_t MoveEvents::onItemMove(const std::shared_ptr<Item> &item, const std::sh
 		const auto &tileItem = thing->getItem();
 		if (!tileItem) {
 			continue;
+		}
+
+		if (isAdd && item && item->getID() == 3042) {
+			g_logger().debug("[basin-debug] onItemMove: tile item id={} uid={} hasMoveEvent={}", tileItem->getID(), tileItem->getUniqueId(), getEvent(tileItem, eventType2) != nullptr);
 		}
 
 		moveEvent = getEvent(tileItem, eventType2);

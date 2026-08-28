@@ -29,6 +29,17 @@ local config = {
 local tombCoalBasin = MoveEvent()
 
 function tombCoalBasin.onAddItem(moveitem, tileitem, position)
+	-- TEMP DEBUG (2026-08-28, investigacao do basin de Skartholt que nao funciona) --
+	-- imprime os valores reais lidos, pra confirmar se tileitem.uid/moveitem.itemid
+	-- resolvem certo nesta versao do Canary. Remover depois de confirmar a causa.
+	local topCreature = position:getTopCreature()
+	if topCreature and topCreature:isPlayer() then
+		topCreature:sendTextMessage(MESSAGE_LOOK, string.format(
+			"[DEBUG] tileitem.uid=%s tileitem.itemid=%s moveitem.itemid=%s moveitem.uid=%s",
+			tostring(tileitem.uid), tostring(tileitem.itemid), tostring(moveitem.itemid), tostring(moveitem.uid)
+		))
+	end
+
 	local targetCoalBasin = config[tileitem.uid]
 	if not targetCoalBasin then
 		return true

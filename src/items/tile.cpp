@@ -1616,6 +1616,17 @@ void Tile::postAddNotification(const std::shared_ptr<Thing> &thing, const std::s
 		item = thing->getItem();
 	}
 
+	// TEMP DEBUG (2026-08-28, investigacao do basin de Skartholt que nao dispara o
+	// moveevent) -- so pra scarab coin (3042), pra nao spammar. Remover depois de
+	// confirmar a causa. Ver PENDING.md.
+	if (item && item->getID() == 3042) {
+		g_logger().debug(
+			"[basin-debug] postAddNotification: item=3042 pos={} link={} isLinkOwner={} hasTeleportFlag={} hasTrashFlag={} hasMailboxFlag={}",
+			getPosition().toString(), static_cast<int>(link), link == LINK_OWNER,
+			hasFlag(TILESTATE_TELEPORT), hasFlag(TILESTATE_TRASHHOLDER), hasFlag(TILESTATE_MAILBOX)
+		);
+	}
+
 	if (link == LINK_OWNER) {
 		if (hasFlag(TILESTATE_TELEPORT)) {
 			const auto &teleport = getTeleportItem();
