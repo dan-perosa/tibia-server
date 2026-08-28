@@ -2715,15 +2715,6 @@ void ProtocolGame::parseFightModes(NetworkMessage &msg) {
 		const bool secureMode = msg.getByte() != 0;
 		msg.getByte(); // PvP mode
 
-		// TEMP DEBUG (2026-08-27, chase mode desync investigation, PENDING.md) -- logs every
-		// 0xA0 tactics packet the client actually sends, with the chaseMode value it carries.
-		// Reproduce the "grudando no monstro mesmo com chase desligado" bug with debug-level
-		// logging on, then check whether a chaseMode=false packet arrives at the moment the
-		// checkbox is unchecked (client bug: not sent) or arrives but gets overridden right
-		// after (server bug: some other code path re-enables it -- would show as a second 0xA0
-		// or a follow/attack packet flipping it back). Safe to delete once the bug is found.
-		g_logger().debug("[chase-debug] player '{}' sent tactics packet: chaseMode={}, secureMode={}", player->getName(), chaseMode, secureMode);
-
 		g_game().playerSetFightModes(player->getID(), FIGHTMODE_ATTACK, chaseMode, secureMode);
 		return;
 	}
@@ -2742,25 +2733,12 @@ void ProtocolGame::parseFightModes(NetworkMessage &msg) {
 		fightMode = FIGHTMODE_DEFENSE;
 	}
 
-	// TEMP DEBUG (2026-08-27, chase mode desync investigation, PENDING.md) -- see comment above.
-	g_logger().debug("[chase-debug] player '{}' sent tactics packet (legacy format): chaseMode={}, secureMode={}", player->getName(), rawChaseMode != 0, rawSecureMode != 0);
-
 	g_game().playerSetFightModes(player->getID(), fightMode, rawChaseMode != 0, rawSecureMode != 0);
 }
 
 void ProtocolGame::parseAttack(NetworkMessage &msg) {
 	auto creatureId = msg.get<uint32_t>();
 	// msg.get<uint32_t>(); creatureId (same as above)
-
-	// TEMP DEBUG (2026-08-27, chase mode desync investigation, PENDING.md) -- logs every 0xA1
-	// attack packet so it can be lined up against the [chase-debug] tactics logs above and, in
-	// game, against the server's actual followCreature state (say "!checkchase" right after, see
-	// the existing talkaction in data/scripts/talkactions/player/givemanapotions_debug.lua).
-	// Safe to delete once the bug is found.
-	if (player) {
-		g_logger().debug("[chase-debug] player '{}' sent attack packet: creatureId={}", player->getName(), creatureId);
-	}
-
 	g_game().playerSetAttackedCreature(player->getID(), creatureId);
 }
 

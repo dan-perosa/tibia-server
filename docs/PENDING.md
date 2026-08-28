@@ -5,48 +5,46 @@ implementar algo daqui, é só remover o item e registrar no `CHANGELOG.md`.
 
 ---
 
-## Pendências de 2026-08-26 (PRIORIDADE — instrumentado em 27/08, falta reproduzir com log ligado)
+## Pendências de 2026-08-26 (PRIORIDADE — plano de instrumentação pronto, ainda não executado)
 
 Confirmado em 27/08: `dudantas/tibia-client` (repo pinado em `client/TIBIA_CLIENT_SOURCE.txt`)
 não tem código-fonte nenhum — é só distribuição de assets/binário do client oficial fechado da
-CipSoft. Não dá pra ler/corrigir o client diretamente. Em vez disso, instrumentado o **servidor**
-(que é aberto) com logs de debug temporários nos dois pontos exatos onde dá pra provar, com dado
-real, se o problema é o client não mandando o pacote certo ou o servidor fazendo algo errado com
-o que recebe. Como usar: `logLevel = "debug"` no `config.lua` (tá em `"info"`), reproduzir o bug,
-depois grepar o log do servidor por `[chase-debug]` ou `[skillbar-debug]`. Lembrete: com debug
-ligado o log fica MUITO verboso (loga todo pacote bruto recebido), grep pela tag específica.
+CipSoft. Não dá pra ler/corrigir o client diretamente. A camada de protocolo/parsing do servidor
+(`parseFightModes`/`parseAttack` em `protocolgame.cpp`, e `Player::addSkillAdvance` +
+`AddPlayerSkills` pro skill bar) já foi lida com cuidado e está correta.
+
+**Plano de diagnóstico (chegou a ser implementado e testado em 27/28-08, depois revertido por ser
+só instrumentação temporária, não um fix -- reaplicar quando alguém for reproduzir de verdade):**
+adicionar `g_logger().debug(...)` em `parseFightModes`/`parseAttack`
+(`src/server/network/protocol/protocolgame.cpp`) logando o valor de chaseMode recebido a cada
+pacote, e em `Player::addSkillAdvance` (`src/creatures/players/player.cpp`) logando cada mudança
+de percentual de skill. Precisa compilar com `-DDEBUG_LOG=ON` (flag do CMake, off por padrão --
+não é o `logLevel` do `config.lua` sozinho) e rodar com `logLevel = "debug"`. Reproduzir os bugs e
+grepar o log do servidor pela tag específica (ex: `[chase-debug]`) -- com debug ligado o log fica
+MUITO verboso, não dá pra ler sem filtrar. Se o log mostrar o pacote/update chegando certo mesmo
+com o bug acontecendo na tela, confirma que é 100% client-side, sem solução por código. Se mostrar
+o servidor calado num momento que devia estar mandando update, aí tem algo a caçar no servidor.
 
 - **Personagem gruda no monstro durante o ataque, mesmo com "modo perseguição" desmarcado na
   tela — com qualquer arma, inclusive distância (ex: snakebite rod, alcance 3, mas o personagem
   vai até alcance 1 mesmo assim).** Já acontecia antes de 25/08, não é regressão de nada mexido
   aqui. Investigação completa em `CHANGELOG.md` 2026-08-26 e 2026-08-27 — eliminado como causa:
   constantes do client, lógica do botão de toggle, lógica C++ do servidor
-  (`Player::setChaseMode`/`setAttackedCreature`, confirmados corretos de novo em 27/08 lendo
-  `Player::setChaseMode` — ele limpa `followCreature` corretamente assim que recebe chaseMode
-  false), e a camada de protocolo/parsing (`parseFightModes`/`parseAttack` em `protocolgame.cpp`).
-  Suspeita mais forte: chase mode viaja num pacote separado do de ataque (opcode `0xA0` vs
-  `0xA1`), e o client pode não reenviar o pacote de "tactics" quando o jogador usa um toggle
-  rápido durante o combate (só a caixa de diálogo completa reenviaria) -- ou reenvia com o valor
-  errado. **Instrumentado em 27/08**: `parseFightModes` e `parseAttack`
-  (`src/server/network/protocol/protocolgame.cpp`) agora logam `[chase-debug]` toda vez que
-  recebem esses pacotes, com o valor de chaseMode que vieram. Reproduzir o bug com debug ligado e
-  comparar: se nenhum `chaseMode=false` aparece no log no momento em que a tela mostra desligado,
-  é 100% confirmado que o client não manda o pacote (bug do client, sem solução por aqui, só
-  reportar/evitar o toggle rápido). Se o pacote chega certo mas o personagem persegue mesmo assim,
-  aí sim tem bug do lado do servidor pra caçar (usar `!checkchase` junto, já existe em
+  (`Player::setChaseMode`/`setAttackedCreature`, confirmados corretos de novo em 27/08 -- limpa
+  `followCreature` corretamente assim que recebe chaseMode false), e a camada de
+  protocolo/parsing. Suspeita mais forte: chase mode viaja num pacote separado do de ataque
+  (opcode `0xA0` vs `0xA1`), e o client pode não reenviar o pacote de "tactics" quando o jogador
+  usa um toggle rápido durante o combate (só a caixa de diálogo completa reenviaria) -- ou reenvia
+  com o valor errado. Ver plano de diagnóstico acima pra confirmar com dado real. Também dá pra
+  cruzar com `!checkchase` (já existe em
   `data/scripts/talkactions/player/givemanapotions_debug.lua`).
 - **Barra de skill não sobe visualmente, mesmo depois de duas tentativas de correção.**
   Diagnóstico corrigido em 26/08 (à noite): não é bug de arredondamento nem de sinal de evento
   faltando -- o progresso real avança certo o tempo todo, é a **exibição no client** que fica
   presa. Checado em 27/08, a fundo: toda a cadeia do servidor está correta, do cálculo
   (`Player::addSkillAdvance`) até a serialização de rede (`AddPlayerSkills` em `protocolgame.cpp`,
-  manda o percentual com precisão total, sem arredondamento grosseiro). **Instrumentado em
-  27/08**: `Player::addSkillAdvance` (`src/creatures/players/player.cpp`) agora loga
-  `[skillbar-debug]` toda vez que o percentual muda no servidor, junto com se isso disparou o
-  envio pro client. Reproduzir com debug ligado: se o log mostra updates frequentes e corretos
-  enquanto a tela fica travada, isso PROVA (não só sugere) que o problema é renderização no
-  client, sem solução por código aqui. Se o log mostrar que o servidor ficou muito tempo sem
-  logar nenhuma mudança de percentual durante o grind, aí a causa seria outra (revisitar).
+  manda o percentual com precisão total, sem arredondamento grosseiro). Ver plano de diagnóstico
+  acima -- mesma abordagem, pra confirmar (não só suspeitar) que é renderização no client.
 
 ## Pendências de 2026-08-25
 

@@ -147,7 +147,7 @@ jobs:
         with:
           configurePreset: windows-release
           buildPreset: windows-release
-          configurePresetAdditionalArgs: "['-DTOGGLE_BIN_FOLDER=ON', '-DDEBUG_LOG=ON']"
+          configurePresetAdditionalArgs: "['-DTOGGLE_BIN_FOLDER=ON']"
 
       - name: Install MariaDB for smoke test
         if: matrix.type == 'CMake' && inputs.run_canary_smoke
