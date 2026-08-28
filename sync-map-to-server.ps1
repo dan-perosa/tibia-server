@@ -10,14 +10,30 @@
 $ErrorActionPreference = "Stop"
 
 $repoRoot = $PSScriptRoot
-# meu-mapa/ lives directly at the repo root, alongside this script (both are at
-# D:\Tibia\tibia-pedro). The 2026-08-25 fix assumed this script lives one level
-# down in a "canary/" subfolder and went up an extra level to compensate --
-# wrong on this checkout, so it pointed at a nonexistent "D:\Tibia\meu-mapa"
-# and made fix_ground_20888.py crash with FileNotFoundError before the server
-# ever launched (found 2026-08-28). Fixed to use $repoRoot directly.
-$mapDir = Join-Path $repoRoot "meu-mapa"
+# meu-mapa/ location varies by checkout: on some machines (Daniel's) this script
+# and meu-mapa/ are siblings, both directly at $repoRoot. On Pedro's machine,
+# meu-mapa/ is the one the RME actually edits and lives ONE level up (this
+# script is nested in a "canary/" subfolder of a separate outer repo) --
+# $repoRoot\meu-mapa there is a stale, rarely-touched tracked copy from 21-25/08,
+# NOT what gets edited. A 2026-08-25 fix handled Pedro's layout but got flipped
+# back by a 2026-08-28 "fix" that assumed the sibling layout, which silently
+# synced that stale copy to the live server (caught by Pedro same day: map
+# "voltou pra uma versao antiga"). Fixed again, this time to pick whichever
+# candidate's .otbm was actually modified more recently, so it self-adjusts to
+# either layout instead of hardcoding one person's checkout.
+$mapDirSibling = Join-Path $repoRoot "meu-mapa"
+$mapDirOuter = Join-Path (Split-Path $repoRoot -Parent) "meu-mapa"
 $mapName = "MAPA OFICIAL DE TRABALHO"
+$siblingOtbm = Join-Path $mapDirSibling "$mapName.otbm"
+$outerOtbm = Join-Path $mapDirOuter "$mapName.otbm"
+$siblingTime = if (Test-Path $siblingOtbm) { (Get-Item $siblingOtbm).LastWriteTime } else { [DateTime]::MinValue }
+$outerTime = if (Test-Path $outerOtbm) { (Get-Item $outerOtbm).LastWriteTime } else { [DateTime]::MinValue }
+if ($outerTime -gt $siblingTime) {
+    $mapDir = $mapDirOuter
+} else {
+    $mapDir = $mapDirSibling
+}
+Write-Host "meu-mapa detectado em: $mapDir (mais recente entre as duas localizacoes possiveis)" -ForegroundColor Cyan
 $canaryExe = Join-Path $repoRoot "canary.exe"
 $dockerComposeFile = Join-Path $repoRoot "docker\docker-compose.yml"
 $dockerServiceName = "server" # nome do serviço em docker/docker-compose.yml

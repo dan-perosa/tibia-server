@@ -4686,6 +4686,24 @@
 		<monster name="Mahrdis" x="2" y="4" z="9" spawntime="90" />
 		<monster name="Flamethrower" x="4" y="4" z="9" spawntime="90" />
 	</monster>
+	<monster centerx="964" centery="947" centerz="10" radius="1">
+		<monster name="Frost Dragon Hatchling" x="1" y="-1" z="10" spawntime="90" />
+	</monster>
+	<monster centerx="959" centery="948" centerz="10" radius="1">
+		<monster name="Frost Dragon" x="1" y="-1" z="10" spawntime="90" />
+	</monster>
+	<monster centerx="962" centery="950" centerz="10" radius="1">
+		<monster name="Frost Dragon" x="1" y="1" z="10" spawntime="90" />
+	</monster>
+	<monster centerx="965" centery="952" centerz="10" radius="1">
+		<monster name="Frost Dragon Hatchling" x="1" y="1" z="10" spawntime="90" />
+	</monster>
+	<monster centerx="956" centery="953" centerz="10" radius="1">
+		<monster name="Frost Dragon" x="1" y="1" z="10" spawntime="90" />
+	</monster>
+	<monster centerx="960" centery="955" centerz="10" radius="1">
+		<monster name="Frost Dragon" x="0" y="-1" z="10" spawntime="90" />
+	</monster>
 	<monster centerx="989" centery="984" centerz="10" radius="3">
 		<monster name="Wereboar" x="-1" y="1" z="10" spawntime="60" />
 		<monster name="Werebear" x="-3" y="2" z="10" spawntime="60" />
