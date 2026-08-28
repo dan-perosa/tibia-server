@@ -5,29 +5,48 @@ implementar algo daqui, é só remover o item e registrar no `CHANGELOG.md`.
 
 ---
 
-## Pendências de 2026-08-26 (PRIORIDADE — provavelmente precisa de C++, não só Lua)
+## Pendências de 2026-08-26 (PRIORIDADE — instrumentado em 27/08, falta reproduzir com log ligado)
+
+Confirmado em 27/08: `dudantas/tibia-client` (repo pinado em `client/TIBIA_CLIENT_SOURCE.txt`)
+não tem código-fonte nenhum — é só distribuição de assets/binário do client oficial fechado da
+CipSoft. Não dá pra ler/corrigir o client diretamente. Em vez disso, instrumentado o **servidor**
+(que é aberto) com logs de debug temporários nos dois pontos exatos onde dá pra provar, com dado
+real, se o problema é o client não mandando o pacote certo ou o servidor fazendo algo errado com
+o que recebe. Como usar: `logLevel = "debug"` no `config.lua` (tá em `"info"`), reproduzir o bug,
+depois grepar o log do servidor por `[chase-debug]` ou `[skillbar-debug]`. Lembrete: com debug
+ligado o log fica MUITO verboso (loga todo pacote bruto recebido), grep pela tag específica.
 
 - **Personagem gruda no monstro durante o ataque, mesmo com "modo perseguição" desmarcado na
   tela — com qualquer arma, inclusive distância (ex: snakebite rod, alcance 3, mas o personagem
   vai até alcance 1 mesmo assim).** Já acontecia antes de 25/08, não é regressão de nada mexido
-  aqui. Investigação completa em `CHANGELOG.md` 2026-08-26 — resumo: confirmado com um comando de
-  debug (`!checkchase`) que o servidor tem `followCreature` ativo durante o ataque mesmo com a
-  tela mostrando desligado. Eliminado como causa: constantes do client, lógica do botão de
-  toggle, lógica C++ do servidor (`Player::setChaseMode`/`setAttackedCreature`, ambos corretos),
-  e nenhum script Lua do datapack mexendo nisso por fora do sistema normal. Suspeita: bug no
-  binário compilado do OTClient (client-side, C++), fora do alcance de uma correção só em Lua —
-  precisa instrumentar/recompilar o client pra ver o pacote de rede real saindo da máquina do
-  jogador.
+  aqui. Investigação completa em `CHANGELOG.md` 2026-08-26 e 2026-08-27 — eliminado como causa:
+  constantes do client, lógica do botão de toggle, lógica C++ do servidor
+  (`Player::setChaseMode`/`setAttackedCreature`, confirmados corretos de novo em 27/08 lendo
+  `Player::setChaseMode` — ele limpa `followCreature` corretamente assim que recebe chaseMode
+  false), e a camada de protocolo/parsing (`parseFightModes`/`parseAttack` em `protocolgame.cpp`).
+  Suspeita mais forte: chase mode viaja num pacote separado do de ataque (opcode `0xA0` vs
+  `0xA1`), e o client pode não reenviar o pacote de "tactics" quando o jogador usa um toggle
+  rápido durante o combate (só a caixa de diálogo completa reenviaria) -- ou reenvia com o valor
+  errado. **Instrumentado em 27/08**: `parseFightModes` e `parseAttack`
+  (`src/server/network/protocol/protocolgame.cpp`) agora logam `[chase-debug]` toda vez que
+  recebem esses pacotes, com o valor de chaseMode que vieram. Reproduzir o bug com debug ligado e
+  comparar: se nenhum `chaseMode=false` aparece no log no momento em que a tela mostra desligado,
+  é 100% confirmado que o client não manda o pacote (bug do client, sem solução por aqui, só
+  reportar/evitar o toggle rápido). Se o pacote chega certo mas o personagem persegue mesmo assim,
+  aí sim tem bug do lado do servidor pra caçar (usar `!checkchase` junto, já existe em
+  `data/scripts/talkactions/player/givemanapotions_debug.lua`).
 - **Barra de skill não sobe visualmente, mesmo depois de duas tentativas de correção.**
-  Diagnóstico corrigido em 26/08 (à noite) — não é um bug de arredondamento nem de sinal de
-  evento faltando: o progresso real (usado pelo servidor pra decidir o level-up) avança rápido e
-  correto o tempo todo; é a **exibição no client** que fica presa num percentual pequeno/velho
-  ("99% faltando") durante quase todo o percurso e só corrige o número certo bem no momento do
-  level-up (por isso completa "em 2 hits" pra quem está olhando a tela, mesmo já tendo avançado
-  bastante por trás). Polling (reler o valor com mais frequência) não resolve, porque o valor
-  cacheado no client já está congelado — o defeito deve estar em como o binário compilado do
-  OTClient processa certos pacotes de atualização em tempo real. Mesma classe de problema do item
-  do chase mode acima — ver `CHANGELOG.md` 2026-08-26 pro histórico completo das duas tentativas.
+  Diagnóstico corrigido em 26/08 (à noite): não é bug de arredondamento nem de sinal de evento
+  faltando -- o progresso real avança certo o tempo todo, é a **exibição no client** que fica
+  presa. Checado em 27/08, a fundo: toda a cadeia do servidor está correta, do cálculo
+  (`Player::addSkillAdvance`) até a serialização de rede (`AddPlayerSkills` em `protocolgame.cpp`,
+  manda o percentual com precisão total, sem arredondamento grosseiro). **Instrumentado em
+  27/08**: `Player::addSkillAdvance` (`src/creatures/players/player.cpp`) agora loga
+  `[skillbar-debug]` toda vez que o percentual muda no servidor, junto com se isso disparou o
+  envio pro client. Reproduzir com debug ligado: se o log mostra updates frequentes e corretos
+  enquanto a tela fica travada, isso PROVA (não só sugere) que o problema é renderização no
+  client, sem solução por código aqui. Se o log mostrar que o servidor ficou muito tempo sem
+  logar nenhuma mudança de percentual durante o grind, aí a causa seria outra (revisitar).
 
 ## Pendências de 2026-08-25
 
@@ -36,10 +55,6 @@ depois do ajuste, pode precisar de mais uma volta):
 - Rate de XP 1-100: 6x → 12x (`data/stages.lua`)
 - Expoente de dano por skill: 0,3 → 0,15 (`Player:onCombat`, `data/events/scripts/player.lua`)
 - Rotworms no início da hunt: reduzidos pelo próprio Pedro direto no mapa
-
-- Acelerar a velocidade de consumo das exercise weapons — talvez atrelar a alguma quest ou marco
-  importante em vez de ser sempre rápido (`data/scripts/actions/items/exercise_training_weapons.lua`,
-  `RATE_EXERCISE_TRAINING_SPEED`/multiplicador "fast-exercise")
 
 **Decisão de escopo pendente (perguntar pro Pedro antes de mexer):**
 - NPC de bless (`data-otservbr-global/npc/test_server.lua`) dá dinheiro e experiência de graça
@@ -71,16 +86,12 @@ depois do ajuste, pode precisar de mais uma volta):
 
 ## Pendências de 2026-08-23
 
-- **Sala de recompensas por número de arenas completadas.** Reaproveitar as storages de
-  conclusão que cada baú já grava por jogador, contar quantas arenas completou, liberar prêmios
-  em faixas (2 arenas = bronze, 4 = prata, etc). Só compensa se houver mais arenas no futuro.
-  Ideia complementar: exigir X arenas completadas como requisito pra uma ilha/quest nova.
-
-- **Loot Pouch + Seal of Quality** (sistema oficial do Tibia). Loot Pouch recebe drops
-  automaticamente (limite de itens/tempo, não ilimitado); Seal of Quality vende tudo da pouch de
-  uma vez a cada 1 minuto pelo preço de NPC, gold direto na conta. Ainda não checado se o
-  Canary/OTServBR-Global já tem isso pronto no datapack ou se precisa implementar do zero —
-  checar isso primeiro.
+- **Sala de recompensas por número de arenas completadas.** Adiado de propósito (27/08): as
+  storages de conclusão das 3 arenas existentes já foram achadas (chests 24701/24702/24703 ->
+  storages 86701-86703, `BASE_STORAGE + actionId` em `custom_reward_chests.lua`), mas com só 3
+  arenas uma sala em faixas (2=bronze, 4=prata) ainda não tem massa crítica. Retomar quando
+  houver mais arenas. Ideia complementar: exigir X arenas completadas como requisito pra uma
+  ilha/quest nova.
 
 ## Pendências de 2026-08-22
 

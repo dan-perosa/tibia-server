@@ -1219,6 +1219,15 @@ void Player::addSkillAdvance(skills_t skill, uint64_t count) {
 		sendUpdateSkills = true;
 	}
 
+	// TEMP DEBUG (2026-08-27, skill bar display freeze investigation, PENDING.md) -- logs every
+	// server-side skill percent change and whether it actually triggers a sendSkills() push to
+	// the client. Reproduce the "bar stuck near 99% missing until level-up" bug with debug-level
+	// logging on, then compare these timestamps/values against what's visually shown on screen --
+	// if the server is logging frequent, correct percent updates while the screen stays frozen,
+	// that confirms (not just suspects) the freeze is client-side rendering, not a missing
+	// update. Safe to delete once the bug is found.
+	g_logger().debug("[skillbar-debug] player '{}' skill={} tries={}/{} newPercent={} sendUpdateSkills={}", getName(), static_cast<int>(skill), skills[skill].tries, nextReqTries, newPercent, sendUpdateSkills);
+
 	if (sendUpdateSkills) {
 		sendSkills();
 		sendStats();
