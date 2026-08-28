@@ -1,5 +1,44 @@
 <?xml version="1.0"?>
 <monsters>
+	<monster centerx="933" centery="1099" centerz="0" radius="1">
+		<monster name="Lizard High Guard" x="0" y="0" z="0" spawntime="60" />
+	</monster>
+	<monster centerx="934" centery="1101" centerz="0" radius="1">
+		<monster name="Lizard Zaogun" x="0" y="0" z="0" spawntime="90" />
+		<monster name="Lizard Noble" x="-1" y="1" z="0" spawntime="90" />
+	</monster>
+	<monster centerx="933" centery="1097" centerz="1" radius="1">
+		<monster name="Dragon Hatchling" x="0" y="0" z="1" spawntime="90" />
+	</monster>
+	<monster centerx="935" centery="1099" centerz="1" radius="1">
+		<monster name="Lizard Dragon Priest" x="0" y="0" z="1" spawntime="60" />
+	</monster>
+	<monster centerx="933" centery="1102" centerz="1" radius="1">
+		<monster name="Lizard Zaogun" x="0" y="0" z="1" spawntime="90" />
+	</monster>
+	<monster centerx="933" centery="1097" centerz="2" radius="1">
+		<monster name="Lizard Dragon Priest" x="0" y="0" z="2" spawntime="90" />
+	</monster>
+	<monster centerx="932" centery="1103" centerz="2" radius="1">
+		<monster name="Lizard Zaogun" x="0" y="0" z="2" spawntime="90" />
+	</monster>
+	<monster centerx="946" centery="1115" centerz="2" radius="1">
+		<monster name="Lizard Noble" x="-1" y="-1" z="2" spawntime="90" />
+		<monster name="Lizard Zaogun" x="0" y="0" z="2" spawntime="90" />
+	</monster>
+	<monster centerx="930" centery="1098" centerz="3" radius="1">
+		<monster name="Lizard High Guard" x="0" y="0" z="3" spawntime="60" />
+	</monster>
+	<monster centerx="934" centery="1099" centerz="3" radius="1">
+		<monster name="Lizard Dragon Priest" x="1" y="0" z="3" spawntime="90" />
+	</monster>
+	<monster centerx="931" centery="1103" centerz="3" radius="1">
+		<monster name="Dragon Hatchling" x="0" y="0" z="3" spawntime="90" />
+	</monster>
+	<monster centerx="944" centery="1114" centerz="3" radius="2">
+		<monster name="Lizard High Guard" x="2" y="-1" z="3" spawntime="90" />
+		<monster name="Lizard High Guard" x="-2" y="1" z="3" spawntime="90" />
+	</monster>
 	<monster centerx="976" centery="1041" centerz="4" radius="1" />
 	<monster centerx="979" centery="1042" centerz="4" radius="1">
 		<monster name="Valkyrie" x="0" y="0" z="4" spawntime="60" />
@@ -63,6 +102,27 @@
 	</monster>
 	<monster centerx="945" centery="1084" centerz="4" radius="1">
 		<monster name="Colerian the Barbarian" x="0" y="0" z="4" spawntime="60" />
+	</monster>
+	<monster centerx="931" centery="1097" centerz="4" radius="1">
+		<monster name="Lizard High Guard" x="0" y="0" z="4" spawntime="60" />
+	</monster>
+	<monster centerx="936" centery="1097" centerz="4" radius="1">
+		<monster name="Lizard High Guard" x="0" y="0" z="4" spawntime="60" />
+	</monster>
+	<monster centerx="930" centery="1102" centerz="4" radius="1">
+		<monster name="Lizard High Guard" x="0" y="0" z="4" spawntime="90" />
+	</monster>
+	<monster centerx="935" centery="1103" centerz="4" radius="1">
+		<monster name="Dragon Hatchling" x="0" y="0" z="4" spawntime="90" />
+	</monster>
+	<monster centerx="940" centery="1113" centerz="4" radius="1">
+		<monster name="Dragon Hatchling" x="1" y="0" z="4" spawntime="90" />
+	</monster>
+	<monster centerx="942" centery="1115" centerz="4" radius="1">
+		<monster name="Lizard Dragon Priest" x="0" y="0" z="4" spawntime="60" />
+	</monster>
+	<monster centerx="946" centery="1116" centerz="4" radius="1">
+		<monster name="Lizard Dragon Priest" x="0" y="0" z="4" spawntime="60" />
 	</monster>
 	<monster centerx="1709" centery="786" centerz="5" radius="7">
 		<monster name="Guilt" x="-4" y="-2" z="5" spawntime="90" />
@@ -3648,13 +3708,13 @@
 		<monster name="Orc Warrior" x="-2" y="2" z="7" spawntime="90" />
 		<monster name="Orc Warrior" x="1" y="2" z="7" spawntime="90" />
 	</monster>
-	<monster centerx="976" centery="932" centerz="8" radius="1">
+	<monster centerx="987" centery="917" centerz="8" radius="1">
 		<monster name="Dragon Lord" x="0" y="0" z="8" spawntime="60" />
 	</monster>
-	<monster centerx="981" centery="935" centerz="8" radius="1">
+	<monster centerx="992" centery="920" centerz="8" radius="1">
 		<monster name="Dragon Lord" x="0" y="0" z="8" spawntime="60" />
 	</monster>
-	<monster centerx="974" centery="936" centerz="8" radius="1">
+	<monster centerx="985" centery="921" centerz="8" radius="1">
 		<monster name="Demodras" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="982" centery="964" centerz="8" radius="1">
@@ -4104,10 +4164,6 @@
 		<monster name="Rotworm" x="-1" y="-1" z="9" spawntime="90" />
 		<monster name="Rotworm" x="1" y="1" z="9" spawntime="90" />
 	</monster>
-	<monster centerx="973" centery="958" centerz="9" radius="2">
-		<monster name="Rotworm" x="1" y="-2" z="9" spawntime="90" />
-		<monster name="Carrion Worm" x="-1" y="1" z="9" spawntime="90" />
-	</monster>
 	<monster centerx="946" centery="959" centerz="9" radius="1">
 		<monster name="Carrion Worm" x="0" y="0" z="9" spawntime="60" />
 	</monster>
@@ -4122,9 +4178,6 @@
 	</monster>
 	<monster centerx="953" centery="964" centerz="9" radius="1">
 		<monster name="Carrion Worm" x="0" y="0" z="9" spawntime="60" />
-	</monster>
-	<monster centerx="972" centery="964" centerz="9" radius="1">
-		<monster name="Rotworm" x="0" y="1" z="9" spawntime="90" />
 	</monster>
 	<monster centerx="1089" centery="965" centerz="9" radius="1">
 		<monster name="Nightmare" x="0" y="0" z="9" spawntime="60" />
@@ -4159,6 +4212,7 @@
 	</monster>
 	<monster centerx="968" centery="972" centerz="9" radius="1">
 		<monster name="Carrion Worm" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Rotworm" x="1" y="1" z="9" spawntime="90" />
 	</monster>
 	<monster centerx="964" centery="973" centerz="9" radius="1">
 		<monster name="Rotworm" x="0" y="0" z="9" spawntime="60" />
