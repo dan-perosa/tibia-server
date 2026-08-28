@@ -7,6 +7,20 @@ implementar algo daqui, é só remover o item e registrar no `CHANGELOG.md`.
 
 ## Pendências de 2026-08-28
 
+- **Basin de scarab coin em Skartholt (perto do templo) não teleporta pra hunt.** Feito pelo
+  Pedro em 24/08, reaproveitando o script oficial de "coal basin" das Ancient Tombs
+  (`data-otservbr-global/scripts/quests/the_ancient_tombs/movements_all_teleports_tombs_coal_basin.lua`,
+  entrada `[60000]`). Investigação em 28/08 confirmou tudo certo no mapa e no script (item
+  3042=scarab coin correto, basin com `uid=60000` batendo com o config, posição do "flame" em
+  `1014,1011,7` certa, sem conflito de registro, sem erro de carregamento) -- mas o
+  `onAddItem` nunca dispara, nem um print de debug incondicional adicionado nele. Suspeita
+  não confirmada: `tileitem.uid`/`moveitem.itemid` (acesso direto de campo, sem `:getXxx()`)
+  podem não resolver nesta versão do Canary -- esse padrão é usado em 46+ scripts oficiais do
+  datapack, então se for isso é um problema mais amplo, não só desse basin. Branch
+  `debug/basin-skartholt` tem logs C++ temporários em `src/items/tile.cpp`
+  (`Tile::postAddNotification`) e `src/lua/creature/movement.cpp` (`MoveEvents::onItemMove`)
+  pra confirmar onde a cadeia quebra -- build disparado, aguardando teste com o log ligado.
+
 - **Revisar os starter kits de cada vocação** (`data/scripts/actions/quests/custom_reward_chests.lua`,
   storage `starter_kit` — chests 24465-24468). Pedido do Daniel, sem detalhe ainda de o que
   exatamente revisar (itens, quantidades, balanceamento) -- perguntar antes de mexer.
