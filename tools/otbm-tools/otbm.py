@@ -12,9 +12,13 @@ doorId/teleDest), NOT the newer OTBM_ATTR_ATTRIBUTE_MAP(128) format --
 that format is only used for MAP_OTBM_4 or > MAP_OTBM_5, which this
 version is not.
 
-This intentionally does NOT support container item children (nested
-items), which is fine for terrain/building/decoration work but would
-need extending if you ever need to place a pre-filled container.
+Supports one level (or more -- it recurses) of container item children
+(nested items, e.g. a pre-filled box/chest) via OtbmItem.children. Format
+confirmed against RME source (Container::serializeItemNode_OTBM /
+unserializeItemNode_OTBM in iomap_otbm.cpp): a container's contents are
+just further OTBM_ITEM nodes nested directly inside the container's own
+OTBM_ITEM node, after its own attributes -- no separate marker needed,
+since "is this a container" is implicit from the item's id.
 """
 
 from __future__ import annotations
@@ -76,6 +80,7 @@ class OtbmItem:
     depot_id: Optional[int] = None
     door_id: Optional[int] = None
     tele_dest: Optional[tuple] = None  # (x, y, z)
+    children: list = field(default_factory=list)  # list[OtbmItem] -- container contents
 
 
 @dataclass
@@ -207,6 +212,9 @@ def _write_item(w: _Writer, item: OtbmItem):
     if item.depot_id is not None:
         w.u8(OTBM_ATTR_DEPOT_ID)
         w.u16(item.depot_id)
+
+    for child in item.children:
+        _write_item(w, child)
 
     w.end_node()
 
@@ -424,6 +432,17 @@ def _read_item_attributes(item: OtbmItem, fr: _FieldReader):
                               f"this map may use a newer/older OTBM attribute format than otbm.py supports.")
 
 
+def _parse_item(item_content: bytes, item_children: list) -> OtbmItem:
+    ifr = _FieldReader(item_content)
+    item = OtbmItem(id=ifr.u16())
+    _read_item_attributes(item, ifr)
+    for child_type, child_content, child_children in item_children:
+        if child_type != OTBM_ITEM:
+            raise ValueError(f"Unexpected node type {child_type} inside container item {item.id}")
+        item.children.append(_parse_item(child_content, child_children))
+    return item
+
+
 def read_otbm(path: str) -> OtbmMap:
     with open(path, "rb") as f:
         raw = f.read()
@@ -493,10 +512,7 @@ def read_otbm(path: str) -> OtbmMap:
                         raise ValueError(f"Unknown tile attribute tag {tag} at ({x},{y},{z})")
                 for item_type, item_content, item_children in tile_children:
                     if item_type == OTBM_ITEM:
-                        ifr = _FieldReader(item_content)
-                        item = OtbmItem(id=ifr.u16())
-                        _read_item_attributes(item, ifr)
-                        tile.items.append(item)
+                        tile.items.append(_parse_item(item_content, item_children))
                     elif item_type == OTBM_TILE_ZONE:
                         zfr = _FieldReader(item_content)
                         count = zfr.u16()

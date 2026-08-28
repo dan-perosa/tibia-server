@@ -418,3 +418,21 @@ compile_commands.json
 /plan
 /enc_temp_folder
 canary-debug
+
+# tools/otclient e tools/otbm-tools migrados do repositorio privado em 2026-08-28
+# (ver docs/CHANGELOG.md) -- excluir os mesmos artefatos grandes/gerados que ja
+# eram ignorados la
+tools/otclient/data/
+tools/otclient/sounds/
+tools/otclient/otclient_gl_x64.exe
+tools/otclient/otclient_gl_x64.pdb
+tools/otclient/otclient_gl_x64.lib
+tools/otclient/otclient_gl_x64.exp
+tools/otclient/_engine-backup-*/
+tools/otclient/*.log
+tools/rme-assets/assets
+tools/otbm-tools/dbeaver-ce-*.exe
+tools/otbm-tools/__pycache__/
+tools/otbm-tools/rme-*-stdout*.log
+tools/otbm-tools/rme-*-stderr*.log
+tools/otbm-tools/otservbr-custom.otbm
