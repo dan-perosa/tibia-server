@@ -7,6 +7,18 @@ por sessão de trabalho, mais recente no topo.
 
 ## 2026-08-28
 
+### Adventurer's Blessing até nível 30; !lastdeath e !tptemplo
+- `adventurersBlessingLevel`: 21 -> 30 (`config.lua`) -- bless automática/de graça vai até
+  nível 30, depois disso precisa comprar. Config já existente do Canary, só ajustado o valor.
+- `!tptemplo` (`data/scripts/talkactions/player/tptemplo.lua`): qualquer jogador, teleporta pro
+  templo da própria cidade.
+- `!lastdeath` (`data/scripts/talkactions/god/lastdeath.lua`, só grupo god): teleporta pro tile
+  exato da última morte do personagem. A tabela `player_deaths` nunca guardou posição -- passou
+  a gravar em `data/scripts/creaturescripts/player/death.lua` (KV do próprio jogador, escopo
+  `last-death`). Só funciona pra mortes a partir de agora, não tem retroativo.
+- Adicionado ao `PENDING.md`: revisar os starter kits de cada vocação (pedido do Daniel, sem
+  detalhe do que revisar ainda).
+
 ### Login não aparecia lista de personagens após reiniciar o PC
 PC foi reiniciado, e nenhum dos três serviços (MariaDB, Apache/XAMPP, `canary.exe`) sobe
 sozinho -- precisam ser ligados manualmente toda vez. Religar isso resolveu parte do

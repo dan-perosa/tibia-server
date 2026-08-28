@@ -5,6 +5,12 @@ implementar algo daqui, é só remover o item e registrar no `CHANGELOG.md`.
 
 ---
 
+## Pendências de 2026-08-28
+
+- **Revisar os starter kits de cada vocação** (`data/scripts/actions/quests/custom_reward_chests.lua`,
+  storage `starter_kit` — chests 24465-24468). Pedido do Daniel, sem detalhe ainda de o que
+  exatamente revisar (itens, quantidades, balanceamento) -- perguntar antes de mexer.
+
 ## Pendências de 2026-08-26 (PRIORIDADE — plano de instrumentação pronto, ainda não executado)
 
 Confirmado em 27/08: `dudantas/tibia-client` (repo pinado em `client/TIBIA_CLIENT_SOURCE.txt`)

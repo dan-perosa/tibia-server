@@ -494,7 +494,7 @@ minDelayBetweenConditions = 0
 -- configure maximum value of critical imbuement
 criticalChance = 10
 inventoryGlowOnFiveBless = false
-adventurersBlessingLevel = 21
+adventurersBlessingLevel = 30
 skulledDeathLoseStoreItem = false
 experienceDisplayRates = true
 disableLegacyRaids = false

@@ -179,6 +179,11 @@ end
 local playerDeath = CreatureEvent("PlayerDeath")
 
 function playerDeath.onDeath(player, corpse, killer, mostDamageKiller, unjustified, mostDamageUnjustified)
+	-- Recorded regardless of deathListEnabled -- used by !lastdeath (god-only, see
+	-- data/scripts/talkactions/god/lastdeath.lua) to teleport to the exact death tile.
+	local deathPosition = player:getPosition()
+	player:kv():scoped("last-death"):set("position", { x = deathPosition.x, y = deathPosition.y, z = deathPosition.z })
+
 	if not deathListEnabled then
 		return
 	end
