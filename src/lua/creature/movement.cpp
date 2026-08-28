@@ -381,7 +381,7 @@ uint32_t MoveEvents::onItemMove(const std::shared_ptr<Item> &item, const std::sh
 		}
 
 		if (isAdd && item && item->getID() == 3042) {
-			g_logger().debug("[basin-debug] onItemMove: tile item id={} uid={} hasMoveEvent={}", tileItem->getID(), tileItem->getUniqueId(), getEvent(tileItem, eventType2) != nullptr);
+			g_logger().debug("[basin-debug] onItemMove: tile item id={} uid={} hasMoveEvent={}", tileItem->getID(), tileItem->getAttribute<uint16_t>(ItemAttribute_t::UNIQUEID), getEvent(tileItem, eventType2) != nullptr);
 		}
 
 		moveEvent = getEvent(tileItem, eventType2);
