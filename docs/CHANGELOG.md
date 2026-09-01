@@ -39,6 +39,40 @@ por sessão de trabalho, mais recente no topo.
 - Adicionado ao `PENDING.md`: revisar os starter kits de cada vocação (pedido do Daniel, sem
   detalhe do que revisar ainda).
 
+### Migração pro client oficial (mesmo do Daniel) + repositório único
+Resumo do resto do dia, depois do bug de login resolvido abaixo:
+
+- **Repositório único**: descontinuado o repositório privado do Pedro
+  (`Miracidio/Reposit-rio-privado-tibia-Miracidio`). Conteúdo que só existia lá
+  (`tools/otclient/`, `tools/otbm-tools/` completo, notas pessoais) migrado pra dentro
+  deste repositório compartilhado com o Daniel.
+- **`config.lua` passou a ser versionado no git**, com `mysqlUser = "root"` /
+  `mysqlPass = "123"` -- decisão consciente do Pedro e do Daniel, sabendo que o
+  repositório é público e a senha fica exposta (avisei do risco duas vezes, Pedro
+  confirmou que aceita).
+- **Corrigido de novo o bug de path do `sync-map-to-server.ps1`** (terceira vez):
+  o Daniel tinha "consertado" pro layout de pasta da máquina dele, quebrando pro
+  layout da máquina do Pedro (`meu-mapa/` num nível diferente da árvore). Fix definitivo:
+  o script agora detecta automaticamente qual das duas localizações possíveis tem o
+  `.otbm` mais recente, em vez de fixar uma.
+- **Migração pro client oficial** (`dudantas/tibia-client`, commit fixo
+  `1b6faec234d5b549d5302d82c16c510184ee937d`) + `login-server.exe` (release oficial
+  v1.1.3 do `opentibiabr/login-server`), documentado em
+  `docs/usar-mesmo-client-do-daniel.md`. OTClient antigo (`tools/otclient/`) continua
+  no repositório mas não é mais o client do dia a dia. Dois problemas de instalação
+  resolvidos sem precisar de admin: faltavam DLLs do Universal CRT (copiadas de
+  `C:\Windows\System32\downlevel\`) e o `Qt6WebEngineCore.dll` (198MB) vinha
+  compactado como `.rar` no repositório, precisou ser extraído (Windows 11 tem suporte
+  nativo a `.rar` via `Shell.Application` COM, não precisou instalar 7-Zip).
+- **Senha do root do MariaDB trocada pra `123`** a pedido do Pedro (procedimento de
+  recuperação via `--skip-grant-tables`, documentado como script em
+  `reset-mariadb-root-password.ps1` na raiz do projeto).
+- Criados atalhos no desktop: "Tibia (Cliente Novo)", "Login Server", "Iniciar MariaDB"
+  (esse último já pede elevação de admin sozinho).
+
+Estado final do dia confirmado funcionando de ponta a ponta pelo Pedro: login, entrada
+no mundo, e atualização de mapa via RME. Ver checkpoint completo na memória do projeto.
+
 ### Login não aparecia lista de personagens após reiniciar o PC
 PC foi reiniciado, e nenhum dos três serviços (MariaDB, Apache/XAMPP, `canary.exe`) sobe
 sozinho -- precisam ser ligados manualmente toda vez. Religar isso resolveu parte do
