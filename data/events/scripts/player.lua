@@ -530,9 +530,71 @@ function Player:onTradeRequest(target, item)
 	return true
 end
 
+-- Bestiary completion reward (custom, 2026-08-31, see docs/customizacoes.md) --
+-- gives one Wheel of Destiny promotion scroll the first time a player finishes
+-- a creature's bestiary (reaches the final kill stage), tier picked by the
+-- creature's own BestiaryStars (1-5). Fired from onGainExperience because
+-- that's the earliest player-side monster-kill hook -- but it runs BEFORE the
+-- C++ side (Player::onKilledMonster -> addBestiaryKill) updates the kill
+-- count for THIS kill, so isMonsterBestiaryUnlocked() here still reflects the
+-- state before this kill. addEvent(..., 0, ...) defers the actual check to
+-- right after onKilledMonster has run (same game-loop pass, next dispatcher
+-- tick), so by then the count is already updated and we can tell whether
+-- THIS kill was the one that finished it.
+local BESTIARY_PROMOTION_SCROLLS = {
+	[1] = 43946, -- abridged promotion scroll (3 wheel points)
+	[2] = 43947, -- basic promotion scroll (5 wheel points)
+	[3] = 43948, -- revised promotion scroll (9 wheel points)
+	[4] = 43949, -- extended promotion scroll (13 wheel points)
+	[5] = 43950, -- advanced promotion scroll (20 wheel points)
+}
+
+local function checkBestiaryPromotionReward(playerId, raceId)
+	local player = Player(playerId)
+	if not player then
+		return
+	end
+
+	if not player:isMonsterBestiaryUnlocked(raceId) then
+		return -- this kill didn't complete the bestiary for this creature
+	end
+
+	local rewardKV = player:kv():scoped("bestiary-scroll-reward")
+	local raceIdKey = tostring(raceId)
+	if rewardKV:get(raceIdKey) then
+		return -- already rewarded for this creature before
+	end
+
+	local mType = MonsterType(raceId)
+	if not mType then
+		return
+	end
+
+	local stars = mType:BestiaryStars()
+	local scrollId = BESTIARY_PROMOTION_SCROLLS[stars] or BESTIARY_PROMOTION_SCROLLS[1]
+
+	if player:addItem(scrollId, 1) then
+		rewardKV:set(raceIdKey, true)
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, string.format(
+			"You completed the bestiary entry for %s and received a %s!",
+			mType:name(), ItemType(scrollId):getName()
+		))
+	end
+end
+
 function Player:onGainExperience(target, exp, rawExp)
 	if not target or target:isPlayer() then
 		return exp
+	end
+
+	do
+		local mType = target:getType()
+		if mType then
+			local raceId = mType:raceId()
+			if raceId and raceId > 0 and not self:isMonsterBestiaryUnlocked(raceId) then
+				addEvent(checkBestiaryPromotionReward, 0, self:getId(), raceId)
+			end
+		end
 	end
 
 	-- Soul regeneration

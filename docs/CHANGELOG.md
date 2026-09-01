@@ -5,6 +5,26 @@ por sessão de trabalho, mais recente no topo.
 
 ---
 
+## 2026-08-31
+
+### Recompensa de bestiário (promotion scrolls) + criado docs/customizacoes.md
+- Nova mecânica: completar o bestiário de uma criatura (último estágio de
+  kills) dá um promotion scroll da Wheel of Destiny, escolhido pela
+  `BestiaryStars` (1-5) da criatura. `data/events/scripts/player.lua`
+  (`checkBestiaryPromotionReward`, hook em `Player:onGainExperience`).
+- De quebra, corrigido um bug pré-existente: os itens 43946-43950
+  (promotion scrolls) tinham script de uso pronto
+  (`data/scripts/actions/items/wheel_scrolls.lua`) mas nenhuma entrada no
+  `items.xml` -- não dava nem pra criar o item. Adicionado.
+- Criado `docs/customizacoes.md` -- registro só do que é diferente do
+  datapack padrão OTServBR-Global (separado do `PENDING.md`/`CHANGELOG.md`).
+- No processo, montada uma galeria visual de sprites (publicada como
+  artifact, cópia local em `temp/`) lendo `data/items/appearances.dat`
+  direto -- precisou decifrar o formato de compressão customizado da
+  CipSoft dos arquivos `client/assets/sprites-*.bmp.lzma` (não é
+  `.lzma`/`.xz` padrão). Detalhe técnico documentado em
+  `docs/customizacoes.md`.
+
 ## 2026-08-28
 
 ### Adventurer's Blessing até nível 30; !lastdeath e !tptemplo
