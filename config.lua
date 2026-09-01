@@ -212,7 +212,7 @@ transcendenceAvatarDuration = 7000
 -- Bestiary & Bosstiary system
 -- NOTE: bestiaryKillMultiplier, multiplier value of monster killed, default 1
 -- NOTE: bosstiaryKillMultiplier, multiplier value of boss killed, default 1
-bestiaryKillMultiplier = 1
+bestiaryKillMultiplier = 3
 bosstiaryKillMultiplier = 1
 bestiaryRateCharmShopPrice  = 1.0
 boostedBossSlot = true

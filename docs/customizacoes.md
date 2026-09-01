@@ -35,6 +35,8 @@ Não é lista de pendência (isso é `PENDING.md`) nem histórico de sessão (is
   vai até nível 30, depois disso precisa comprar.
 - `freePremium = true` (padrão: false).
 - `autoLoot = true` (padrão: false) — feature nativa do Canary, só ligada.
+- `bestiaryKillMultiplier = 3` (padrão: 1) — cada kill conta 3x pro progresso
+  do bestiário (01/09/2026, pedido do Daniel).
 
 ## Mecânicas
 
